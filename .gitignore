@@ -1,0 +1,8 @@
+node_modules
+dist
+*.log
+.DS_Store
+tsconfig.tsbuildinfo
+# Private: these contain the phone number. The site serves public/resume/ instead.
+resume-source/
+SuryaTej (1).pdf

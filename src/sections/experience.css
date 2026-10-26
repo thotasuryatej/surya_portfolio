@@ -1,0 +1,299 @@
+.xp-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 1rem + 3vw, 3.5rem);
+  align-items: start;
+}
+
+.xp-jobs {
+  display: grid;
+  gap: 12px;
+}
+.xp-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  gap: 8px;
+}
+.xp-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: rgb(var(--raised-rgb) / 0.4);
+  color: var(--text-3);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--t-fast),
+    color var(--t-fast),
+    background var(--t-fast);
+}
+.xp-tab img {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  padding: 3px;
+  border-radius: 8px;
+  background: #fff;
+  object-fit: contain;
+}
+.xp-tab > span:not(.badge-dot) {
+  display: grid;
+  min-width: 0;
+}
+.xp-tab strong {
+  overflow: hidden;
+  color: var(--text-2);
+  font-size: 0.92rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.xp-tab .mono {
+  font-size: 0.7rem;
+}
+.xp-tab .badge-dot {
+  margin-left: auto;
+}
+.xp-tab:hover {
+  border-color: var(--line-3);
+}
+.xp-tab[aria-selected='true'] {
+  border-color: rgb(var(--accent-rgb) / 0.55);
+  background: rgb(var(--accent-rgb) / 0.08);
+  color: var(--text-2);
+}
+.xp-tab[aria-selected='true'] strong {
+  color: var(--text-hi);
+}
+.job {
+  position: relative;
+  padding: clamp(16px, 0.8rem + 0.8vw, 22px);
+}
+.job-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+/* Official logos sit on a white plate in both themes, so the artwork is always shown on the background it was made for. */
+.job-logo {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  padding: 6px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px var(--line-2),
+    0 6px 18px -10px rgb(var(--shadow-rgb) / 0.5);
+}
+.job-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.job-id {
+  flex: 1;
+  min-width: 0;
+}
+.job-role {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.job-co {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 14px;
+  margin-top: 4px;
+  font-size: 0.95rem;
+  color: var(--text-2);
+}
+.job-loc {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.82rem;
+  color: var(--text-3);
+}
+.job-when {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.78rem;
+  color: var(--text-3);
+}
+.job-sum {
+  margin-top: 10px;
+  color: var(--text);
+  line-height: 1.6;
+}
+.job-points {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0;
+  padding-left: 1.1em;
+  color: var(--text-2);
+  font-size: 0.93rem;
+  line-height: 1.6;
+}
+.job-points li::marker {
+  color: var(--cyan);
+}
+.job-more {
+  margin: 8px 0 6px;
+}
+.job .tag-list {
+  margin-top: 10px;
+}
+
+.xp-side {
+  display: grid;
+  gap: 20px;
+}
+.xp-sub {
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-label);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.edu {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+}
+.edu-icon,
+.ach-icon {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  color: var(--violet);
+  background: var(--violet-a12);
+  box-shadow: inset 0 0 0 1px rgb(var(--violet-rgb) / 0.25);
+}
+.edu-degree {
+  font-weight: 600;
+  line-height: 1.4;
+}
+.edu-inst {
+  margin-top: 2px;
+  color: var(--text-2);
+  font-size: 0.93rem;
+}
+.edu-meta {
+  margin-top: 6px;
+  font-size: 0.74rem;
+  color: var(--text-3);
+}
+
+.ach {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+.ach-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: rgb(var(--raised-rgb) / 0.5);
+}
+.ach-item--award .ach-icon,
+.ach-item--selection .ach-icon {
+  color: var(--amber);
+  background: rgb(var(--amber-rgb) / 0.1);
+  box-shadow: inset 0 0 0 1px rgb(var(--amber-rgb) / 0.28);
+}
+.ach-title {
+  font-weight: 550;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+.ach-ctx {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-top: 0;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  color: var(--text-3);
+}
+.ach-ctx .text-link {
+  font-size: inherit;
+}
+
+@media (max-width: 960px) {
+  .xp-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .xp-tab {
+    padding: 8px 10px;
+  }
+  .ach-ctx {
+    -webkit-line-clamp: 2;
+  }
+}
+
+@media (min-width: 961px) and (max-height: 900px) {
+  .ach-item {
+    padding: 6px 10px;
+  }
+  .ach-icon,
+  .edu-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+  }
+  .edu {
+    padding: 10px 14px;
+  }
+  .xp-side {
+    gap: 14px;
+  }
+}
+
+/* Phones: logo + name on one row, dates under them; tabs drop the logo so company names fit */
+@media (max-width: 560px) {
+  .job-head {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .job-logo {
+    width: 44px;
+    height: 44px;
+    padding: 4px;
+    border-radius: 11px;
+  }
+  .job-when {
+    grid-column: 1 / -1;
+  }
+  .xp-tab img {
+    display: none;
+  }
+  .xp-tab strong {
+    white-space: normal;
+    font-size: 0.86rem;
+    line-height: 1.25;
+  }
+}

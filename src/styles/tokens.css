@@ -1,0 +1,185 @@
+/* Design tokens — change the look of the whole site from here.
+ *
+ * Two themes share every component. Colours that need transparency are stored as bare RGB channels
+ * (`--accent-rgb: 111 227 255`) and used as `rgb(var(--accent-rgb) / 0.4)`, so each theme only swaps
+ * channels here instead of overriding components. Dark is the default; light is set by
+ * <html data-theme="light"> (see the inline script in index.html and ThemeToggle.tsx).
+ */
+:root {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --bg: #05070b;
+  --bg-2: #080b11;
+  --surface: #0b1018;
+  --surface-2: #0f1520;
+  --surface-3: #141c29;
+
+  /* Channels (used as rgb(var(--x-rgb) / alpha)) */
+  --accent-rgb: 111 227 255;
+  --accent-2-rgb: 47 196 238;
+  --accent-deep-rgb: 0 80 120;
+  --violet-rgb: 157 140 255;
+  --line-rgb: 165 208 255;
+  --spec-rgb: 190 235 255; /* pointer-following specular tint on glass */
+  --amber-rgb: 251 207 111;
+  --green-rgb: 110 231 183;
+  --sky-rgb: 70 140 255;
+  --base-rgb: 12 18 28; /* translucent panels and glass body */
+  --raised-rgb: 17 24 36; /* cards that sit on panels */
+  --well-rgb: 5 8 13; /* insets: diagrams, media wells */
+  --tint-rgb: 18 36 54; /* coloured wells behind illustrations */
+  --shadow-rgb: 0 0 0;
+  --hi-rgb: 255 255 255; /* light catching an edge — white in both themes */
+  --ink-rgb: 255 255 255; /* faint fills/strokes in the text colour */
+
+  --line: rgb(var(--line-rgb) / 0.09);
+  --line-2: rgb(var(--line-rgb) / 0.16);
+  --line-3: rgb(var(--line-rgb) / 0.28);
+
+  /* Text */
+  --text: #e9eff7;
+  --text-hi: #ffffff;
+  --text-2: #b4c0cf;
+  --text-3: #8592a3;
+  --text-4: #74808e;
+
+  /* Light */
+  --cyan: #6fe3ff;
+  --cyan-2: #2fc4ee;
+  --ice: #cdeeff;
+  --violet: #9d8cff;
+  --violet-2: #7a68f0;
+  --green: #6ee7b7;
+  --amber: #fbcf6f;
+  --rose: #ff8fa3;
+  --on-accent: #03121a; /* text on a filled accent button */
+  --accent-hi: #a6f0ff; /* top of the primary button's gradient */
+
+  --cyan-a10: rgb(var(--accent-rgb) / 0.1);
+  --cyan-a20: rgb(var(--accent-rgb) / 0.2);
+  --violet-a12: rgb(var(--violet-rgb) / 0.12);
+
+  /* Hero chip (CircuitCore): package, die and halo */
+  --pkg-1: #1a2333;
+  --pkg-2: #090d14;
+  --die-1: #0f2030;
+  --die-2: #0a121c;
+  --die-3: #181433;
+  --ice-2: #9fdcff;
+  --halo-2: #5a8cff;
+
+  /* Logo inks (src/components/brand/Monogram.tsx) */
+  --logo-1: #d9f6ff;
+  --logo-2: #6fe3ff;
+  --logo-3: #9d8cff;
+  --logo-pkg: #0e1622;
+  --logo-pin: #3b5675;
+
+  /* Glow strength: glows are light sources in the dark and soft shadows in the light */
+  --glow: 1;
+
+  /* Evidence colours */
+  --ev-professional: var(--cyan);
+  --ev-academic: var(--violet);
+  --ev-exploring: var(--amber);
+
+  /* Type */
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SFMono-Regular', Consolas, monospace;
+
+  /* Display sizes also cap by viewport height, so short laptop screens keep a section on one screen */
+  --fs-hero: min(clamp(2.5rem, 1.4rem + 4.6vw, 5.25rem), max(2.5rem, 7.4svh));
+  --fs-h2: min(clamp(2rem, 1.35rem + 2.4vw, 3.25rem), max(1.75rem, 5.4svh));
+  --fs-h3: clamp(1.2rem, 1.05rem + 0.5vw, 1.5rem);
+  --fs-lead: clamp(1.06rem, 1rem + 0.3vw, 1.25rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+  --fs-label: 0.75rem;
+
+  /* Space & shape */
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+  --maxw: 1200px;
+  --section-y: min(clamp(4rem, 3rem + 5vw, 7.5rem), max(3.5rem, 8svh));
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+  --r-xl: 32px;
+  --r-pill: 999px;
+
+  /* Motion — mirrored in src/lib/motion.ts for Motion components */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --t-fast: 160ms;
+  --t-med: 320ms;
+  --t-slow: 600ms;
+
+  --nav-h: 64px;
+}
+
+/* Light: cool white and grey surfaces, clear glass, deep-blue and indigo accents.
+   Designed separately rather than inverted — accents are darker for contrast and glows become soft shadows. */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f3f6fa;
+  --bg-2: #e9eef5;
+  --surface: #ffffff;
+  --surface-2: #f6f8fb;
+  --surface-3: #edf1f7;
+
+  --accent-rgb: 14 99 214;
+  --accent-2-rgb: 10 84 184;
+  --accent-deep-rgb: 8 48 120;
+  --violet-rgb: 92 64 208;
+  --line-rgb: 24 52 92;
+  --spec-rgb: 255 255 255;
+  --amber-rgb: 166 98 0;
+  --green-rgb: 6 128 84;
+  --sky-rgb: 110 165 255;
+  --base-rgb: 255 255 255;
+  --raised-rgb: 255 255 255;
+  --well-rgb: 232 238 246;
+  --tint-rgb: 222 234 250;
+  --shadow-rgb: 22 40 70;
+  --hi-rgb: 255 255 255;
+  --ink-rgb: 16 32 56;
+
+  --line: rgb(var(--line-rgb) / 0.11);
+  --line-2: rgb(var(--line-rgb) / 0.18);
+  --line-3: rgb(var(--line-rgb) / 0.3);
+
+  --text: #0c1422;
+  --text-hi: #050a14;
+  --text-2: #364252;
+  --text-3: #4f5b6b;
+  --text-4: #5d6878;
+
+  --cyan: #0e63d6;
+  --cyan-2: #0a54b8;
+  --ice: #12406f;
+  --violet: #5c40d0;
+  --violet-2: #4a30b8;
+  --green: #067f54;
+  --amber: #9a5b00;
+  --rose: #b4243f;
+  --on-accent: #ffffff;
+  --accent-hi: #3d8bff;
+
+  --pkg-1: #ffffff;
+  --pkg-2: #dde5ef;
+  --die-1: #e8f1fd;
+  --die-2: #f6f9fe;
+  --die-3: #ebe7ff;
+  --ice-2: #7fb6ff;
+  --halo-2: #6ea8ff;
+
+  --logo-1: #0b4f8a;
+  --logo-2: #1662d6;
+  --logo-3: #5b3fd0;
+  --logo-pkg: #ffffff;
+  --logo-pin: #9fb3cf;
+
+  --glow: 0.45;
+}

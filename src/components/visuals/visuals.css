@@ -1,0 +1,167 @@
+.pv {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.pv-gridline {
+  fill: none;
+  stroke: rgb(var(--accent-rgb) / 0.06);
+  stroke-width: 1;
+}
+.pv-trace {
+  fill: none;
+  stroke: rgb(var(--accent-rgb) / 0.35);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.pv-flow {
+  stroke: url(#pv-stroke);
+  stroke-dasharray: 4 10;
+  animation: pv-flow 1.6s linear infinite;
+}
+.pv-flow--rev {
+  animation-direction: reverse;
+}
+@keyframes pv-flow {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+.pv-node {
+  fill: rgb(var(--raised-rgb) / 0.9);
+  stroke: rgb(var(--line-rgb) / 0.35);
+  stroke-width: 1.2;
+}
+.pv-chip {
+  fill: rgb(var(--tint-rgb) / 0.95);
+  stroke: url(#pv-stroke);
+  stroke-width: 1.6;
+}
+.pv-ring {
+  fill: none;
+  stroke: rgb(var(--accent-rgb) / 0.3);
+}
+.pv-ring--dash {
+  stroke-dasharray: 2 6;
+  transform-origin: 200px 125px;
+  animation: pv-spin 30s linear infinite;
+}
+@keyframes pv-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.pv-led {
+  fill: var(--cyan);
+  filter: drop-shadow(0 0 4px var(--cyan));
+  animation: pv-blink 2.4s ease-in-out infinite;
+}
+@keyframes pv-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+.pv-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  fill: var(--ice);
+}
+.pv-label--sm {
+  font-size: 9px;
+  letter-spacing: 0.04em;
+}
+.pv-dot {
+  fill: rgb(var(--line-rgb) / 0.3);
+}
+.pv-fill {
+  fill: rgb(var(--accent-rgb) / 0.35);
+}
+.pv-fill--dim {
+  fill: rgb(var(--line-rgb) / 0.1);
+}
+.pv-cta {
+  fill: var(--cyan);
+  opacity: 0.85;
+}
+.pv-card {
+  fill: rgb(var(--violet-rgb) / 0.12);
+  stroke: rgb(var(--violet-rgb) / 0.35);
+}
+.pv-cursor {
+  fill: var(--text);
+  stroke: var(--bg);
+  stroke-width: 1.5;
+}
+.pv-pkt {
+  stroke-width: 1;
+}
+.pv-pkt--bulk {
+  fill: rgb(var(--violet-rgb) / 0.3);
+  stroke: rgb(var(--violet-rgb) / 0.7);
+}
+.pv-pkt--iot {
+  fill: rgb(var(--accent-rgb) / 0.35);
+  stroke: var(--cyan);
+}
+.pv-pkt--iot2 {
+  fill: rgb(var(--green-rgb) / 0.3);
+  stroke: var(--green);
+}
+.pv-box rect {
+  fill: rgb(var(--accent-rgb) / 0.05);
+  stroke: var(--cyan);
+  stroke-width: 1.4;
+}
+.pv-box text {
+  fill: var(--cyan);
+}
+.pv-box--alt rect {
+  fill: rgb(var(--violet-rgb) / 0.06);
+  stroke: var(--violet);
+}
+.pv-box--alt text {
+  fill: var(--violet);
+}
+.pv-scan {
+  stroke: rgb(var(--accent-rgb) / 0.6);
+  stroke-width: 1;
+  filter: drop-shadow(0 0 6px var(--cyan));
+  animation: pv-scan 4s ease-in-out infinite;
+}
+@keyframes pv-scan {
+  0%,
+  100% {
+    transform: translateY(20px);
+  }
+  50% {
+    transform: translateY(230px);
+  }
+}
+.pv-point {
+  fill: var(--cyan);
+  animation: pv-blink 3s ease-in-out infinite;
+}
+.pv-sweep {
+  transform-origin: 200px 125px;
+  animation: pv-spin 3s linear infinite;
+}
+.pv-sweep path {
+  fill: rgb(var(--accent-rgb) / 0.12);
+}
+
+/* Pause when the card is offscreen or the user prefers less motion */
+[data-paused='true'] .pv *,
+.pv-static .pv * {
+  animation-play-state: paused !important;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pv * {
+    animation: none !important;
+  }
+}
+.pv-slot--crit {
+  fill: rgb(var(--amber-rgb) / 0.35);
+  stroke: var(--amber);
+}

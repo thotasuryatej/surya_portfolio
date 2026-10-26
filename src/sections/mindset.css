@@ -1,0 +1,259 @@
+/* Builder's Core: see Mindset.tsx */
+.bc {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(28px, 5vw, 72px);
+}
+
+.bc-stage {
+  --size: min(100%, 460px);
+  position: relative;
+  width: var(--size);
+  aspect-ratio: 1;
+  margin-inline: auto;
+}
+.bc-core {
+  position: absolute;
+  inset: 16%;
+  width: 68%;
+  height: 68%;
+  overflow: visible;
+}
+
+.bc-orbit {
+  fill: none;
+  stroke: rgb(var(--line-rgb) / 0.22);
+  stroke-width: 0.6;
+  stroke-dasharray: 1.5 4;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: bc-spin 60s linear infinite;
+}
+@keyframes bc-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.bc-seg {
+  fill: rgb(var(--line-rgb) / 0.05);
+  stroke: rgb(var(--line-rgb) / 0.22);
+  stroke-width: 0.8;
+  cursor: pointer;
+  transition:
+    fill 0.4s var(--ease-out),
+    stroke 0.4s var(--ease-out),
+    filter 0.4s var(--ease-out),
+    opacity 0.4s var(--ease-out);
+}
+/* Before the core charges, every segment is dark */
+.bc-stage:not([data-charged]) .bc-seg {
+  fill: rgb(var(--line-rgb) / 0.03);
+  stroke: rgb(var(--line-rgb) / 0.12);
+}
+.bc-stage[data-charged] .bc-seg[data-lit] {
+  fill: rgb(var(--accent-rgb) / 0.16);
+  stroke: rgb(var(--accent-rgb) / 0.55);
+  transition-delay: calc(var(--k) * 90ms);
+}
+.bc-stage[data-charged] .bc-seg[data-on] {
+  fill: url(#bc-grad);
+  stroke: rgb(var(--accent-rgb) / 0.9);
+  filter: drop-shadow(0 0 6px rgb(var(--accent-rgb) / 0.55));
+}
+.bc-seg:hover {
+  stroke: rgb(var(--accent-rgb) / 0.8);
+}
+
+.bc-die-ring {
+  fill: none;
+  stroke: url(#bc-grad);
+  stroke-width: 1;
+  opacity: 0.6;
+}
+.bc-die {
+  fill: var(--logo-pkg, var(--bg));
+  stroke: rgb(var(--line-rgb) / 0.25);
+  stroke-width: 0.8;
+}
+
+.bc-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.bc-center-in {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: var(--cyan);
+}
+.bc-center-num {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  color: var(--text-3);
+}
+
+/* Labels sit around the core, one per hexagon edge (angle -90 + 60k) */
+.bc-labels {
+  position: absolute;
+  inset: 0;
+}
+.bc-label {
+  --a: calc(-90deg + var(--k) * 60deg);
+  position: absolute;
+  left: calc(50% + cos(var(--a)) * 44%);
+  top: calc(50% + sin(var(--a)) * 44%);
+  translate: -50% -50%;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: rgb(8 12 18 / 0.55);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  backdrop-filter: blur(12px) saturate(160%);
+  color: var(--text-2);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color var(--t-med) var(--ease-out),
+    border-color var(--t-med) var(--ease-out),
+    box-shadow var(--t-med) var(--ease-out),
+    background var(--t-med) var(--ease-out);
+}
+.bc-label:hover {
+  color: var(--text);
+  border-color: var(--line-3);
+}
+.bc-label[aria-pressed='true'] {
+  color: var(--text-hi);
+  border-color: rgb(var(--accent-rgb) / 0.6);
+  box-shadow:
+    0 0 0 3px rgb(var(--accent-rgb) / 0.12),
+    0 8px 24px -10px rgb(var(--accent-rgb) / 0.5);
+}
+.bc-label-num {
+  font-size: 0.68rem;
+  color: var(--text-4);
+}
+.bc-label[aria-pressed='true'] .bc-label-num {
+  color: var(--cyan);
+}
+:root[data-theme='light'] .bc-label {
+  background: rgb(255 255 255 / 0.6);
+  border-color: rgb(255 255 255 / 0.9);
+  box-shadow: 0 4px 14px -8px rgb(var(--shadow-rgb) / 0.25);
+}
+
+.bc-panel {
+  padding: clamp(22px, 3vw, 34px);
+  border-radius: 22px;
+  min-height: 250px;
+  display: grid;
+  align-content: space-between;
+  gap: 24px;
+}
+.bc-step {
+  margin: 0 0 10px;
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.bc-title {
+  margin: 0 0 10px;
+  font-size: clamp(1.35rem, 2.2vw, 1.7rem);
+  line-height: 1.2;
+  color: var(--text-hi);
+}
+.bc-text {
+  margin: 0;
+  color: var(--text-2);
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+.bc-seen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 18px 0 0;
+}
+.bc-seen .mono {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+.bc-meter {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 6px;
+}
+.bc-meter i {
+  height: 4px;
+  border-radius: 2px;
+  background: rgb(var(--line-rgb) / 0.14);
+  transition: background 0.4s var(--ease-out);
+}
+.bc-meter i[data-lit] {
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+}
+
+@media (max-width: 900px) {
+  .bc {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small screens: the labels drop below the core as a row of pills */
+@media (max-width: 640px) {
+  .bc-stage {
+    --size: min(100%, 300px);
+    aspect-ratio: auto;
+  }
+  .bc-core {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: 72%;
+    height: auto;
+    aspect-ratio: 1;
+    margin: 0 auto;
+  }
+  .bc-center {
+    bottom: auto;
+    aspect-ratio: 1;
+    width: 72%;
+    margin: 0 auto;
+  }
+  .bc-labels {
+    position: static;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+  }
+  .bc-label {
+    position: static;
+    translate: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bc-orbit {
+    animation: none;
+  }
+  .bc-seg {
+    transition: none;
+  }
+}

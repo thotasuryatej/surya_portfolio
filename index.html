@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="color-scheme" content="dark light" />
+    <script>
+      // Apply the saved or system theme before first paint (no flash). Kept in sync with ThemeToggle.tsx.
+      (function () {
+        var t;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!--seo-->
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width:40rem;margin:4rem auto;padding:0 1rem;font-family:system-ui,sans-serif;color:#e8eef6;background:#05070b">
+        <h1>Surya Tej — Embedded Software Developer &amp; IoT Engineer</h1>
+        <p>This site needs JavaScript for its interactive parts. You can still
+          <a style="color:#7fe3ff" href="/resume/Surya-Tej-Resume.pdf">download my résumé</a> or
+          <a style="color:#7fe3ff" href="mailto:thotasuryatej@gmail.com">email me</a>.</p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

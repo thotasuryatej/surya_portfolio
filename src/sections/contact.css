@@ -1,0 +1,119 @@
+.ct {
+  --glass-radius: var(--r-xl);
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 1rem + 3vw, 4rem);
+  align-items: center;
+  padding: clamp(24px, 1rem + 4vw, 64px);
+  overflow: hidden;
+}
+.ct::selection {
+  background: var(--cyan-a20);
+}
+.ct-copy,
+.ct-actions {
+  position: relative;
+  z-index: 1;
+}
+.ct-copy .lead {
+  margin-top: 16px;
+}
+.ct-actions {
+  display: grid;
+  gap: 22px;
+}
+.ct-email {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+}
+.ct-addr {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  font-size: clamp(1.05rem, 0.9rem + 0.8vw, 1.45rem);
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+  border-radius: 6px;
+  transition: color var(--t-fast);
+}
+.ct-addr svg {
+  flex: none;
+  color: var(--cyan);
+}
+.ct-addr:hover {
+  color: var(--ice);
+}
+.ct-status {
+  flex-basis: 100%;
+  min-height: 1.2em;
+  font-size: 0.8rem;
+  color: var(--green);
+}
+.ct-btns {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.ct-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 22px;
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
+.ct-meta li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ct-meta a:hover {
+  color: var(--text);
+}
+
+@media (max-width: 900px) {
+  .ct {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 480px) {
+  .ct-btns .btn {
+    flex: 1 1 100%;
+  }
+}
+
+/* ---------------------------------------------------------------- Footer */
+.footer {
+  position: relative;
+  padding: 36px 0 44px;
+  border-top: 1px solid var(--line);
+  font-size: 0.85rem;
+  color: var(--text-3);
+}
+.footer-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 24px;
+}
+.footer-id {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.footer-top {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  color: var(--text-2);
+}
+.footer-top:hover {
+  color: var(--cyan);
+}

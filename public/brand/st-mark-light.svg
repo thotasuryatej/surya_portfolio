@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" fill="none">
+  <title>Surya Tej — ST mark (light)</title>
+  <!-- ST mark: a microcontroller package with the letters routed inside as PCB traces. Source: src/components/brand/Monogram.tsx -->
+  <defs>
+    <linearGradient id="g" x1="10" y1="10" x2="38" y2="38" gradientUnits="userSpaceOnUse">
+      <stop class="s1" stop-color="#0b4f8a"/><stop class="s2" offset=".5" stop-color="#1662d6"/><stop class="s3" offset="1" stop-color="#5b3fd0"/>
+    </linearGradient>
+  </defs>
+  <path class="pin" stroke="#9fb3cf" stroke-width="2.4" stroke-linecap="round" d="M17 3.5V7M24 3.5V7M31 3.5V7M17 41V44.5M24 41V44.5M31 41V44.5M3.5 17H7M3.5 24H7M3.5 31H7M41 17H44.5M41 24H44.5M41 31H44.5"/>
+  <rect class="pkg" x="7" y="7" width="34" height="34" rx="8.5" fill="#ffffff" stroke="url(#g)" stroke-width="2.2"/>
+  <g stroke="url(#g)" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22.5 14H16.5L13.5 17V20.5L16 23H20L22.5 25.5V31L19.5 34H14.5"/>
+    <path d="M25.5 14H35M30.25 14V30.5"/>
+  </g>
+  <circle cx="30.25" cy="33.6" r="2.3" stroke="url(#g)" stroke-width="2.1"/>
+  <circle cx="12.4" cy="34" r="2.1" fill="url(#g)"/>
+</svg>

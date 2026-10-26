@@ -1,0 +1,45 @@
+.mono-mark {
+  flex: none;
+  overflow: visible;
+}
+
+/* One-time power-up: the package outline draws, the pins appear, the traces route, then the vias land. */
+@media (prefers-reduced-motion: no-preference) {
+  .mono-mark--draw .mm-chip,
+  .mono-mark--draw .mm-trace {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    animation: mm-draw 0.7s var(--ease-out) forwards;
+  }
+  .mono-mark--draw .mm-chip {
+    animation-duration: 0.45s;
+  }
+  .mono-mark--draw .mm-t {
+    animation-delay: 0.35s;
+  }
+  .mono-mark--draw .mm-s {
+    animation-delay: 0.3s;
+    animation-duration: 0.85s;
+  }
+  .mono-mark--draw .mm-pins,
+  .mono-mark--draw .mm-via {
+    opacity: 0;
+    animation: mm-in 0.3s var(--ease-out) forwards;
+  }
+  .mono-mark--draw .mm-pins {
+    animation-delay: 0.3s;
+  }
+  .mono-mark--draw .mm-via {
+    animation-delay: 1s;
+  }
+}
+@keyframes mm-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes mm-in {
+  to {
+    opacity: 1;
+  }
+}

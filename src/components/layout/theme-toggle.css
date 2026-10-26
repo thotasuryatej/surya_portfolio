@@ -1,0 +1,97 @@
+.theme-chip {
+  width: 40px;
+  height: 40px;
+}
+.theme-chip svg {
+  overflow: visible;
+}
+.tc-pin {
+  stroke: rgb(var(--line-rgb) / 0.55);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  transition: stroke 220ms var(--ease-out);
+}
+.tc-body {
+  fill: rgb(var(--base-rgb) / 0.9);
+  stroke: rgb(var(--line-rgb) / 0.6);
+  stroke-width: 1.4;
+  transition:
+    fill 260ms var(--ease-out),
+    stroke 260ms var(--ease-out);
+}
+.tc-notch {
+  fill: rgb(var(--line-rgb) / 0.5);
+}
+.tc-core {
+  fill: var(--cyan);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    fill 260ms var(--ease-out),
+    transform 380ms var(--ease-spring);
+}
+.tc-bite {
+  transition: transform 380ms var(--ease-out);
+}
+.tc-glow {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: scale(0.4);
+  transition:
+    opacity 260ms var(--ease-out),
+    transform 380ms var(--ease-out);
+}
+
+/* Powered: pins carry current, the die glows like a sun */
+.theme-chip.is-on .tc-pin {
+  stroke: var(--cyan);
+}
+.theme-chip.is-on .tc-body {
+  stroke: rgb(var(--accent-rgb) / 0.7);
+}
+.theme-chip.is-on .tc-core {
+  fill: #ffb21f;
+  transform: scale(0.82);
+}
+.theme-chip.is-on .tc-bite {
+  transform: translate(7px, -7px);
+}
+.theme-chip.is-on .tc-glow {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.theme-chip:hover .tc-body {
+  stroke: rgb(var(--accent-rgb) / 0.85);
+}
+.theme-chip:active svg {
+  transform: scale(0.94);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-chip *,
+  .theme-chip svg {
+    transition: none !important;
+  }
+}
+
+/* Theme change without the View Transitions API: a brief colour cross-fade. */
+.theme-fade,
+.theme-fade *,
+.theme-fade *::before,
+.theme-fade *::after {
+  transition:
+    background-color 300ms var(--ease-out),
+    border-color 300ms var(--ease-out),
+    color 300ms var(--ease-out),
+    fill 300ms var(--ease-out),
+    stroke 300ms var(--ease-out),
+    box-shadow 300ms var(--ease-out) !important;
+}
+/* With the View Transitions API: a short whole-page cross-fade (opacity runs on the compositor). */
+html.vt-theme::view-transition-old(root),
+html.vt-theme::view-transition-new(root) {
+  animation-duration: 280ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
