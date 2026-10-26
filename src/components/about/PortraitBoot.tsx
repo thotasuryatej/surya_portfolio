@@ -2,6 +2,7 @@ import { useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { profile } from '../../content';
 import './portrait-boot.css';
+import { asset } from '../../lib/asset';
 
 /**
  * The portrait as a small display on a board: as it scrolls into view, the screen "boots" —
@@ -32,7 +33,7 @@ export function PortraitBoot({ role }: { role: string }) {
           </span>
           <motion.div className="pb-img" style={still ? undefined : { clipPath: clip }}>
             <motion.img
-              src={p.src}
+              src={asset(p.src)}
               alt={p.alt}
               width={1000}
               height={1250}

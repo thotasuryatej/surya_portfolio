@@ -7,6 +7,7 @@ import { ThemeToggle } from './ThemeToggle';
 import { useActiveSection } from '../../hooks/useActiveSection';
 import { usePointerLight } from '../../hooks/usePointerLight';
 import './nav.css';
+import { asset } from '../../lib/asset';
 
 export interface NavItem {
   id: string;
@@ -84,7 +85,7 @@ export function Nav({ items, sectionIds }: { items: NavItem[]; sectionIds: strin
 
         <div className="nav-end">
           <ThemeToggle />
-          <a className="nav-resume" href={profile.resume.file} download={profile.resume.downloadName}>
+          <a className="nav-resume" href={asset(profile.resume.file)} download={profile.resume.downloadName}>
             <Download size={16} aria-hidden="true" />
             <span>Résumé</span>
           </a>

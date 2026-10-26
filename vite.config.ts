@@ -53,6 +53,8 @@ function seoFromContent(): Plugin {
 }
 
 export default defineConfig({
+  // Relative URLs: one build works at suryatejpatel.in and at thotasuryatej.github.io/surya_portfolio/.
+  base: './',
   plugins: [react(), seoFromContent()],
   build: { target: 'es2022', cssCodeSplit: true },
 });

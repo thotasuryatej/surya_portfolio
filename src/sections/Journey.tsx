@@ -6,6 +6,7 @@ import { SectionHead } from '../components/ui/Reveal';
 import { Icon } from '../components/ui/Icon';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import './journey.css';
+import { asset } from '../lib/asset';
 
 const count = (phase: string) => journey.filter((m) => m.phase === phase).length;
 
@@ -76,7 +77,7 @@ function Stop({ m }: { m: (typeof journey)[number] }) {
   const body = (
     <>
       {m.logo ? (
-        <img className="jr-logo" src={m.logo.src} alt={m.logo.alt} width={36} height={36} loading="lazy" />
+        <img className="jr-logo" src={asset(m.logo.src)} alt={m.logo.alt} width={36} height={36} loading="lazy" />
       ) : (
         <span className="jr-icon" aria-hidden="true">
           <Icon name={m.icon} size={17} />

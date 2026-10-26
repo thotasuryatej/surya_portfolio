@@ -6,10 +6,11 @@ import { ProjectVisual } from '../visuals/ProjectVisual';
 import { formatPeriod } from '../../lib/format';
 import { projectStatusColor } from '../../lib/status';
 import { useProjectRoute } from '../../hooks/useProjectRoute';
+import { asset } from '../../lib/asset';
 
 export function ProjectMedia({ project }: { project: Project }) {
   if (project.cover?.type === 'image') {
-    return <img className="pc-img" src={project.cover.src} alt={project.cover.alt} loading="lazy" decoding="async" />;
+    return <img className="pc-img" src={asset(project.cover.src)} alt={project.cover.alt} loading="lazy" decoding="async" />;
   }
   return (
     <>

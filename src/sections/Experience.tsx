@@ -8,6 +8,7 @@ import { formatPeriod } from '../lib/format';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import type { Job } from '../content/schema';
 import './experience.css';
+import { asset } from '../lib/asset';
 
 const VISIBLE_POINTS = 3;
 
@@ -22,7 +23,7 @@ function JobItem({ job, id, labelledBy }: { job: Job; id: string; labelledBy: st
       <header className="job-head">
         {job.logo && (
           <span className="job-logo">
-            <img src={job.logo.src} alt={job.logo.alt} width={56} height={56} loading="lazy" decoding="async" />
+            <img src={asset(job.logo.src)} alt={job.logo.alt} width={56} height={56} loading="lazy" decoding="async" />
           </span>
         )}
         <div className="job-id">
@@ -105,7 +106,7 @@ export function Experience() {
                   tabIndex={sel === i ? 0 : -1}
                   onClick={() => setSel(i)}
                 >
-                  {j.logo && <img src={j.logo.src} alt="" width={32} height={32} loading="lazy" decoding="async" />}
+                  {j.logo && <img src={asset(j.logo.src)} alt="" width={32} height={32} loading="lazy" decoding="async" />}
                   <span>
                     <strong>{j.company}</strong>
                     <span className="mono">{formatPeriod(j.period)}</span>

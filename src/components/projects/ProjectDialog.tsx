@@ -7,6 +7,7 @@ import { Diagram } from '../diagrams/Diagram';
 import { formatDate, formatPeriod } from '../../lib/format';
 import { projectStatusColor } from '../../lib/status';
 import { useProjectRoute } from '../../hooks/useProjectRoute';
+import { asset } from '../../lib/asset';
 
 /** Case-study view in a native modal <dialog>: focus trapping, Escape and inert background come from the browser. */
 export function ProjectDialog() {
@@ -171,9 +172,9 @@ export function ProjectDialog() {
                       {project.media.map((m) => (
                         <figure key={m.src}>
                           {m.type === 'video' ? (
-                            <video src={m.src} poster={m.poster} controls preload="none" aria-label={m.alt} />
+                            <video src={asset(m.src)} poster={asset(m.poster)} controls preload="none" aria-label={m.alt} />
                           ) : (
-                            <img src={m.src} alt={m.alt} loading="lazy" decoding="async" />
+                            <img src={asset(m.src)} alt={m.alt} loading="lazy" decoding="async" />
                           )}
                           {m.caption && <figcaption>{m.caption}</figcaption>}
                         </figure>
@@ -212,7 +213,7 @@ export function ProjectDialog() {
                   <ul role="list" className="dlg-links">
                     {project.links.map((l) => (
                       <li key={l.href}>
-                        <a className="btn btn--glass glass glass--thin btn--sm" href={l.href} target="_blank" rel="noopener noreferrer">
+                        <a className="btn btn--glass glass glass--thin btn--sm" href={asset(l.href)} target="_blank" rel="noopener noreferrer">
                           {l.label}
                           <ArrowUpRight size={16} aria-hidden="true" />
                           <span className="sr-only">(opens in a new tab)</span>
