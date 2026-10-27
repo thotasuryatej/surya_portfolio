@@ -72,7 +72,12 @@ function Clicked() {
 function Pinned() {
   const { outer, step, goTo } = useScrollSteps(N);
   return (
-    <div ref={outer} style={{ height: `calc(100vh + ${HEIGHT}vh)` }}>
+    <div ref={outer} className="bc-outer" style={{ height: `calc(100vh + ${HEIGHT}vh)` }}>
+      {/* One snap point in the middle of each step's stretch of scroll, where goTo lands too. On phones a
+          swipe stops at each of them, so a flick moves one habit instead of flying past two (mindset.css). */}
+      {mindset.map((_, k) => (
+        <i key={k} className="bc-snap" style={{ ['--at' as string]: `${(HEIGHT * (k + 0.5)) / N}vh` }} aria-hidden="true" />
+      ))}
       {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
       <div className="pin-stage bc-pin" data-signal-skip="">
         <div className="container">

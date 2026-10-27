@@ -429,3 +429,27 @@
     transition: none;
   }
 }
+
+/* Snap points for the pinned steps (see Mindset.tsx). Each sits where the page is scrolled to for its
+   step, plus the scroll padding that snapping aligns it below. Only phones and tablets snap: there a
+   swipe travels far enough to skip a step, while a mouse wheel moves a step or less. */
+.bc-outer {
+  position: relative;
+}
+.bc-snap {
+  position: absolute;
+  left: 0;
+  top: calc(var(--at) + var(--scroll-pad));
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+@media (max-width: 900px) {
+  html:has(.bc-snap) {
+    scroll-snap-type: y proximity;
+  }
+  .bc-snap {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}

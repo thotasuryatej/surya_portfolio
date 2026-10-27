@@ -7,7 +7,9 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: calc(var(--nav-h) + 24px);
+  /* Kept in a variable so snap points can line up regardless of it (see mindset.css) */
+  --scroll-pad: calc(var(--nav-h) + 24px);
+  scroll-padding-top: var(--scroll-pad);
   background: var(--bg);
 }
 
@@ -229,7 +231,7 @@ main > .section:not(:first-of-type) {
    desktops, and the page scrolls freely. Phones keep natural heights (sections there are taller). */
 @media (min-width: 761px) and (min-height: 560px) {
   html {
-    scroll-padding-top: 0;
+    --scroll-pad: 0px;
   }
   main > .section {
     min-height: 100svh;
