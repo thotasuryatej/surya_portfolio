@@ -13,11 +13,10 @@ export const profile: Profile = {
   // No phone number here: anything in this file ships in the public JavaScript bundle.
   // To show one in Contact, add phone: '…' and set showPhone: true.
   showPhone: false,
-  // Placeholder until a real photo is added — see CONTENT_GUIDE.md › Portrait.
   portrait: {
     src: '/images/surya-tej-portrait.webp',
     alt: 'Portrait of Surya Tej',
-    placeholder: true,
+    placeholder: false,
   },
   socials: [
     {
