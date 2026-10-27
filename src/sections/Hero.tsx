@@ -34,7 +34,12 @@ export function Hero() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const copyY = useTransform(scrollYProgress, [0, 1], [0, -90]);
   const fade = useTransform(scrollYProgress, [0, 0.75], [1, 0]);
-  const coreScale = useTransform(scrollYProgress, [0, 1], [1, 0.88]);
+  // The core tracks its own exit, not the hero's: on phones it sits below the copy and would otherwise
+  // have faded before it reaches the screen
+  const coreRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: coreOut } = useScroll({ target: coreRef, offset: ['start start', 'end start'] });
+  const coreFade = useTransform(coreOut, [0.3, 0.95], [1, 0]);
+  const coreScale = useTransform(coreOut, [0, 1], [1, 0.88]);
   const out = !reduce;
 
   // Pointer parallax for the core (fine pointers, motion allowed)
@@ -103,7 +108,7 @@ export function Hero() {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 1.1, ease: ease.out, delay: 0.1 }}
         >
-          <motion.div style={out ? { scale: coreScale, opacity: fade } : undefined}>
+          <motion.div ref={coreRef} style={out ? { scale: coreScale, opacity: coreFade } : undefined}>
             <CircuitCore nodes={hero.nodes} />
           </motion.div>
         </motion.div>
