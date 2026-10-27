@@ -7,14 +7,36 @@
 
 .cap-grid {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.2fr);
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.4fr);
   gap: clamp(1rem, 0.5rem + 2vw, 2rem);
   align-items: start;
 }
 
 .cap-tabs {
+  position: relative;
   display: grid;
   gap: 4px;
+}
+/* Pinned: how far the scroll has walked through the list */
+.cap-rail {
+  position: absolute;
+  left: -12px;
+  top: 10px;
+  bottom: 10px;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line-2);
+  overflow: hidden;
+}
+.cap-rail span {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, var(--violet), var(--cyan));
+  box-shadow: 0 0 calc(12px * var(--glow)) rgb(var(--accent-rgb) / 0.6);
+  transform-origin: 50% 0;
+}
+.cap-tab[data-past] .cap-tab-icon {
+  border-color: rgb(var(--accent-rgb) / 0.35);
 }
 .cap-tab {
   position: relative;
@@ -91,9 +113,49 @@
   position: sticky;
   top: calc(var(--nav-h) + 40px);
 }
+.cap-panel-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cap-count {
+  font-size: var(--fs-label);
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+}
 .cap-panel {
   padding: clamp(20px, 1rem + 1.5vw, 32px);
   min-height: 420px;
+  container-type: inline-size;
+}
+/* An area with a demo (Lighting Control) puts it beside the text, so the panel fits one screen */
+@container (min-width: 500px) {
+  .cap-body[data-demo] {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    gap: clamp(16px, 4cqi, 24px);
+    align-items: start;
+  }
+  .cap-body[data-demo] .cap-panel-head {
+    margin-bottom: 10px;
+  }
+  .cap-body[data-demo] .cap-panel-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+  }
+  .cap-body[data-demo] .cap-detail {
+    margin-bottom: 14px;
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+  .cap-body[data-demo] .dim {
+    margin-top: 0;
+  }
+  .cap-body[data-demo] .cap-related {
+    margin-top: 18px;
+  }
 }
 .cap-panel-head {
   display: flex;
@@ -150,6 +212,7 @@
 
 /* Dimming demo */
 .dim {
+  container-type: inline-size;
   margin-top: 24px;
   padding: 16px;
   border-radius: 18px;
@@ -170,6 +233,18 @@
   border-radius: var(--r-pill);
   background: rgb(var(--ink-rgb) / 0.03);
   border: 1px solid var(--line);
+}
+/* A narrow demo (beside the text on smaller screens): the four modes as a 2 × 2 grid */
+@container (max-width: 360px) {
+  .dim-modes {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-radius: 14px;
+  }
+  .dim-modes .dim-mode {
+    border-radius: 10px;
+  }
 }
 .dim-mode {
   padding: 6px 12px;
@@ -280,6 +355,12 @@
   .cap-panel {
     min-height: 0;
   }
+  .cap-panel-wrap {
+    top: calc(var(--nav-h) + 16px);
+  }
+  .dim-caption {
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 960px) {
@@ -344,4 +425,9 @@
 }
 .cap-acc-inner .cap-panel-head {
   margin-bottom: 10px;
+}
+
+/* Pinned: the whole stage is sticky already */
+.pin-stage .cap-panel-wrap {
+  position: static;
 }

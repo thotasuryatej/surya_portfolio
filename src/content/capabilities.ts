@@ -55,7 +55,7 @@ export const capabilities: Capability[] = [
     icon: 'Lightbulb',
     summary: 'Four different ways to say "50% brightness".',
     detail:
-      'Built at PAT IoT Solutions: dimming controllers supporting Phase-Cut, PWM, DALI and analog dimming. Each technique controls light output differently — try the interactive explainer below.',
+      'Built at PAT IoT Solutions: dimming controllers supporting Phase-Cut, PWM, DALI and analog dimming. Each technique controls light output differently — try the interactive explainer.',
     technologies: ['Phase-Cut', 'PWM', 'DALI', 'Analog dimming'],
     evidence: ['professional'],
     relatedProjects: ['smart-home-iot-hub'],

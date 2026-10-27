@@ -21,21 +21,28 @@
   overflow: visible;
 }
 
-.bc-orbit {
-  fill: none;
-  stroke: rgb(var(--line-rgb) / 0.22);
-  stroke-width: 0.6;
-  stroke-dasharray: 1.5 4;
+/* Outer ticks turn slowly; everything else stays aligned with the labels */
+.bc-ticks {
+  stroke: rgb(var(--line-rgb) / 0.3);
+  stroke-width: 0.7;
+  stroke-linecap: round;
+  /* The ticks are symmetric about the centre, so their own box turns about it */
   transform-box: fill-box;
   transform-origin: center;
-  animation: bc-spin 60s linear infinite;
+  animation: bc-spin 90s linear infinite;
 }
 @keyframes bc-spin {
   to {
     transform: rotate(360deg);
   }
 }
+.bc-ring {
+  fill: none;
+  stroke: rgb(var(--line-rgb) / 0.16);
+  stroke-width: 0.6;
+}
 
+/* Habit segments */
 .bc-seg {
   fill: rgb(var(--line-rgb) / 0.05);
   stroke: rgb(var(--line-rgb) / 0.22);
@@ -44,8 +51,7 @@
   transition:
     fill 0.4s var(--ease-out),
     stroke 0.4s var(--ease-out),
-    filter 0.4s var(--ease-out),
-    opacity 0.4s var(--ease-out);
+    filter 0.4s var(--ease-out);
 }
 /* Before the core charges, every segment is dark */
 .bc-stage:not([data-charged]) .bc-seg {
@@ -55,7 +61,6 @@
 .bc-stage[data-charged] .bc-seg[data-lit] {
   fill: rgb(var(--accent-rgb) / 0.16);
   stroke: rgb(var(--accent-rgb) / 0.55);
-  transition-delay: calc(var(--k) * 90ms);
 }
 .bc-stage[data-charged] .bc-seg[data-on] {
   fill: url(#bc-grad);
@@ -66,16 +71,45 @@
   stroke: rgb(var(--accent-rgb) / 0.8);
 }
 
-.bc-die-ring {
-  fill: none;
-  stroke: url(#bc-grad);
-  stroke-width: 1;
-  opacity: 0.6;
+/* Coil ring: two coils per habit */
+.bc-coil {
+  fill: rgb(var(--line-rgb) / 0.06);
+  stroke: rgb(var(--line-rgb) / 0.2);
+  stroke-width: 0.6;
+  transition:
+    fill 0.4s var(--ease-out),
+    stroke 0.4s var(--ease-out);
+}
+.bc-stage[data-charged] .bc-coil[data-lit] {
+  fill: rgb(var(--accent-rgb) / 0.55);
+  stroke: rgb(var(--accent-rgb) / 0.9);
+  filter: drop-shadow(0 0 3px rgb(var(--accent-rgb) / 0.6));
+}
+
+/* The core: brighter with every habit lit */
+.bc-halo {
+  fill: url(#bc-halo);
+  opacity: calc(0.15 + var(--charge, 0) * 0.85);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.5s var(--ease-out);
+  animation: bc-breathe 3.2s ease-in-out infinite;
+}
+@keyframes bc-breathe {
+  50% {
+    transform: scale(1.06);
+  }
 }
 .bc-die {
   fill: var(--logo-pkg, var(--bg));
-  stroke: rgb(var(--line-rgb) / 0.25);
-  stroke-width: 0.8;
+}
+.bc-die-ring {
+  fill: none;
+  stroke: url(#bc-grad);
+  stroke-width: 1.4;
+  opacity: calc(0.4 + var(--charge, 0) * 0.6);
+  filter: drop-shadow(0 0 calc(var(--charge, 0) * 5px) rgb(var(--accent-rgb) / 0.8));
+  transition: opacity 0.5s var(--ease-out);
 }
 
 .bc-center {
@@ -249,8 +283,14 @@
   }
 }
 
+/* Pinned: keep the core and the head on one screen */
+.pin-stage .bc-stage {
+  --size: min(100%, 460px, 100svh - var(--nav-h) - 250px);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .bc-orbit {
+  .bc-ticks,
+  .bc-halo {
     animation: none;
   }
   .bc-seg {

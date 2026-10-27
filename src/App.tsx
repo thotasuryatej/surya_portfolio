@@ -4,6 +4,7 @@ import { Nav } from './components/layout/Nav';
 import { Footer } from './components/layout/Footer';
 import { ProjectDialog } from './components/projects/ProjectDialog';
 import { VisualDefs } from './components/visuals/ProjectVisual';
+import { SignalTrace } from './components/visuals/SignalTrace';
 import { ProjectRouteProvider } from './hooks/useProjectRoute';
 import { sectionComponents, visibleSections } from './sections/registry';
 
@@ -12,16 +13,18 @@ const sectionIds = visibleSections.map((s) => s.id);
 
 export default function App() {
   // Sections below the fold use content-visibility:auto (base.css), so their heights are estimates until
-  // first rendered. After an in-page jump, re-align once scrolling settles in case an estimate moved the target.
+  // first rendered. After an in-page jump, re-align once scrolling settles in case an estimate moved the target;
+  // a re-align can render more sections on the way, so it repeats (a few times at most) until the target lands.
   useEffect(() => {
     let target: string | null = null;
+    let tries = 0;
     let timer = 0;
     const settle = () => {
       const el = target ? document.getElementById(target) : null;
-      target = null;
       if (!el) return;
       const offset = el.getBoundingClientRect().top - (parseFloat(getComputedStyle(el).scrollMarginTop) || 0);
-      if (Math.abs(offset) > 4) el.scrollIntoView();
+      if (Math.abs(offset) > 4 && tries++ < 4) el.scrollIntoView();
+      else target = null;
     };
     const onScroll = () => {
       window.clearTimeout(timer);
@@ -29,11 +32,15 @@ export default function App() {
     };
     const onClick = (e: MouseEvent) => {
       const id = (e.target as Element).closest?.('a[href^="#"]')?.getAttribute('href')?.slice(1);
-      if (id && sectionIds.includes(id)) target = id;
+      if (id && sectionIds.includes(id)) {
+        target = id;
+        tries = 0;
+      }
     };
     const initial = location.hash.slice(1);
     if (sectionIds.includes(initial)) {
       target = initial;
+      tries = 0;
       document.getElementById(initial)?.scrollIntoView({ behavior: 'instant' });
     }
     document.addEventListener('click', onClick);
@@ -59,6 +66,7 @@ export default function App() {
         <VisualDefs />
         <Nav items={navItems} sectionIds={sectionIds} />
         <main id="main" tabIndex={-1}>
+          <SignalTrace />
           {visibleSections.map((s) => {
             const Section = sectionComponents[s.id];
             return <Section key={s.id} />;

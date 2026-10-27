@@ -1,0 +1,92 @@
+/* The page-long signal trace (SignalTrace.tsx). Sits under every section inside <main>; only
+   strokes, no filters, so it costs nothing while the page is idle. */
+.signal {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  contain: strict;
+  pointer-events: none;
+}
+.signal svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: visible;
+}
+
+.sig-stop-1 {
+  stop-color: var(--cyan);
+}
+.sig-stop-2 {
+  stop-color: var(--cyan-2);
+}
+.sig-stop-3 {
+  stop-color: var(--violet);
+}
+
+.sig-seg path {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* The unpowered copper: always there, barely visible */
+.sig-base {
+  stroke: rgb(var(--line-rgb) / 0.14);
+  stroke-width: 1;
+}
+.sig-lit,
+.sig-glow {
+  stroke: url(#signal-ink);
+  stroke-dasharray: var(--len) calc(var(--len) + 2px);
+  stroke-dashoffset: var(--len);
+  transition: stroke-dashoffset 1.2s var(--ease-out) var(--delay, 0ms);
+}
+.sig-lit {
+  stroke-width: 1.25;
+  opacity: 0.6;
+}
+.sig-glow {
+  stroke-width: 5;
+  opacity: calc(0.12 * var(--glow));
+}
+.sig-branch {
+  transition-duration: 0.35s;
+}
+.sig-seg[data-on] .sig-lit,
+.sig-seg[data-on] .sig-glow {
+  stroke-dashoffset: 0;
+}
+
+.sig-via,
+.sig-pad {
+  fill: var(--bg);
+  stroke: rgb(var(--line-rgb) / 0.3);
+  stroke-width: 1;
+  transition:
+    fill 0.4s ease var(--delay, 0ms),
+    stroke 0.4s ease var(--delay, 0ms);
+}
+.sig-seg[data-on] .sig-via,
+.sig-pad[data-on] {
+  fill: rgb(var(--accent-rgb) / 0.55);
+  stroke: rgb(var(--accent-rgb) / 0.7);
+}
+
+/* A short bright dash that travels the stretch once when a section is reached (Web Animations) */
+.sig-seg .sig-pulse {
+  stroke: var(--ice);
+  stroke-width: 2;
+  opacity: 0;
+}
+:root[data-theme='light'] .sig-seg .sig-pulse {
+  stroke: var(--cyan);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sig-lit,
+  .sig-glow,
+  .sig-via,
+  .sig-pad {
+    transition: none;
+  }
+}

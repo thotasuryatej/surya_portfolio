@@ -1,5 +1,5 @@
-import { useRef, useState, type KeyboardEvent } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { AnimatePresence, motion, useReducedMotion, useTransform, type MotionValue } from 'motion/react';
 import { ease } from '../lib/motion';
 import { ArrowUpRight, ChevronDown } from 'lucide-react';
 import { capabilities, projectBySlug } from '../content';
@@ -12,6 +12,7 @@ import { DimmingDemo } from '../components/capabilities/DimmingDemo';
 import { evidenceColor, evidenceLabel } from '../lib/status';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { useMedia } from '../hooks/useMedia';
+import { useScrollSteps } from '../hooks/useScrollSteps';
 import './capabilities.css';
 
 const LEGEND: Evidence[] = ['professional', 'academic', 'exploring'];
@@ -28,152 +29,223 @@ function Legend() {
   );
 }
 
-export function Capabilities() {
-  const [activeId, setActiveId] = useState(capabilities[0]?.id);
-  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
-  const narrow = useMedia('(max-width: 960px)');
-  const active = capabilities.find((c) => c.id === activeId) ?? capabilities[0];
-  if (!active) return null;
+type Cap = (typeof capabilities)[number];
+const N = capabilities.length;
+/** Extra scroll the pinned section takes, in vh: enough for each area to be read */
+const HEIGHT = N * 42;
 
-  // Roving focus for the tab list (arrow keys, Home, End)
-  const onKey = (e: KeyboardEvent, i: number) => {
-    const n = capabilities.length;
-    const next =
-      e.key === 'ArrowDown' || e.key === 'ArrowRight' ? (i + 1) % n
-      : e.key === 'ArrowUp' || e.key === 'ArrowLeft' ? (i - 1 + n) % n
-      : e.key === 'Home' ? 0
-      : e.key === 'End' ? n - 1
-      : -1;
-    if (next < 0) return;
-    e.preventDefault();
-    setActiveId(capabilities[next].id);
-    tabs.current[next]?.focus();
-  };
+export function Capabilities() {
+  const narrow = useMedia('(max-width: 960px)');
+  const roomy = useMedia('(min-height: 640px)');
+  const still = useReducedMotion();
+  const pinned = !narrow && roomy && !still;
+
+  const head = (
+    <SectionHead
+      id="build-title"
+      eyebrow="What I build"
+      title="From a microcontroller pin to the interface people use"
+      lead={
+        pinned
+          ? 'Most of my work lives inside devices. Scroll through the areas, or pick one, to see what it involves and where I have used it.'
+          : 'Most of my work lives inside devices. Pick an area to see what it involves and where I have used it.'
+      }
+    />
+  );
 
   return (
-    <section id="build" className="section" aria-labelledby="build-title">
-      <div className="container">
-        <SectionHead
-          id="build-title"
-          eyebrow="What I build"
-          title="From a microcontroller pin to the interface people use"
-          lead="Most of my work lives inside devices. Pick an area to see what it involves and where I have used it."
-        />
-
-        {narrow ? (
-          <>
-            <Legend />
-            <Accordion />
-          </>
-        ) : (
-          <div className="cap-grid">
-            <Reveal>
-              <div className="cap-tabs" role="tablist" aria-label="Engineering areas" aria-orientation="vertical">
-                {capabilities.map((c, i) => {
-                  const selected = c.id === active.id;
-                  return (
-                    <button
-                      key={c.id}
-                      ref={(el) => {
-                        tabs.current[i] = el;
-                      }}
-                      type="button"
-                      role="tab"
-                      id={`cap-tab-${c.id}`}
-                      aria-selected={selected}
-                      aria-controls="cap-panel"
-                      tabIndex={selected ? 0 : -1}
-                      className="cap-tab"
-                      onClick={() => setActiveId(c.id)}
-                      onKeyDown={(e) => onKey(e, i)}
-                    >
-                      {selected && (
-                        <motion.span layoutId="cap-active" className="cap-tab-bg" transition={{ type: 'spring', stiffness: 400, damping: 36 }} />
-                      )}
-                      <span className="cap-tab-icon">
-                        <Icon name={c.icon} size={18} />
-                      </span>
-                      <span className="cap-tab-text">
-                        <span className="cap-tab-title">{c.title}</span>
-                        <span className="cap-tab-sum">{c.summary}</span>
-                      </span>
-                      <span className="cap-tab-dots" aria-hidden="true">
-                        {c.evidence.map((ev) => (
-                          <span key={ev} style={{ background: evidenceColor[ev] }} />
-                        ))}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.08} className="cap-panel-wrap">
-              <Legend />
-              <Glass id="cap-panel" role="tabpanel" aria-labelledby={`cap-tab-${active.id}`} className="cap-panel">
-                <AnimatePresence mode="wait" initial={false}>
-                  <motion.div
-                    key={active.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -6 }}
-                    transition={{ duration: 0.25, ease: ease.out }}
-                  >
-                    <Detail c={active} />
-                  </motion.div>
-                </AnimatePresence>
-              </Glass>
-            </Reveal>
-          </div>
-        )}
-      </div>
+    <section
+      id="build"
+      className={`section${pinned ? ' section--pinned' : ''}`}
+      // Pinned, it is several screens tall; say so before it first renders (content-visibility) so jumps land right
+      style={pinned ? { containIntrinsicSize: `auto calc(100vh + ${HEIGHT}vh)` } : undefined}
+      aria-labelledby="build-title"
+    >
+      {narrow ? (
+        <div className="container">
+          {head}
+          <Legend />
+          <Accordion />
+        </div>
+      ) : pinned ? (
+        <Pinned head={head} />
+      ) : (
+        <div className="container">
+          {head}
+          <Clicked />
+        </div>
+      )}
     </section>
   );
 }
 
-type Cap = (typeof capabilities)[number];
+/** Reduced motion or a short window: plain tabs. */
+function Clicked() {
+  const [index, setIndex] = useState(0);
+  return <Tabs index={index} select={setIndex} />;
+}
+
+/** Wide screens: the section pins and scrolling walks through the areas, each opening beside the list. */
+function Pinned({ head }: { head: ReactNode }) {
+  const { outer, step, goTo, progress } = useScrollSteps(N);
+  const fill = useTransform(progress, [0, 1], [1 / N, 1]);
+  return (
+    <div ref={outer} style={{ height: `calc(100vh + ${HEIGHT}vh)` }}>
+      {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
+      <div className="pin-stage" data-signal-skip="">
+        <div className="container">
+          {head}
+          <Tabs index={step} select={goTo} fill={fill} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Tabs({ index, select, fill }: { index: number; select: (i: number) => void; fill?: MotionValue<number> }) {
+  const tabs = useRef<(HTMLButtonElement | null)[]>([]);
+  const active = capabilities[index];
+
+  // Roving focus for the tab list (arrow keys, Home, End)
+  const onKey = (e: KeyboardEvent, i: number) => {
+    const next =
+      e.key === 'ArrowDown' || e.key === 'ArrowRight'
+        ? (i + 1) % N
+        : e.key === 'ArrowUp' || e.key === 'ArrowLeft'
+          ? (i - 1 + N) % N
+          : e.key === 'Home'
+            ? 0
+            : e.key === 'End'
+              ? N - 1
+              : -1;
+    if (next < 0) return;
+    e.preventDefault();
+    select(next);
+    tabs.current[next]?.focus({ preventScroll: true });
+  };
+
+  return (
+    <div className="cap-grid">
+      <Reveal>
+        <div className="cap-tabs" role="tablist" aria-label="Engineering areas" aria-orientation="vertical">
+          {fill && (
+            <span className="cap-rail" aria-hidden="true">
+              <motion.span style={{ scaleY: fill }} />
+            </span>
+          )}
+          {capabilities.map((c, i) => {
+            const selected = i === index;
+            return (
+              <button
+                key={c.id}
+                ref={(el) => {
+                  tabs.current[i] = el;
+                }}
+                type="button"
+                role="tab"
+                id={`cap-tab-${c.id}`}
+                aria-selected={selected}
+                aria-controls="cap-panel"
+                tabIndex={selected ? 0 : -1}
+                className="cap-tab"
+                data-past={i < index || undefined}
+                onClick={() => select(i)}
+                onKeyDown={(e) => onKey(e, i)}
+              >
+                {selected && (
+                  <motion.span
+                    layoutId="cap-active"
+                    className="cap-tab-bg"
+                    transition={{ type: 'spring', stiffness: 400, damping: 36 }}
+                  />
+                )}
+                <span className="cap-tab-icon">
+                  <Icon name={c.icon} size={18} />
+                </span>
+                <span className="cap-tab-text">
+                  <span className="cap-tab-title">{c.title}</span>
+                  <span className="cap-tab-sum">{c.summary}</span>
+                </span>
+                <span className="cap-tab-dots" aria-hidden="true">
+                  {c.evidence.map((ev) => (
+                    <span key={ev} style={{ background: evidenceColor[ev] }} />
+                  ))}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </Reveal>
+
+      <Reveal delay={0.08} className="cap-panel-wrap">
+        <div className="cap-panel-top">
+          <Legend />
+          <span className="cap-count mono" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
+          </span>
+        </div>
+        <Glass id="cap-panel" role="tabpanel" aria-labelledby={`cap-tab-${active.id}`} className="cap-panel">
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={active.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.22, ease: ease.out }}
+            >
+              <Detail c={active} />
+            </motion.div>
+          </AnimatePresence>
+        </Glass>
+      </Reveal>
+    </div>
+  );
+}
 
 function Detail({ c }: { c: Cap }) {
   const { open } = useProjectRoute();
   return (
-    <>
-      <div className="cap-panel-head">
-        <span className="cap-panel-icon">
-          <Icon name={c.icon} size={24} />
-        </span>
-        <div className="cap-panel-badges">
-          {c.evidence.map((ev) => (
-            <Badge key={ev} color={evidenceColor[ev]}>
-              {evidenceLabel[ev]}
-            </Badge>
-          ))}
+    <div className="cap-body" data-demo={c.demo || undefined}>
+      <div className="cap-info">
+        <div className="cap-panel-head">
+          <span className="cap-panel-icon">
+            <Icon name={c.icon} size={24} />
+          </span>
+          <div className="cap-panel-badges">
+            {c.evidence.map((ev) => (
+              <Badge key={ev} color={evidenceColor[ev]}>
+                {evidenceLabel[ev]}
+              </Badge>
+            ))}
+          </div>
         </div>
+        <h3 className="h3">{c.title}</h3>
+        <p className="cap-detail">{c.detail}</p>
+        <TagList items={c.technologies} label="Technologies" />
+
+        {!!c.relatedProjects?.length && (
+          <div className="cap-related">
+            <span className="cap-related-label mono">Related work</span>
+            <ul role="list">
+              {c.relatedProjects.map((slug) => {
+                const p = projectBySlug(slug);
+                return p ? (
+                  <li key={slug}>
+                    <button type="button" className="text-link" onClick={() => open(slug)}>
+                      {p.title}
+                      <ArrowUpRight size={16} aria-hidden="true" />
+                    </button>
+                  </li>
+                ) : null;
+              })}
+            </ul>
+          </div>
+        )}
       </div>
-      <h3 className="h3">{c.title}</h3>
-      <p className="cap-detail">{c.detail}</p>
-      <TagList items={c.technologies} label="Technologies" />
 
+      {/* Beside the text when the panel is wide enough, so the whole area fits on one screen */}
       {c.demo === 'dimming' && <DimmingDemo />}
-
-      {!!c.relatedProjects?.length && (
-        <div className="cap-related">
-          <span className="cap-related-label mono">Related work</span>
-          <ul role="list">
-            {c.relatedProjects.map((slug) => {
-              const p = projectBySlug(slug);
-              return p ? (
-                <li key={slug}>
-                  <button type="button" className="text-link" onClick={() => open(slug)}>
-                    {p.title}
-                    <ArrowUpRight size={16} aria-hidden="true" />
-                  </button>
-                </li>
-              ) : null;
-            })}
-          </ul>
-        </div>
-      )}
-    </>
+    </div>
   );
 }
 

@@ -12,7 +12,7 @@ export const about: AboutContent = {
   ],
   glance: [
     { icon: 'Microchip', label: 'Microcontrollers', items: ['ESP32', 'ESP8266', 'Nuvoton MS51'] },
-    { icon: 'Lightbulb', label: 'Lighting control', items: ['Phase-cut', 'PWM', 'DALI', 'Analog'] },
+    { icon: 'Cable', label: 'Integration', items: ['Firmware debug', 'Circuit debug', 'HW testing'] },
     { icon: 'Network', label: 'Connectivity', items: ['Matter', 'Wi-Fi', 'UART', 'I2C', 'SPI'] },
     { icon: 'Timer', label: 'Real-time', items: ['RTOS tasks', 'Scheduling', 'Device comms'] },
     { icon: 'Code', label: 'Languages', items: ['Embedded C', 'C++17', 'Python'] },

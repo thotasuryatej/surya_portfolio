@@ -28,10 +28,10 @@ export const hero: HeroContent = {
       evidence: 'professional',
     },
     {
-      id: 'lighting',
-      label: 'Lighting control',
-      icon: 'Lightbulb',
-      detail: 'At PAT IoT Solutions: dimming controllers supporting Phase-Cut, PWM, DALI and analog dimming.',
+      id: 'integration',
+      label: 'Hardware bring-up',
+      icon: 'Cable',
+      detail: 'Firmware debugging, circuit debugging and hardware testing alongside the hardware and product teams.',
       evidence: 'professional',
     },
     {

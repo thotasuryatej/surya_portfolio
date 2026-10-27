@@ -213,20 +213,22 @@ button {
 }
 
 /* -------------------------------------------------------------- Sections */
+main {
+  position: relative; /* the signal trace (SignalTrace.tsx) is laid out against <main> */
+}
 .section {
   position: relative;
   padding-block: var(--section-y);
 }
 /* Skip style/layout/paint for off-screen sections; `auto` remembers each real size once rendered (App re-aligns in-page jumps) */
-main > .section:not(:first-child) {
+main > .section:not(:first-of-type) {
   content-visibility: auto;
   contain-intrinsic-size: auto 100svh;
 }
-/* One section per screen: each section fills the viewport, content centred, and the page snaps
-   section to section on tablets and desktops. Phones scroll freely (sections there are taller). */
+/* One section per screen: each section fills the viewport with its content centred on tablets and
+   desktops, and the page scrolls freely. Phones keep natural heights (sections there are taller). */
 @media (min-width: 761px) and (min-height: 560px) {
   html {
-    scroll-snap-type: y mandatory;
     scroll-padding-top: 0;
   }
   main > .section {
@@ -235,19 +237,37 @@ main > .section:not(:first-child) {
     flex-direction: column;
     justify-content: center;
     padding-block: calc(var(--nav-h) + 30px) 28px;
-    scroll-snap-align: start;
   }
   main > .section > .container {
     width: 100%;
   }
   main > .hero {
     min-height: 100svh;
-    scroll-snap-align: start;
   }
-  .footer {
-    scroll-snap-align: end;
+  /* Pinned sections are as tall as their scroll; the sticky stage inside does the framing */
+  main > .section--pinned {
+    display: block;
+    padding-block: 0;
   }
 }
+/* Sticky stage of a pinned, scroll-stepped section (useScrollSteps) */
+.pin-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: var(--nav-h);
+}
+.section--pinned {
+  padding-block: 0;
+}
+.pin-stage .section-head {
+  margin-bottom: clamp(1rem, 4svh, 2.5rem);
+}
+
 /* Word-by-word heading reveal (SectionHead): each word rises from behind its own mask */
 .word-mask {
   display: inline-block;

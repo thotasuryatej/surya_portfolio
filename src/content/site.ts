@@ -11,7 +11,7 @@ export const site: SiteConfig = {
   url: 'https://suryatejpatel.in',
   title: 'Surya Tej — Embedded Software Developer & IoT Engineer',
   description:
-    'Surya Tej is an embedded software developer in Hyderabad building firmware for IoT and smart-home products — ESP32, ESP8266, Nuvoton, RTOS, lighting control and Matter — and exploring what to build next.',
+    'Surya Tej is an embedded software developer in Hyderabad building firmware for IoT and smart-home products — ESP32, ESP8266, Nuvoton, RTOS and Matter — and exploring what to build next.',
   keywords: [
     'Surya Tej',
     'Embedded Software Developer',

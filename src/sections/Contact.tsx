@@ -33,7 +33,7 @@ export function Contact() {
     <section id="contact" className="section contact" aria-labelledby="contact-title">
       <div className="container">
         <Reveal>
-          <Glass className="ct">
+          <Glass className="ct" data-signal-end="">
             <div className="ct-copy">
               <p className="eyebrow">Contact</p>
               <h2 className="h2" id="contact-title">
