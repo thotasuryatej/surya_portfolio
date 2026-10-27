@@ -16,7 +16,7 @@ export function ProjectDialog() {
   const scroller = useRef<HTMLDivElement>(null);
   const project = openSlug ? projectBySlug(openSlug) : undefined;
 
-  // Layout effect: the dialog must be open before a View Transition captures the new state.
+  // Layout effect: the dialog must be open before a prev/next View Transition captures the new state.
   useLayoutEffect(() => {
     const d = ref.current;
     if (!d) return;
@@ -25,6 +25,7 @@ export function ProjectDialog() {
       document.documentElement.classList.add('dialog-open');
     } else if (!project && d.open) {
       d.close();
+      d.removeAttribute('data-closing');
     }
     if (!project) document.documentElement.classList.remove('dialog-open');
   }, [project]);

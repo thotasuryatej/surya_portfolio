@@ -12,6 +12,17 @@
         if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
         document.documentElement.dataset.theme = t;
       })();
+      // A reload starts at the top. The browser's own scroll restoration lands in the wrong place (sections
+      // below the fold only estimate their height until drawn), and a section link left in the URL would
+      // jump there again. A case study link (#project/…) is kept, so its dialog reopens.
+      (function () {
+        try {
+          history.scrollRestoration = 'manual';
+          var nav = performance.getEntriesByType('navigation')[0];
+          if (nav && nav.type === 'reload' && location.hash && location.hash.indexOf('#project/') !== 0)
+            history.replaceState(null, '', location.pathname + location.search);
+        } catch (e) {}
+      })();
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />

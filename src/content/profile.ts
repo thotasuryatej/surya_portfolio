@@ -7,14 +7,14 @@ export const profile: Profile = {
   shortName: 'Surya',
   initials: 'ST',
   headline: 'An engineer who turns ideas into things that work.',
-  roles: ['Embedded Software Developer', 'IoT Engineer', 'Builder', 'Lifelong Learner'],
+  roles: ['Embedded Software Developer', 'IoT Engineer', 'Inventor', 'Lifelong Learner'],
   location: 'Hyderabad, India',
   email: 'thotasuryatej@gmail.com',
   // No phone number here: anything in this file ships in the public JavaScript bundle.
   // To show one in Contact, add phone: '…' and set showPhone: true.
   showPhone: false,
   portrait: {
-    src: '/images/surya-tej-portrait.webp',
+    src: '/images/surya-tej.webp',
     alt: 'Portrait of Surya Tej',
     placeholder: false,
   },

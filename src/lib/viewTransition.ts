@@ -29,11 +29,3 @@ export function viewTransition(update: () => void | Promise<void>, className: st
   return vt;
 }
 
-/** Resolves once `test` passes, checking on a timer (frames are paused while a transition captures). */
-export function until(test: () => boolean, timeout = 600) {
-  return new Promise<void>((resolve) => {
-    const t0 = performance.now();
-    const tick = () => (test() || performance.now() - t0 > timeout ? resolve() : setTimeout(tick, 16));
-    tick();
-  });
-}

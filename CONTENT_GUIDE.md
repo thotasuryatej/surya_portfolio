@@ -83,7 +83,9 @@ it shows a clearly labelled placeholder (never a generated face).
 
 1. Export a real photo as WebP, portrait 4:5, at least 1000 × 1250 px (around 150 KB is plenty).
    Keep your face in the upper-middle; the frame crops the edges slightly.
-2. Save it as `public/images/surya-tej-portrait.webp`, replacing the placeholder.
+2. Save it in `public/images/` under a **new** filename (for example `surya-tej-2.webp`) and update
+   `portrait.src` in `src/content/profile.ts`. Browsers cache images by URL, so reusing the old name
+   can leave visitors seeing the previous picture.
 3. In `src/content/profile.ts`, set `portrait.placeholder` to `false`. The status light then reads "ONLINE".
 4. Run `npm run validate`; the placeholder warning disappears.
 

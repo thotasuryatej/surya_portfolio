@@ -1,40 +1,20 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 import { flushSync } from 'react-dom';
-import { canTransition, until, viewTransition } from '../lib/viewTransition';
+import { viewTransition } from '../lib/viewTransition';
+import { prefersReducedMotion } from '../lib/motion';
 
 /**
  * Case studies open in a dialog with a shareable URL: /#project/<slug>.
  * The browser back button closes the dialog.
  *
- * Where View Transitions are supported, a card's image and title morph into the dialog and back again
- * (names in projects.css); without a visible card the panel simply fades and lifts. Elsewhere, or with reduced
- * motion, the dialog's own CSS entrance plays.
+ * Opening and closing are plain CSS animations on the dialog (projects.css): a View Transition there has to
+ * snapshot the whole page twice, which froze the page for a few hundred ms. Prev/next inside the dialog still
+ * cross-fades with one, as the dialog covers the page by then.
  */
 const PREFIX = '#project/';
 const slugFromHash = () => (location.hash.startsWith(PREFIX) ? decodeURIComponent(location.hash.slice(PREFIX.length)) : null);
-
-const PARTS = [
-  ['.pc-media', 'pj-media'],
-  ['.pc-title', 'pj-title'],
-] as const;
-
-const dialogOpen = () => !!document.querySelector('dialog.dlg[open]');
-
-/** The visible card for a project, or null when it is off-screen (morphing to it would look like a jump). */
-function cardFor(slug: string) {
-  const card = document.querySelector<HTMLElement>(`[data-project-card="${CSS.escape(slug)}"]`);
-  if (!card) return null;
-  const r = card.getBoundingClientRect();
-  return r.bottom > 0 && r.top < innerHeight ? card : null;
-}
-function nameCard(card: HTMLElement | null, on: boolean) {
-  // The open dialog already carries these names; naming the card too would abort the transition.
-  if (on && dialogOpen()) return;
-  PARTS.forEach(([sel, name]) => {
-    const el = card?.querySelector<HTMLElement>(sel);
-    if (el) el.style.viewTransitionName = on ? name : '';
-  });
-}
+/** Matches the dialog's exit animation in projects.css. */
+const EXIT_MS = 220;
 
 interface Ctx {
   openSlug: string | null;
@@ -65,13 +45,8 @@ export function ProjectRouteProvider({ children }: { children: ReactNode }) {
       }
       flushSync(() => setOpenSlug(slug));
     };
-    const card = switching ? null : cardFor(slug);
-    if (!canTransition()) return go();
-    nameCard(card, true);
-    viewTransition(() => {
-      nameCard(card, false);
-      go();
-    }, switching ? 'vt-project-swap' : 'vt-project');
+    if (switching) viewTransition(go, 'vt-project-swap');
+    else go();
   }, []);
 
   const close = useCallback(() => {
@@ -87,18 +62,12 @@ export function ProjectRouteProvider({ children }: { children: ReactNode }) {
         document.getElementById('projects')?.scrollIntoView();
       }
     };
-    const slug = slugFromHash();
-    if (!slug || !canTransition()) return doClose();
-    const card = cardFor(slug);
-    viewTransition(
-      async () => {
-        doClose();
-        await until(() => !dialogOpen());
-        nameCard(card, true);
-      },
-      'vt-project',
-      () => nameCard(card, false),
-    );
+    // Play the exit, then close; ProjectDialog clears the flag once the dialog has closed.
+    const d = document.querySelector<HTMLDialogElement>('dialog.dlg[open]');
+    if (!d || prefersReducedMotion()) return doClose();
+    if (d.hasAttribute('data-closing')) return;
+    d.setAttribute('data-closing', '');
+    window.setTimeout(doClose, EXIT_MS);
   }, []);
 
   return <ProjectRouteContext.Provider value={{ openSlug, open, close }}>{children}</ProjectRouteContext.Provider>;

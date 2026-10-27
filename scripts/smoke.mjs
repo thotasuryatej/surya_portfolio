@@ -68,10 +68,10 @@ const errors = [];
     await labels.first().focus();
     await page.keyboard.press('ArrowRight');
     assert((await labels.nth(1).getAttribute('aria-pressed')) === 'true', 'second habit not pressed');
-    await page.waitForFunction(() => /Research/.test(document.querySelector('.bc-title')?.textContent ?? ''), null, { timeout: 2000 });
+    await page.waitForFunction(() => /Research/.test(document.querySelector('.bc-body > :last-child .bc-title')?.textContent ?? ''), null, { timeout: 2000 });
     await page.keyboard.press('End');
     assert((await labels.last().getAttribute('aria-pressed')) === 'true', 'End did not select last');
-    await page.waitForFunction(() => /Improve/.test(document.querySelector('.bc-title')?.textContent ?? ''), null, { timeout: 2000 });
+    await page.waitForFunction(() => /Improve/.test(document.querySelector('.bc-body > :last-child .bc-title')?.textContent ?? ''), null, { timeout: 2000 });
   });
 
   await check('capability tabs: arrow keys move selection', async () => {

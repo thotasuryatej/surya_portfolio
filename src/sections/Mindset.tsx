@@ -13,7 +13,8 @@ import './mindset.css';
 /*
  * "Builder's Core": an original reactor-style core. Six arc segments are the six build habits; the
  * coil ring inside lights two coils per habit, and the core glows brighter as more habits are lit.
- * On wide screens the section pins and scrolling charges the core one habit at a time.
+ * The section pins and scrolling charges the core one habit at a time. On narrow screens the core also turns
+ * like a dial, bringing the current habit's segment to the top (the labels sit below it there, not around it).
  */
 
 const N = mindset.length;
@@ -36,8 +37,9 @@ const TICKS = Array.from({ length: 72 }, (_, i) => i * 5);
 
 export function Mindset() {
   const still = useReducedMotion();
-  const wide = useMedia('(min-width: 901px) and (min-height: 640px)');
-  const pinned = wide && !still;
+  // Pin wherever the core, its labels and the panel fit on one screen (stacked, on narrow screens)
+  const fits = useMedia('(min-width: 901px) and (min-height: 640px), (max-width: 900px) and (min-height: 600px)');
+  const pinned = fits && !still;
   return (
     <section
       id="mindset"
@@ -53,7 +55,7 @@ export function Mindset() {
 
 const Head = () => <SectionHead id="mindset-title" eyebrow="Mindset" title="How I build" lead={mindsetIntro} />;
 
-/** Narrow screens and reduced motion: pick a habit; the core charges once when it scrolls into view. */
+/** Short screens and reduced motion: pick a habit; the core charges once when it scrolls into view. */
 function Clicked() {
   const reduce = useReducedMotion();
   const stage = useRef<HTMLDivElement>(null);
@@ -72,10 +74,10 @@ function Pinned() {
   return (
     <div ref={outer} style={{ height: `calc(100vh + ${HEIGHT}vh)` }}>
       {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
-      <div className="pin-stage" data-signal-skip="">
+      <div className="pin-stage bc-pin" data-signal-skip="">
         <div className="container">
           <Head />
-          <Core charged active={step} select={goTo} />
+          <Core charged pinned active={step} select={goTo} />
         </div>
       </div>
     </div>
@@ -85,18 +87,19 @@ function Pinned() {
 function Core({
   stage,
   charged,
+  pinned,
   active,
   select,
 }: {
   stage?: RefObject<HTMLDivElement | null>;
   charged: boolean;
+  pinned?: boolean;
   active: number;
   select: (k: number) => void;
 }) {
   const { open } = useProjectRoute();
   const btns = useRef<(HTMLButtonElement | null)[]>([]);
   const step = mindset[active];
-  const project = step.example ? projectBySlug(step.example.project) : undefined;
 
   const onKey = (e: KeyboardEvent) => {
     const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
@@ -111,12 +114,12 @@ function Core({
   };
 
   return (
-    <div className="bc">
+    <div className={pinned ? 'bc bc--pinned' : 'bc'}>
       <div
         className="bc-stage"
         ref={stage}
         data-charged={charged ? '' : undefined}
-        style={{ ['--charge' as string]: charged ? (active + 1) / N : 0 }}
+        style={{ ['--charge' as string]: charged ? (active + 1) / N : 0, ['--turn' as string]: active }}
       >
         <svg className="bc-core" viewBox="-100 -100 200 200" aria-hidden="true">
           <defs>
@@ -137,26 +140,28 @@ function Core({
             ))}
           </g>
           <circle className="bc-ring" r="62.5" />
-          {SEGMENTS.map((d, k) => (
-            <path
-              key={k}
-              d={d}
-              className="bc-seg"
-              data-lit={k <= active ? '' : undefined}
-              data-on={k === active ? '' : undefined}
-              style={{ ['--k' as string]: k }}
-              onClick={() => select(k)}
-            />
-          ))}
-          {COILS.map((d, j) => (
-            <path
-              key={j}
-              d={d}
-              className="bc-coil"
-              data-lit={Math.floor(j / 2) <= active ? '' : undefined}
-              style={{ ['--k' as string]: Math.floor(j / 2) }}
-            />
-          ))}
+          <g className="bc-rotor">
+            {SEGMENTS.map((d, k) => (
+              <path
+                key={k}
+                d={d}
+                className="bc-seg"
+                data-lit={k <= active ? '' : undefined}
+                data-on={k === active ? '' : undefined}
+                style={{ ['--k' as string]: k }}
+                onClick={() => select(k)}
+              />
+            ))}
+            {COILS.map((d, j) => (
+              <path
+                key={j}
+                d={d}
+                className="bc-coil"
+                data-lit={Math.floor(j / 2) <= active ? '' : undefined}
+                style={{ ['--k' as string]: Math.floor(j / 2) }}
+              />
+            ))}
+          </g>
           <circle className="bc-halo" r="44" />
           <circle className="bc-die" r="31" />
           <circle className="bc-die-ring" r="34.5" />
@@ -199,33 +204,35 @@ function Core({
             </button>
           ))}
         </div>
+        {pinned && (
+          <p className="bc-hint mono" aria-hidden="true">
+            Scroll to turn the core
+          </p>
+        )}
       </div>
 
       <Glass variant="strong" className="bc-panel" aria-live="polite">
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.div
-            key={active}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -8 }}
-            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <p className="bc-step mono">
-              Step {active + 1} of {N}
-            </p>
-            <h3 className="bc-title">{step.title}</h3>
-            <p className="bc-text">{step.text}</p>
-            {project && (
-              <p className="bc-seen">
-                <span className="mono">Seen in</span>
-                <button type="button" className="text-link" onClick={() => open(project.slug)}>
-                  {project.title}
-                  <ArrowUpRight size={14} aria-hidden="true" />
-                </button>
-              </p>
-            )}
-          </motion.div>
-        </AnimatePresence>
+        <div className="bc-body">
+          {/* Pinned, every step is laid out unseen in the same cell, so the panel is as tall as the longest
+              one and the core above it keeps its size from step to step */}
+          {pinned &&
+            mindset.map((_, k) => (
+              <div key={k} className="bc-sizer" aria-hidden="true">
+                <StepBody k={k} />
+              </div>
+            ))}
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={active}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <StepBody k={active} open={open} />
+            </motion.div>
+          </AnimatePresence>
+        </div>
         <div className="bc-meter" aria-hidden="true">
           {mindset.map((_, k) => (
             <i key={k} data-lit={k <= active ? '' : undefined} />
@@ -233,5 +240,28 @@ function Core({
         </div>
       </Glass>
     </div>
+  );
+}
+
+function StepBody({ k, open }: { k: number; open?: (slug: string) => void }) {
+  const step = mindset[k];
+  const project = step.example ? projectBySlug(step.example.project) : undefined;
+  return (
+    <>
+      <p className="bc-step mono">
+        Step {k + 1} of {N}
+      </p>
+      <h3 className="bc-title">{step.title}</h3>
+      <p className="bc-text">{step.text}</p>
+      {project && (
+        <p className="bc-seen">
+          <span className="mono">Seen in</span>
+          <button type="button" className="text-link" tabIndex={open ? undefined : -1} onClick={() => open?.(project.slug)}>
+            {project.title}
+            <ArrowUpRight size={14} aria-hidden="true" />
+          </button>
+        </p>
+      )}
+    </>
   );
 }

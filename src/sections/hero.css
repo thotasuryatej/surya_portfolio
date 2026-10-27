@@ -47,6 +47,16 @@
   margin-inline: 10px;
   color: var(--text-4);
 }
+/* Too narrow for one line: the main role gets its own line and the rest start flush beneath it,
+   instead of wrapping wherever they happen to and leaving a separator at the start of a line */
+@media (max-width: 560px) {
+  .hero-eyebrow > span:first-child {
+    flex-basis: 100%;
+  }
+  .hero-eyebrow > span:nth-child(2) > .hero-eyebrow-sep {
+    display: none;
+  }
+}
 
 .hero-title {
   font-size: var(--fs-hero);

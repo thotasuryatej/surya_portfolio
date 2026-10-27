@@ -8,7 +8,8 @@ import { asset } from '../../lib/asset';
  * The portrait as a small display on a board: as it scrolls into view, the screen "boots" —
  * a scan line sweeps down, revealing the photo, then the status LED turns on.
  * Scroll-linked, transform/clip-path only. Reduced motion shows it fully on.
- * To use a real photo: replace public/images/surya-tej-portrait.webp and set `placeholder: false` in profile.ts.
+ * To use a real photo: save it in public/images/ under a new filename (browsers cache
+ * images by URL), point profile.ts at it and set `placeholder: false` in profile.ts.
  */
 export function PortraitBoot({ role }: { role: string }) {
   const ref = useRef<HTMLDivElement>(null);
