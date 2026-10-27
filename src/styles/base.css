@@ -64,6 +64,16 @@ a {
   text-decoration: none;
 }
 
+/* Phones: no 300ms double-tap-zoom delay, and a tap flash in the accent colour instead of the default grey */
+a,
+button,
+[role='tab'],
+input,
+label {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgb(var(--accent-rgb) / 0.12);
+}
+
 button {
   font: inherit;
   color: inherit;
@@ -117,7 +127,7 @@ button {
   width: 100%;
   max-width: calc(var(--maxw) + var(--gutter) * 2);
   margin-inline: auto;
-  padding-inline: var(--gutter);
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
 }
 
 /* ------------------------------------------------------------- Atmosphere */

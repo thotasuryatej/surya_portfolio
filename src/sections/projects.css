@@ -593,6 +593,8 @@ html.vt-project-swap::view-transition-group(pj-title) {
   .dlg-panel {
     --glass-radius: 0px;
     border-radius: 0;
+    /* Full screen on phones: keep the close button and pager clear of the notch and home bar */
+    padding-block: env(safe-area-inset-top, 0px) env(safe-area-inset-bottom, 0px);
   }
   .dlg-pager {
     grid-template-columns: minmax(0, 1fr);

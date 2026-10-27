@@ -1,10 +1,11 @@
 .nav {
   position: fixed;
-  top: 14px;
+  /* viewport-fit=cover (index.html): keep clear of notches and the status bar */
+  top: calc(14px + env(safe-area-inset-top, 0px));
   left: 0;
   right: 0;
   z-index: 50;
-  padding-inline: var(--gutter);
+  padding-inline: max(var(--gutter), env(safe-area-inset-left, 0px)) max(var(--gutter), env(safe-area-inset-right, 0px));
   pointer-events: none;
   transition: translate 320ms var(--ease-out);
 }
