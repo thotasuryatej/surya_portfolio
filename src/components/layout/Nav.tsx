@@ -87,7 +87,7 @@ export function Nav({ items, sectionIds }: { items: NavItem[]; sectionIds: strin
           <ThemeToggle />
           <a className="nav-resume" href={asset(profile.resume.file)} download={profile.resume.downloadName}>
             <Download size={16} aria-hidden="true" />
-            <span>Résumé</span>
+            <span>Resume</span>
           </a>
           <button
             ref={menuBtn}

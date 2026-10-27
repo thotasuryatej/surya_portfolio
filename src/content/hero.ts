@@ -6,7 +6,6 @@ export const hero: HeroContent = {
   accent: 'things that work.',
   lead:
     "I'm Surya Tej, an embedded software developer who builds connected systems, explores emerging technologies, and enjoys bringing ambitious ideas to life — from firmware and IoT to new experiments with AI.",
-  now: 'Currently building a Matter-based IoT hub at PAT IoT Solutions.',
   primaryAction: { label: 'Explore my builds', href: '#projects' },
   secondaryAction: { label: 'About me', href: '#about' },
 

@@ -106,16 +106,14 @@
   }
 }
 
+/* Phones: the two actions stacked at the same full width, so their edges line up */
 @media (max-width: 480px) {
   .hero-actions {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr);
     width: 100%;
   }
-  .hero-actions .btn--primary {
-    grid-column: 1 / -1;
-  }
   .hero-actions .btn {
-    padding-inline: 12px;
+    justify-content: center;
   }
 }
