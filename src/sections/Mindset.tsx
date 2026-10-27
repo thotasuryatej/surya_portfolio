@@ -18,8 +18,10 @@ import './mindset.css';
  */
 
 const N = mindset.length;
-/** Extra scroll the pinned section takes, in vh */
-const HEIGHT = N * 48;
+/** Scroll each pinned step takes, in vh: a full screen on phones, where a swipe travels far, so a habit
+    stays up long enough to read */
+const STEP = 48;
+const STEP_TOUCH = 100;
 
 const pt = (r: number, deg: number) => {
   const a = (deg * Math.PI) / 180;
@@ -37,18 +39,22 @@ const TICKS = Array.from({ length: 72 }, (_, i) => i * 5);
 
 export function Mindset() {
   const still = useReducedMotion();
-  // Pin wherever the core, its labels and the panel fit on one screen (stacked, on narrow screens)
-  const fits = useMedia('(min-width: 901px) and (min-height: 640px), (max-width: 900px) and (min-height: 600px)');
+  // Pin wherever the core, its labels and the panel fit on one screen. Narrow, only on touch screens (stacked,
+  // turned by swipes that snap a step at a time); a narrow desktop window keeps the click version.
+  const fits = useMedia(
+    '(min-width: 901px) and (min-height: 640px), (max-width: 900px) and (min-height: 600px) and (pointer: coarse)',
+  );
   const pinned = fits && !still;
+  const height = N * (useMedia('(max-width: 900px) and (pointer: coarse)') ? STEP_TOUCH : STEP);
   return (
     <section
       id="mindset"
       className={`section${pinned ? ' section--pinned' : ''}`}
       // Pinned, it is several screens tall; say so before it first renders (content-visibility) so jumps land right
-      style={pinned ? { containIntrinsicSize: `auto calc(100vh + ${HEIGHT}vh)` } : undefined}
+      style={pinned ? { containIntrinsicSize: `auto calc(100vh + ${height}vh)` } : undefined}
       aria-labelledby="mindset-title"
     >
-      {pinned ? <Pinned /> : <Clicked />}
+      {pinned ? <Pinned height={height} /> : <Clicked />}
     </section>
   );
 }
@@ -69,14 +75,15 @@ function Clicked() {
   );
 }
 
-function Pinned() {
+/** `height`: the extra scroll the pinned section takes, in vh */
+function Pinned({ height }: { height: number }) {
   const { outer, step, goTo } = useScrollSteps(N);
   return (
-    <div ref={outer} className="bc-outer" style={{ height: `calc(100vh + ${HEIGHT}vh)` }}>
+    <div ref={outer} className="bc-outer" style={{ height: `calc(100vh + ${height}vh)` }}>
       {/* One snap point in the middle of each step's stretch of scroll, where goTo lands too. On phones a
           swipe stops at each of them, so a flick moves one habit instead of flying past two (mindset.css). */}
       {mindset.map((_, k) => (
-        <i key={k} className="bc-snap" style={{ ['--at' as string]: `${(HEIGHT * (k + 0.5)) / N}vh` }} aria-hidden="true" />
+        <i key={k} className="bc-snap" style={{ ['--at' as string]: `${(height * (k + 0.5)) / N}vh` }} aria-hidden="true" />
       ))}
       {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
       <div className="pin-stage bc-pin" data-signal-skip="">

@@ -431,7 +431,7 @@
 }
 
 /* Snap points for the pinned steps (see Mindset.tsx). Each sits where the page is scrolled to for its
-   step, plus the scroll padding that snapping aligns it below. Only phones and tablets snap: there a
+   step, plus the scroll padding that snapping aligns it below. Only narrow touch screens snap: there a
    swipe travels far enough to skip a step, while a mouse wheel moves a step or less. */
 .bc-outer {
   position: relative;
@@ -444,7 +444,7 @@
   height: 1px;
   pointer-events: none;
 }
-@media (max-width: 900px) {
+@media (max-width: 900px) and (pointer: coarse) {
   html:has(.bc-snap) {
     scroll-snap-type: y proximity;
   }
