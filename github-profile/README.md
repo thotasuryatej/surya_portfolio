@@ -38,6 +38,4 @@ working after the demo ends.
 
 ### Contact
 
-[LinkedIn](https://www.linkedin.com/in/thota-suryatej/) · [thotasuryatej@gmail.com](mailto:thotasuryatej@gmail.com)
-
-<!-- Add your portfolio link here once the site is deployed: · [Portfolio](https://YOUR-DOMAIN) -->
+[Portfolio](https://thotasuryatej.github.io/surya_portfolio/) · [LinkedIn](https://www.linkedin.com/in/thota-suryatej/) · [thotasuryatej@gmail.com](mailto:thotasuryatej@gmail.com)

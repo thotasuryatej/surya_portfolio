@@ -1,6 +1,6 @@
 # Modeling and Enhancing IoT Traffic Management in Wi-Fi Networks
 
-B.Tech major project (Batch 13) — modelling how IoT traffic behaves on Wi-Fi networks with the **NS-3** network
+B.Tech major project (Batch 13): modelling how IoT traffic behaves on Wi-Fi networks with the **NS-3** network
 simulator, and evaluating ways to keep it fair and responsive. This repository holds the project's presentation
 website (`index.html`, `styles.css`, `script.js`) and screenshots of the simulation output.
 
@@ -14,7 +14,8 @@ website (`index.html`, `styles.css`, `script.js`) and screenshots of the simulat
 
 ## Simulation
 
-**Topology.** The NS-3 script creates a mixed network of CSMA nodes and Wi-Fi stations:
+**Topology.** The NS-3 script creates a mixed network of CSMA nodes and Wi-Fi stations, configured from the command
+line:
 
 | Parameter | Meaning |
 | --- | --- |
@@ -37,4 +38,4 @@ Open `index.html` in a browser, or enable GitHub Pages for this repository (Sett
 
 ## Tools
 
-NS-3 · NetAnim · HTML · CSS · JavaScript
+NS-3 · HTML · CSS · JavaScript

@@ -1,7 +1,7 @@
 # Patel's Dhaba — Restaurant Website
 
-A small static website for Patel's Dhaba in Erragadda, Hyderabad: a welcome page with a link to the menu, and a menu
-page showing the menu cards.
+A small static website for a local restaurant, Patel's Dhaba, built as a personal side project: a welcome page that
+links to the menu and the restaurant's Instagram, and a menu page showing the menu cards.
 
 ## Contents
 
