@@ -177,3 +177,17 @@
     opacity: 0.16;
   }
 }
+
+/* Phones: the portrait and its caption sit on the centre line */
+@media (max-width: 700px) {
+  .about-portrait .pb {
+    margin-inline: auto;
+  }
+  .about-portrait .pb-cap {
+    justify-items: center;
+    text-align: center;
+    padding: 12px 0 0;
+    border-left: 0;
+    border-top: 1px solid rgb(var(--accent-rgb) / 0.5);
+  }
+}

@@ -539,11 +539,23 @@
   pointer-events: none;
 }
 @media (max-width: 900px) and (pointer: coarse) {
-  html:has(.bc-snap) {
-    scroll-snap-type: y proximity;
+  /* Mandatory only while pinned (Mindset.tsx sets the class): a flick can't sail past a habit */
+  html.bc-snapping {
+    scroll-snap-type: y mandatory;
   }
   .bc-snap {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }
+  /* The ends let the page go on: a swipe may pass them once it is past the last habit */
+  .bc-snap--end {
+    scroll-snap-stop: normal;
+  }
+}
+/* Phones: the head and intro scroll in before the core pins (Mindset.tsx) */
+.bc-intro {
+  padding-top: var(--section-y);
+}
+.bc-intro .section-head {
+  margin-bottom: 0;
 }

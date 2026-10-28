@@ -1,4 +1,4 @@
-import { useRef, useState, type KeyboardEvent, type RefObject } from 'react';
+import { useEffect, useRef, useState, type KeyboardEvent, type RefObject } from 'react';
 import { AnimatePresence, motion, useInView, useReducedMotion } from 'motion/react';
 import { ArrowUpRight } from 'lucide-react';
 import { mindset, mindsetIntro, projectBySlug } from '../content';
@@ -59,7 +59,8 @@ export function Mindset() {
   const section = useRef<HTMLElement>(null);
   const past = useScrolledPast(section);
   const pinned = fits && !still && !past;
-  const height = N * (useMedia('(max-width: 900px) and (pointer: coarse)') ? STEP_TOUCH : STEP);
+  const touch = useMedia('(max-width: 900px) and (pointer: coarse)');
+  const height = N * (touch ? STEP_TOUCH : STEP);
   return (
     <section
       id="mindset"
@@ -69,7 +70,7 @@ export function Mindset() {
       style={pinned ? { containIntrinsicSize: `auto calc(100vh + ${height}vh)` } : undefined}
       aria-labelledby="mindset-title"
     >
-      {pinned ? <Pinned height={height} /> : <Clicked from={past ? N - 1 : 0} />}
+      {pinned ? <Pinned height={height} touch={touch} /> : <Clicked from={past ? N - 1 : 0} />}
     </section>
   );
 }
@@ -91,24 +92,52 @@ function Clicked({ from }: { from: number }) {
   );
 }
 
-/** `height`: the extra scroll the pinned section takes, in vh */
-function Pinned({ height }: { height: number }) {
+/** `height`: the extra scroll the pinned section takes, in vh. `touch`: a phone, where swipes snap. */
+function Pinned({ height, touch }: { height: number; touch: boolean }) {
   const { outer, step, goTo } = useScrollSteps(N);
+  // While the core is pinned on a phone, snapping is mandatory, so even a hard flick stops at the next habit.
+  // It is off at the pin's two ends (snap points too), so the page scrolls freely on either side.
+  useEffect(() => {
+    const el = outer.current;
+    if (!touch || !el) return;
+    const root = document.documentElement;
+    const check = () => {
+      const top = el.getBoundingClientRect().top;
+      const end = el.offsetHeight - innerHeight;
+      root.classList.toggle('bc-snapping', top < -2 && -top < end - 2);
+    };
+    check();
+    addEventListener('scroll', check, { passive: true });
+    return () => {
+      removeEventListener('scroll', check);
+      root.classList.remove('bc-snapping');
+    };
+  }, [outer, touch]);
   return (
+    <>
+      {/* On phones the head and its full intro scroll in above the pin; pinned, there is only room for the core */}
+      {touch && (
+        <div className="container bc-intro">
+          <Head />
+        </div>
+      )}
     <div ref={outer} className="bc-outer" style={{ height: `calc(100vh + ${height}vh)` }}>
-      {/* One snap point in the middle of each step's stretch of scroll, where goTo lands too. On phones a
-          swipe stops at each of them, so a flick moves one habit instead of flying past two (mindset.css). */}
+      {/* One snap point in the middle of each step's stretch of scroll, where goTo lands too, and one at each
+          end of the pin. On phones a swipe stops at each of them, so a flick moves one habit (mindset.css). */}
       {mindset.map((_, k) => (
         <i key={k} className="bc-snap" style={{ ['--at' as string]: `${(height * (k + 0.5)) / N}vh` }} aria-hidden="true" />
       ))}
+      <i className="bc-snap bc-snap--end" style={{ ['--at' as string]: '0vh' }} aria-hidden="true" />
+      <i className="bc-snap bc-snap--end" style={{ ['--at' as string]: `${height}vh` }} aria-hidden="true" />
       {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
       <div className="pin-stage bc-pin" data-signal-skip="">
         <div className="container">
-          <Head />
+          {!touch && <Head />}
           <Core charged pinned active={step} select={goTo} />
         </div>
       </div>
     </div>
+    </>
   );
 }
 

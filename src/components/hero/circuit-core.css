@@ -227,13 +227,24 @@
   }
 }
 
-/* Scan beam: a wedge of arc-blue light sweeping the board, kept off the chip's lens */
+/* Scan beam: a wedge of arc-blue light sweeping the board, kept off the chip's lens. The frame stays
+   still and clips; only the light inside it turns, so a spinning square's corners never widen the page. */
 .core-scan {
   --period: 9s;
   position: absolute;
   inset: 2.7%;
   border-radius: 50%;
+  overflow: hidden;
   pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle, transparent 42%, #000 44%, #000 98%, transparent 100%);
+  mask-image: radial-gradient(circle, transparent 42%, #000 44%, #000 98%, transparent 100%);
+  opacity: 0;
+  animation: scan-in 1s var(--ease-out) 2.2s forwards;
+}
+.core-scan::before {
+  content: '';
+  position: absolute;
+  inset: 0;
   background: conic-gradient(
     from 0deg,
     transparent 0deg 290deg,
@@ -241,12 +252,7 @@
     rgb(var(--reactor-rgb) / calc(0.2 * var(--glow) + 0.04)) 357deg,
     rgb(var(--reactor-rgb) / 0.6) 360deg
   );
-  -webkit-mask-image: radial-gradient(circle, transparent 42%, #000 44%, #000 98%, transparent 100%);
-  mask-image: radial-gradient(circle, transparent 42%, #000 44%, #000 98%, transparent 100%);
-  opacity: 0;
-  animation:
-    scan-in 1s var(--ease-out) 2.2s forwards,
-    spin var(--period) linear 2.2s infinite;
+  animation: spin var(--period) linear 2.2s infinite;
 }
 @keyframes scan-in {
   to {

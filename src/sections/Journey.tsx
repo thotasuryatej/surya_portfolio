@@ -9,7 +9,10 @@ import { asset } from '../lib/asset';
 import { useScrolledPast } from '../hooks/useScrolledPast';
 import './journey.css';
 
-const WIDE = '(min-width: 900px)';
+/** Where the section pins and scrolls sideways: wide screens, and phones tall enough for the board */
+const WIDE = '(min-width: 900px), (pointer: coarse) and (min-height: 600px)';
+/** On phones a swipe travels far; the board takes more scroll per stop, so it moves at a readable pace */
+const TOUCH = '(max-width: 899px) and (pointer: coarse)';
 
 /** The phase that starts at stop i, with how many stops it spans; undefined mid-phase. */
 const phaseAt = (i: number) => {
@@ -20,9 +23,9 @@ const phaseAt = (i: number) => {
 };
 
 /**
- * Journey: a PCB trace from 2021 to now. On wide screens the section pins and scrolling moves the
- * board sideways; each milestone "powers on" as the current reaches it. On narrow screens, with reduced
- * motion, and once scrolled past, the same board is a strip you swipe or scroll sideways.
+ * Journey: a PCB trace from 2021 to now. On wide screens and phones the section pins and scrolling moves
+ * the board sideways; each milestone "powers on" as the current reaches it. On short or narrow desktop
+ * windows, with reduced motion, and once scrolled past, the same board is a strip you swipe or scroll sideways.
  */
 export function Journey() {
   const still = useReducedMotion();
@@ -62,6 +65,7 @@ function Pinned() {
   const track = useRef<HTMLOListElement>(null);
   const [dist, setDist] = useState(0);
   const [lit, setLit] = useState(0);
+  const slow = typeof matchMedia === 'function' && matchMedia(TOUCH).matches ? 1.5 : 1;
 
   useLayoutEffect(() => {
     const r = rail.current;
@@ -86,7 +90,7 @@ function Pinned() {
   useMotionValueEvent(smooth, 'change', (p) => setLit(Math.round(p * (journey.length - 1))));
 
   return (
-    <div ref={outer} className="jr-outer" style={{ height: `calc(100vh + ${dist}px)` }}>
+    <div ref={outer} className="jr-outer" style={{ height: `calc(100vh + ${dist * slow}px)` }}>
       {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
       <div className="jr-pin" data-signal-skip="">
         <div className="container">

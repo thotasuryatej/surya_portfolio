@@ -203,3 +203,44 @@
     justify-content: center;
   }
 }
+
+/* Wider than a phone: the name on one line, scaled to fit its column (the copy column is a size container) */
+@media (min-width: 701px) {
+  .hero-copy {
+    container-type: inline-size;
+  }
+  .hero-name {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.2em;
+    font-size: min(var(--fs-display), 23cqi);
+    white-space: nowrap;
+  }
+  .hero-name-line + .hero-name-line {
+    padding-left: 0;
+  }
+}
+
+/* Phones: one centred column. The name's two lines stack on the centre line instead of stepping in */
+@media (max-width: 700px) {
+  .hero-copy {
+    justify-items: center;
+    text-align: center;
+  }
+  .hero-name {
+    justify-items: center;
+    margin-inline: 0;
+  }
+  .hero-name-line + .hero-name-line {
+    padding-left: 0;
+  }
+  .hero-role {
+    justify-content: center;
+  }
+  .hero-tagline {
+    padding-right: 0;
+  }
+  .hero-actions {
+    justify-content: center;
+  }
+}
