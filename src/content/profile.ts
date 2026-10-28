@@ -15,6 +15,7 @@ export const profile: Profile = {
   showPhone: false,
   portrait: {
     src: '/images/surya-tej.webp',
+    srcDark: '/images/surya-tej-dark.webp',
     alt: 'Portrait of Surya Tej',
     placeholder: false,
   },

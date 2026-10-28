@@ -10,6 +10,8 @@ import { asset } from '../../lib/asset';
  * Scroll-linked, transform/clip-path only. Reduced motion shows it fully on.
  * To use a real photo: save it in public/images/ under a new filename (browsers cache
  * images by URL), point profile.ts at it and set `placeholder: false` in profile.ts.
+ * With `srcDark` set, the dark theme shows that photo instead; CSS picks one by the theme, and a lazy image
+ * that isn't displayed isn't downloaded.
  */
 export function PortraitBoot({ role }: { role: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -33,15 +35,19 @@ export function PortraitBoot({ role }: { role: string }) {
             <span className="mono">BOOTING…</span>
           </span>
           <motion.div className="pb-img" style={still ? undefined : { clipPath: clip }}>
-            <motion.img
-              src={asset(p.src)}
-              alt={p.alt}
-              width={1000}
-              height={1250}
-              loading="lazy"
-              decoding="async"
-              style={still ? undefined : { scale }}
-            />
+            {(p.srcDark ? [p.src, p.srcDark] : [p.src]).map((src, i) => (
+              <motion.img
+                key={src}
+                className={p.srcDark ? (i ? 'pb-photo-dark' : 'pb-photo-light') : undefined}
+                src={asset(src)}
+                alt={p.alt}
+                width={1000}
+                height={1250}
+                loading="lazy"
+                decoding="async"
+                style={still ? undefined : { scale }}
+              />
+            ))}
           </motion.div>
           {!still && <motion.span className="pb-scan" aria-hidden="true" style={{ top: scanY, opacity: scanO }} />}
         </div>

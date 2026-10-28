@@ -66,7 +66,8 @@ export interface Profile {
    * Portrait shown in the hero → About transition. Set `placeholder: false` once `src` is a real photo
    * (portrait orientation, about 4:5, at least 1000px tall). See CONTENT_GUIDE.md.
    */
-  portrait?: { src: string; alt: string; placeholder: boolean };
+  /** `srcDark`: optional photo shown in the dark theme instead of `src` */
+  portrait?: { src: string; srcDark?: string; alt: string; placeholder: boolean };
   socials: SocialLink[];
   resume: {
     /** Path in /public. Replace the file and keep the name, or update this path. */

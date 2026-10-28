@@ -88,6 +88,8 @@ it shows a clearly labelled placeholder (never a generated face).
    can leave visitors seeing the previous picture.
 3. In `src/content/profile.ts`, set `portrait.placeholder` to `false`. The status light then reads "ONLINE".
 4. Run `npm run validate`; the placeholder warning disappears.
+5. Optional: a second photo for the dark theme. Save it the same way and set `portrait.srcDark`;
+   the light theme keeps `portrait.src`. Leave `srcDark` out to use one photo in both themes.
 
 ## Update your résumé
 

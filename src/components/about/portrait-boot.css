@@ -63,6 +63,10 @@
   display: block;
   transform-origin: 50% 30%;
 }
+[data-theme='dark'] .pb-photo-light,
+[data-theme='light'] .pb-photo-dark {
+  display: none;
+}
 .pb-scan {
   position: absolute;
   left: 0;
