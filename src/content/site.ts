@@ -24,8 +24,8 @@ export const site: SiteConfig = {
     'Hyderabad',
   ],
   ogImage: '/og-image.png',
-  themeColor: '#05070b',
-  themeColorLight: '#f3f6fa',
+  themeColor: '#0b0a09',
+  themeColorLight: '#f4f3ef',
 
   // Order here = order on the page. `nav` controls the navigation bar.
   // To add a new section: create the component, register it in

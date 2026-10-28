@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="color-scheme" content="dark light" />
     <script>
-      // Apply the saved or system theme before first paint (no flash). Kept in sync with ThemeToggle.tsx.
+      // Apply the saved theme before first paint (no flash). Dark is the primary presentation; light is the
+      // visitor's choice from the toggle. Kept in sync with src/lib/theme.ts.
       (function () {
         var t;
         try { t = localStorage.getItem('theme'); } catch (e) {}
-        if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        if (t !== 'light' && t !== 'dark') t = 'dark';
         document.documentElement.dataset.theme = t;
       })();
       // A reload starts at the top. The browser's own scroll restoration lands in the wrong place (sections
@@ -31,7 +32,7 @@
   <body>
     <div id="root"></div>
     <noscript>
-      <div style="max-width:40rem;margin:4rem auto;padding:0 1rem;font-family:system-ui,sans-serif;color:#e8eef6;background:#05070b">
+      <div style="max-width:40rem;margin:4rem auto;padding:0 1rem;font-family:system-ui,sans-serif;color:#eee8de;background:#0b0a09">
         <h1>Surya Tej — Embedded Software Developer &amp; IoT Engineer</h1>
         <p>This site needs JavaScript for its interactive parts. You can still
           <a style="color:#7fe3ff" href="resume/Surya-Tej-Resume.pdf">download my resume</a> or

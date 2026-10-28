@@ -15,6 +15,8 @@
   gap: 8px;
 }
 .xp-tab {
+  position: relative;
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -64,15 +66,85 @@
 }
 .xp-tab[aria-selected='true'] {
   border-color: rgb(var(--accent-rgb) / 0.55);
-  background: rgb(var(--accent-rgb) / 0.08);
   color: var(--text-2);
+}
+/* The lit plate behind the chosen job; it slides across when you pick the other one */
+.xp-tab-on {
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(80% 120% at 0% 0%, rgb(var(--accent-rgb) / 0.16), transparent 70%), rgb(var(--accent-rgb) / 0.05);
+  box-shadow: 0 10px 30px -18px rgb(var(--accent-rgb) / calc(0.9 * var(--glow)));
 }
 .xp-tab[aria-selected='true'] strong {
   color: var(--text-hi);
 }
 .job {
   position: relative;
+  isolation: isolate;
+  overflow: hidden;
   padding: clamp(16px, 0.8rem + 0.8vw, 22px);
+}
+/* A warm key light from the top left, the same lamp as the What I Build panel */
+.job::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(70% 55% at 0% 0%, rgb(var(--accent-rgb) / calc(0.09 * var(--glow))), transparent 70%);
+}
+.job-year {
+  position: absolute;
+  right: -0.03em;
+  bottom: -0.22em;
+  z-index: -1;
+  font-size: clamp(6rem, 4rem + 6vw, 10rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.06em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgb(var(--accent-rgb) / 0.11);
+  pointer-events: none;
+  user-select: none;
+}
+/* Switching jobs: the card's rows rise in one after another */
+.job > :not(.job-year) {
+  animation: job-in 0.55s var(--ease-out) both;
+}
+.job > :nth-child(3) {
+  animation-delay: 0.05s;
+}
+.job > :nth-child(4) {
+  animation-delay: 0.1s;
+}
+.job > :nth-child(n + 5) {
+  animation-delay: 0.15s;
+}
+.job-year {
+  animation: job-year-in 0.9s var(--ease-out) both;
+}
+@keyframes job-in {
+  from {
+    opacity: 0;
+    translate: 0 10px;
+  }
+}
+@keyframes job-year-in {
+  from {
+    opacity: 0;
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .job > *,
+  .job-year {
+    animation: none;
+  }
 }
 .job-head {
   display: flex;
@@ -207,6 +279,8 @@
   margin: 0;
 }
 .ach-item {
+  position: relative;
+  overflow: hidden;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -214,6 +288,23 @@
   border-radius: var(--r-md);
   border: 1px solid var(--line);
   background: rgb(var(--raised-rgb) / 0.5);
+}
+/* A lit edge in the item's colour */
+.ach-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 18%;
+  bottom: 18%;
+  width: 2px;
+  border-radius: 2px;
+  background: var(--violet);
+  box-shadow: 0 0 calc(10px * var(--glow)) rgb(var(--violet-rgb) / 0.7);
+}
+.ach-item--award::before,
+.ach-item--selection::before {
+  background: var(--amber);
+  box-shadow: 0 0 calc(10px * var(--glow)) rgb(var(--amber-rgb) / 0.7);
 }
 .ach-item--award .ach-icon,
 .ach-item--selection .ach-icon {

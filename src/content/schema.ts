@@ -108,6 +108,8 @@ export interface HeroContent {
 export interface AboutContent {
   title: string;
   intro: string[];
+  /** Optional one-line statement shown large under the About grid; its words light up as it scrolls into view. */
+  statement?: string;
   more: string[];
   /** "At a glance" tiles: a few words each, so a visitor can scan them instead of reading. */
   glance: { icon: string; label: string; items: string[] }[];
@@ -165,7 +167,7 @@ export interface Capability {
 
 /* ----------------------------------------------------------------- Projects */
 
-export const projectStatuses = ['In progress', 'Deployed', 'Completed', 'Prototype', 'Research', 'Academic', 'Concept'] as const;
+export const projectStatuses = ['In progress', 'Deployed', 'Completed', 'Prototype', 'Research', 'Academic', 'Passion project', 'Concept'] as const;
 export type ProjectStatus = (typeof projectStatuses)[number];
 
 export interface CaseStudySection {

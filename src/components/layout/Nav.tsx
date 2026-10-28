@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { ease, spring } from '../../lib/motion';
-import { Download, Menu, X } from 'lucide-react';
+import { AnimatePresence, motion, type Variants } from 'motion/react';
+import { ease } from '../../lib/motion';
+import { Download, Mail, Plus } from 'lucide-react';
 import { profile } from '../../content';
 import { ThemeToggle } from './ThemeToggle';
+import { Monogram } from '../brand/Monogram';
+import { BrandIcon } from '../ui/BrandIcon';
 import { useActiveSection } from '../../hooks/useActiveSection';
-import { usePointerLight } from '../../hooks/usePointerLight';
 import './nav.css';
 import { asset } from '../../lib/asset';
 
@@ -14,74 +15,70 @@ export interface NavItem {
   label: string;
 }
 
+const list: Variants = { show: { transition: { staggerChildren: 0.045, delayChildren: 0.12 } } };
+const row: Variants = {
+  hide: { opacity: 0, x: 28 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.5, ease: ease.out } },
+};
+
+/**
+ * The top bar is just the mark and three controls; the sections live in one menu, the same on every screen size:
+ * a panel from the right edge with large links numbered like the section chapters, over a dimmed page.
+ * Escape, the scrim or any link closes it, and focus returns to the Menu button.
+ */
 export function Nav({ items, sectionIds }: { items: NavItem[]; sectionIds: string[] }) {
   const active = useActiveSection(sectionIds);
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
-  const bar = useRef<HTMLDivElement>(null);
   const menuBtn = useRef<HTMLButtonElement>(null);
-  usePointerLight(bar);
+  const panel = useRef<HTMLElement>(null);
 
-  // Hide while scrolling down, come back on any scroll up (and always near the top).
+  // Always on screen; once the page scrolls under it, the controls sit on small plates (nav.css).
   useEffect(() => {
-    let last = window.scrollY;
-    const on = () => {
-      const y = window.scrollY;
-      setScrolled(y > 24);
-      if (Math.abs(y - last) < 6) return;
-      setHidden(y > last && y > 120);
-      last = y;
-    };
+    const on = () => setScrolled(window.scrollY > 24);
     on();
     window.addEventListener('scroll', on, { passive: true });
     return () => window.removeEventListener('scroll', on);
   }, []);
 
-  // Close the mobile menu on Escape and when the viewport grows.
+  // While open: focus the first link, keep Tab inside the panel, close on Escape.
   useEffect(() => {
     if (!open) return;
+    const focusables = () => [...(panel.current?.querySelectorAll<HTMLElement>('a[href], button') ?? [])];
+    focusables()[0]?.focus({ preventScroll: true });
     const key = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setOpen(false);
         menuBtn.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const f = [menuBtn.current!, ...focusables()];
+      const i = f.indexOf(document.activeElement as HTMLElement);
+      if (e.shiftKey && i <= 0) {
+        e.preventDefault();
+        f[f.length - 1].focus();
+      } else if (!e.shiftKey && i === f.length - 1) {
+        e.preventDefault();
+        f[0].focus();
       }
     };
-    const mq = matchMedia('(min-width: 961px)');
-    const resize = () => mq.matches && setOpen(false);
     window.addEventListener('keydown', key);
-    mq.addEventListener('change', resize);
-    return () => {
-      window.removeEventListener('keydown', key);
-      mq.removeEventListener('change', resize);
-    };
+    return () => window.removeEventListener('keydown', key);
   }, [open]);
 
-  // "Mindset" isn't in the nav; highlight its neighbour so the nav never goes blank.
+  // "Mindset" isn't in the menu; mark its neighbour so the menu always shows where you are.
   const navIds = items.map((i) => i.id);
-  const current = navIds.includes(active) ? active : navIds[Math.max(0, sectionIds.indexOf(active) - 1)] ?? active;
+  const current = navIds.includes(active) ? active : (navIds[Math.max(0, sectionIds.indexOf(active) - 1)] ?? active);
+  const close = () => setOpen(false);
 
   return (
-    <header className={`nav${scrolled ? ' is-scrolled' : ''}${hidden && !open ? ' is-hidden' : ''}`} onFocus={() => setHidden(false)}>
-      <div ref={bar} className="nav-bar glass glass--strong glass--pill">
-        <a href="#home" className="nav-mark" aria-label={`${profile.fullName} — back to top`} onClick={() => setOpen(false)}>
-          <span className="nav-name">{profile.fullName}</span>
+    <header
+      className={`nav${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`}>
+      <div className="nav-bar">
+        <a href="#home" className="nav-mark" aria-label={`${profile.fullName} — back to top`} onClick={close}>
+          <Monogram size={30} />
         </a>
-
-        <nav aria-label="Main" className="nav-links">
-          <ul role="list">
-            {items.map((item) => (
-              <li key={item.id}>
-                <a href={`#${item.id}`} className="nav-link" aria-current={current === item.id ? 'location' : undefined}>
-                  {current === item.id && (
-                    <motion.span layoutId="nav-pill" className="nav-pill" transition={spring.snappy} />
-                  )}
-                  <span className="nav-link-text">{item.label}</span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
 
         <div className="nav-end">
           <ThemeToggle />
@@ -92,43 +89,79 @@ export function Nav({ items, sectionIds }: { items: NavItem[]; sectionIds: strin
           <button
             ref={menuBtn}
             type="button"
-            className="icon-btn nav-menu-btn"
+            className="nav-menu-btn"
             aria-expanded={open}
-            aria-controls="mobile-menu"
-            aria-label={open ? 'Close menu' : 'Open menu'}
+            aria-controls="site-menu"
             onClick={() => setOpen((o) => !o)}
           >
-            {open ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
+            <span className="nav-menu-label">{open ? 'Close' : 'Menu'}</span>
+            <Plus size={16} aria-hidden="true" className="nav-menu-icon" />
           </button>
         </div>
       </div>
 
       <AnimatePresence>
         {open && (
+          <motion.div
+            key="scrim"
+            className="nav-scrim"
+            aria-hidden="true"
+            onClick={close}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          />
+        )}
+        {open && (
           <motion.nav
-            id="mobile-menu"
-            aria-label="Mobile"
-            className="nav-sheet glass glass--strong"
-            initial={{ opacity: 0, y: -10, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: ease.out }}
+            key="panel"
+            ref={panel}
+            id="site-menu"
+            aria-label="Sections"
+            className="nav-panel"
+            initial={{ x: '100%' }}
+            animate={{ x: 0 }}
+            exit={{ x: '100%' }}
+            transition={{ duration: 0.5, ease: ease.inOut }}
           >
-            <ul role="list">
-              {items.map((item, i) => (
-                <li key={item.id}>
+            <p className="nav-panel-label mono">Index</p>
+            <motion.ul role="list" className="nav-panel-list" variants={list} initial="hide" animate="show">
+              {items.map((item) => (
+                <motion.li key={item.id} variants={row}>
                   <a
                     href={`#${item.id}`}
-                    className="nav-sheet-link"
+                    className="nav-panel-link"
                     aria-current={current === item.id ? 'location' : undefined}
-                    onClick={() => setOpen(false)}
+                    onClick={close}
                   >
-                    <span className="mono">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="nav-panel-num mono" aria-hidden="true">
+                      {String(sectionIds.indexOf(item.id)).padStart(2, '0')}
+                    </span>
                     {item.label}
                   </a>
-                </li>
+                </motion.li>
               ))}
-            </ul>
+            </motion.ul>
+
+            <div className="nav-panel-foot">
+              <p className="nav-panel-label mono">Get in touch</p>
+              <a className="nav-panel-mail" href={`mailto:${profile.email}`}>
+                <Mail size={16} aria-hidden="true" />
+                {profile.email}
+              </a>
+              <ul role="list" className="nav-panel-socials">
+                {profile.socials.map((s) => (
+                  <li key={s.href}>
+                    <a href={s.href} target="_blank" rel="noopener noreferrer">
+                      <BrandIcon icon={s.icon} />
+                      {s.label}
+                      <span className="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </motion.nav>
         )}
       </AnimatePresence>

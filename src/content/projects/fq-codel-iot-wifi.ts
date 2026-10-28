@@ -10,7 +10,7 @@ export default defineProject({
   period: { start: '2025-04' },
   role: 'Designed and implemented the simulation and analysis',
   technologies: ['NS-3', 'NetAnim', 'FQ-CoDel', 'Queue management', 'Wi-Fi'],
-  order: 3,
+  order: 5,
   visual: 'queue',
   diagram: 'fq-codel',
   overview: [

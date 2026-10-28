@@ -2,11 +2,13 @@ import { useEffect } from 'react';
 import { MotionConfig } from 'motion/react';
 import { Nav } from './components/layout/Nav';
 import { Footer } from './components/layout/Footer';
+import { Intro } from './components/layout/Intro';
 import { ProjectDialog } from './components/projects/ProjectDialog';
 import { VisualDefs } from './components/visuals/ProjectVisual';
 import { SignalTrace } from './components/visuals/SignalTrace';
 import { ProjectRouteProvider } from './hooks/useProjectRoute';
 import { sectionComponents, visibleSections } from './sections/registry';
+import { ChapterContext } from './lib/chapter';
 
 const navItems = visibleSections.filter((s) => s.nav).map(({ id, label }) => ({ id, label }));
 const sectionIds = visibleSections.map((s) => s.id);
@@ -64,12 +66,17 @@ export default function App() {
           <i className="aura aura--3" />
         </div>
         <VisualDefs />
+        <Intro />
         <Nav items={navItems} sectionIds={sectionIds} />
         <main id="main" tabIndex={-1}>
           <SignalTrace />
-          {visibleSections.map((s) => {
+          {visibleSections.map((s, i) => {
             const Section = sectionComponents[s.id];
-            return <Section key={s.id} />;
+            return (
+              <ChapterContext.Provider key={s.id} value={i}>
+                <Section />
+              </ChapterContext.Provider>
+            );
           })}
         </main>
         <Footer />

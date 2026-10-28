@@ -1,11 +1,12 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { journey, journeyPhases, milestoneDate, projectBySlug } from '../content';
 import { SectionHead } from '../components/ui/Reveal';
 import { Icon } from '../components/ui/Icon';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { asset } from '../lib/asset';
+import { useScrolledPast } from '../hooks/useScrolledPast';
 import './journey.css';
 
 const WIDE = '(min-width: 900px)';
@@ -20,8 +21,8 @@ const phaseAt = (i: number) => {
 
 /**
  * Journey: a PCB trace from 2021 to now. On wide screens the section pins and scrolling moves the
- * board sideways; each milestone "powers on" as the current reaches it. On narrow screens (and with
- * reduced motion) it is a plain vertical timeline whose trace fills as you scroll.
+ * board sideways; each milestone "powers on" as the current reaches it. On narrow screens, with reduced
+ * motion, and once scrolled past, the same board is a strip you swipe or scroll sideways.
  */
 export function Journey() {
   const still = useReducedMotion();
@@ -32,11 +33,14 @@ export function Journey() {
     mq.addEventListener('change', on);
     return () => mq.removeEventListener('change', on);
   }, []);
-  const pinned = wide && !still;
+  // Once scrolled past, it stays the sideways strip: coming back up doesn't replay the whole ride
+  const section = useRef<HTMLElement>(null);
+  const past = useScrolledPast(section);
+  const pinned = wide && !still && !past;
 
   return (
-    <section id="journey" className={`section jr${pinned ? ' section--pinned jr--pinned' : ''}`} aria-labelledby="journey-title">
-      {pinned ? <Pinned /> : <Stacked />}
+    <section id="journey" ref={section} className={`section jr${pinned ? ' section--pinned jr--pinned' : ''}`} aria-labelledby="journey-title">
+      {pinned ? <Pinned /> : <Swipe />}
     </section>
   );
 }
@@ -114,40 +118,62 @@ function Pinned() {
   );
 }
 
-function Stacked() {
-  const list = useRef<HTMLOListElement>(null);
-  const { scrollYProgress } = useScroll({ target: list, offset: ['start 0.8', 'end 0.6'] });
+/** Narrow screens, reduced motion, and the way back up: the same board as a strip you swipe or scroll sideways. */
+function Swipe() {
+  const still = useReducedMotion();
+  const rail = useRef<HTMLDivElement>(null);
+  const { scrollXProgress } = useScroll({ container: rail });
+  const [lit, setLit] = useState(0);
+  const [ends, setEnds] = useState({ start: true, end: false });
+  useMotionValueEvent(scrollXProgress, 'change', (p) => {
+    setLit(Math.round(p * (journey.length - 1)));
+    const r = rail.current;
+    if (r) setEnds({ start: r.scrollLeft < 4, end: r.scrollLeft + r.clientWidth >= r.scrollWidth - 4 });
+  });
+  const fill = useTransform(scrollXProgress, [0, 1], [0.03, 1]);
+  // Mouse users get buttons; each press moves about two stops
+  const nudge = (dir: number) => rail.current?.scrollBy({ left: dir * 560, behavior: still ? 'auto' : 'smooth' });
+
   return (
-    <div className="container">
-      <Head />
-      <ol ref={list} className="jr-list" role="list">
-        <span className="jr-vline" aria-hidden="true">
-          <motion.span className="jr-current" style={{ scaleY: scrollYProgress }} />
-        </span>
-        {journey.map((m, i) => {
-          const phase = phaseAt(i);
-          return [
-            phase && (
-              <li key={phase.id} className="jr-phase-head">
-                <strong>{phase.label}</strong>
-                <span className="mono">{phase.range}</span>
+    <>
+      <div className="container">
+        <Head />
+      </div>
+      <div ref={rail} className="jr-rail jr-rail--swipe" tabIndex={0} role="region" aria-label="Journey timeline — scroll sideways">
+        <ol className="jr-track" role="list">
+          <span className="jr-line" aria-hidden="true">
+            <motion.span className="jr-current" style={{ scaleX: fill }} />
+          </span>
+          {journey.map((m, i) => {
+            const phase = phaseAt(i);
+            return (
+              <li key={m.title} className="jr-stop" data-on={i <= lit || undefined}>
+                {phase && (
+                  <span className="jr-band" style={{ ['--n' as string]: phase.count }}>
+                    <strong>{phase.label}</strong>
+                    <span className="mono">{phase.range}</span>
+                  </span>
+                )}
+                <Stop m={m} />
               </li>
-            ),
-            <motion.li
-              key={m.title}
-              className="jr-stop"
-              data-on
-              initial={{ opacity: 0, x: 18 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: '0px 0px -10% 0px' }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Stop m={m} />
-            </motion.li>,
-          ];
-        })}
-      </ol>
-    </div>
+            );
+          })}
+        </ol>
+      </div>
+      <div className="container jr-nav">
+        <span className="jr-hint mono" aria-hidden="true">
+          {String(lit + 1).padStart(2, '0')} / {String(journey.length).padStart(2, '0')}
+        </span>
+        <span className="jr-nav-btns">
+          <button type="button" className="jr-arrow" onClick={() => nudge(-1)} disabled={ends.start} aria-label="Earlier stops">
+            <ArrowLeft size={18} aria-hidden="true" />
+          </button>
+          <button type="button" className="jr-arrow" onClick={() => nudge(1)} disabled={ends.end} aria-label="Later stops">
+            <ArrowRight size={18} aria-hidden="true" />
+          </button>
+        </span>
+      </div>
+    </>
   );
 }
 

@@ -1,4 +1,5 @@
 import { useId, useRef, useState, type KeyboardEvent } from 'react';
+import { motion } from 'motion/react';
 import { ArrowUpRight, ChevronDown, GraduationCap, MapPin } from 'lucide-react';
 import { achievements, education, jobs, projectBySlug } from '../content';
 import { Reveal, SectionHead } from '../components/ui/Reveal';
@@ -20,6 +21,10 @@ function JobItem({ job, id, labelledBy }: { job: Job; id: string; labelledBy: st
   const hidden = job.points.length - VISIBLE_POINTS;
   return (
     <article className="job surface" role="tabpanel" id={id} aria-labelledby={labelledBy}>
+      {/* The year it started, set large and outlined behind the card like a chapter mark */}
+      <span className="job-year" aria-hidden="true">
+        {job.period.start.slice(0, 4)}
+      </span>
       <header className="job-head">
         {job.logo && (
           <span className="job-logo">
@@ -106,6 +111,7 @@ export function Experience() {
                   tabIndex={sel === i ? 0 : -1}
                   onClick={() => setSel(i)}
                 >
+                  {sel === i && <motion.span layoutId="xp-tab-on" className="xp-tab-on" transition={{ type: 'spring', stiffness: 400, damping: 36 }} />}
                   {j.logo && <img src={asset(j.logo.src)} alt="" width={32} height={32} loading="lazy" decoding="async" />}
                   <span>
                     <strong>{j.company}</strong>
@@ -141,10 +147,18 @@ export function Experience() {
             <Reveal delay={0.06}>
               <h3 className="xp-sub">Recognition & programmes</h3>
               <ul className="ach" role="list">
-                {achievements.map((a) => {
+                {achievements.map((a, i) => {
                   const p = a.relatedProject ? projectBySlug(a.relatedProject) : undefined;
                   return (
-                    <li key={a.title} className={`ach-item ach-item--${a.kind}`}>
+                    // Each one powers on in turn as the list comes into view
+                    <motion.li
+                      key={a.title}
+                      className={`ach-item ach-item--${a.kind}`}
+                      initial={{ opacity: 0, x: -14 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true, margin: '0px 0px -8% 0px' }}
+                      transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+                    >
                       <span className="ach-icon">
                         <Icon name={a.icon} size={18} />
                       </span>
@@ -163,7 +177,7 @@ export function Experience() {
                           )}
                         </p>
                       </div>
-                    </li>
+                    </motion.li>
                   );
                 })}
               </ul>

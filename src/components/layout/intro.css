@@ -1,0 +1,99 @@
+/* The power-on card (Intro.tsx). Only transforms, opacity, clip-path and one stroke: nothing to lay out. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(40rem 22rem at 50% 50%, rgb(var(--accent-rgb) / 0.05), transparent 70%),
+    var(--bg);
+  pointer-events: none;
+  clip-path: inset(0 0 0 0);
+  transition: clip-path 640ms var(--ease-in-out);
+}
+.intro[data-state='out'] {
+  clip-path: inset(0 0 100% 0);
+}
+.intro-card {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+  transition:
+    transform 640ms var(--ease-in-out),
+    opacity 400ms var(--ease-out);
+}
+.intro[data-state='out'] .intro-card {
+  transform: translateY(-6vh);
+  opacity: 0;
+}
+.intro-name {
+  margin: 0;
+  font-size: clamp(2.4rem, 1.4rem + 4vw, 4.75rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.045em;
+  color: var(--text-hi);
+  animation: intro-name 760ms var(--ease-out) both;
+}
+.intro-trace {
+  width: min(320px, 70vw);
+  height: auto;
+  overflow: visible;
+}
+.intro-trace path {
+  stroke: var(--cyan);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: intro-draw 620ms var(--ease-in-out) 120ms forwards;
+}
+.intro-trace circle {
+  fill: var(--cyan);
+  opacity: 0;
+  animation: intro-pad 240ms var(--ease-out) 700ms forwards;
+}
+.intro-sub {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  animation: intro-fade 500ms var(--ease-out) 260ms both;
+}
+
+@keyframes intro-name {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    clip-path: inset(100% 0 -10% 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    clip-path: inset(-10% 0 -10% 0);
+  }
+}
+@keyframes intro-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes intro-pad {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+    transform-origin: 311px 20px;
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+}

@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { ease } from '../../lib/motion';
 import { Fragment, type ReactNode } from 'react';
+import { useChapter } from '../../lib/chapter';
 
 /** Fades content up once as it enters the viewport. Respects reduced motion via <MotionConfig>. */
 export function Reveal({
@@ -64,6 +65,7 @@ export function SectionHead({
   lead?: ReactNode;
   id: string;
 }) {
+  const chapter = useChapter();
   return (
     <motion.header
       className="section-head"
@@ -73,6 +75,11 @@ export function SectionHead({
       viewport={{ once: true, margin: '0px 0px -8% 0px' }}
     >
       <motion.p className="eyebrow" variants={fadeVariants}>
+        {chapter && (
+          <span className="eyebrow-num" aria-hidden="true">
+            {chapter}
+          </span>
+        )}
         {eyebrow}
       </motion.p>
       <h2 className="h2" id={id}>

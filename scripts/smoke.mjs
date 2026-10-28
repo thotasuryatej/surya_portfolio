@@ -28,10 +28,20 @@ const errors = [];
   page.on('pageerror', (e) => errors.push(e.message));
   await page.goto(url, { waitUntil: 'networkidle' });
 
-  await check('nav link scrolls to section and marks it current', async () => {
-    await page.click('.nav-links a[href="#experience"]');
+  await check('menu link scrolls to section and marks it current', async () => {
+    const btn = page.locator('button[aria-controls="site-menu"]');
+    await btn.click();
+    await page.locator('#site-menu a[href="#experience"]').click();
     await page.waitForFunction(() => Math.abs(document.getElementById('experience').getBoundingClientRect().top) < 200, null, { timeout: 5000 });
-    await page.waitForFunction(() => document.querySelector('.nav-links a[aria-current="location"]')?.getAttribute('href') === '#experience', null, { timeout: 3000 });
+    await page.locator('#site-menu').waitFor({ state: 'detached' });
+    // Let the smooth scroll finish before reopening, so the menu marks where the jump landed.
+    const settled = () => new Promise((r) => { const y = scrollY; setTimeout(() => r(scrollY === y), 300); });
+    await page.waitForFunction(settled, null, { timeout: 8000, polling: 350 });
+    await btn.focus();
+    await page.keyboard.press('Enter');
+    await page.waitForFunction(() => document.querySelector('#site-menu a[aria-current="location"]')?.getAttribute('href') === '#experience', null, { timeout: 3000 });
+    await page.keyboard.press('Escape');
+    await page.locator('#site-menu').waitFor({ state: 'detached' });
   });
 
   await check('loading with a section hash lands on that section', async () => {
@@ -43,9 +53,7 @@ const errors = [];
 
   await check('theme toggle switches theme and back', async () => {
     const theme = () => page.evaluate(() => document.documentElement.dataset.theme ?? 'dark');
-    // The nav hides while scrolling down, so return to the top first.
     await page.evaluate(() => window.scrollTo(0, 0));
-    await page.locator('.nav:not(.is-hidden)').waitFor({ timeout: 3000 });
     const t0 = await theme();
     await page.locator('.theme-chip').first().click();
     await page.waitForFunction((t) => (document.documentElement.dataset.theme ?? 'dark') !== t, t0, { timeout: 3000 });
@@ -189,19 +197,20 @@ const errors = [];
   await page.goto(url, { waitUntil: 'networkidle' });
 
   await check('mobile menu opens, Escape closes, focus returns', async () => {
-    const btn = page.locator('button[aria-controls="mobile-menu"]');
+    const btn = page.locator('button[aria-controls="site-menu"]');
     await btn.click();
     assert((await btn.getAttribute('aria-expanded')) === 'true', 'not expanded');
-    await page.locator('#mobile-menu').waitFor();
+    await page.locator('#site-menu').waitFor();
     await page.keyboard.press('Escape');
     await page.waitForTimeout(300);
     assert((await btn.getAttribute('aria-expanded')) === 'false', 'still expanded');
+    assert(await btn.evaluate((b) => b === document.activeElement), 'focus did not return to the menu button');
   });
 
   await check('mobile menu link navigates and closes menu', async () => {
-    const btn = page.locator('button[aria-controls="mobile-menu"]');
+    const btn = page.locator('button[aria-controls="site-menu"]');
     await btn.click();
-    await page.locator('#mobile-menu a[href="#contact"]').click();
+    await page.locator('#site-menu a[href="#contact"]').click();
     assert((await btn.getAttribute('aria-expanded')) === 'false', 'menu still open');
     await page.waitForFunction(() => Math.abs(document.getElementById('contact').getBoundingClientRect().top) < 200, null, { timeout: 5000 });
   });

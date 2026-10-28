@@ -4,15 +4,16 @@ import { ArrowUpRight } from 'lucide-react';
 import { mindset, mindsetIntro, projectBySlug } from '../content';
 import { SectionHead } from '../components/ui/Reveal';
 import { Glass } from '../components/ui/Glass';
-import { Icon } from '../components/ui/Icon';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { useMedia } from '../hooks/useMedia';
 import { useScrollSteps } from '../hooks/useScrollSteps';
+import { useScrolledPast } from '../hooks/useScrolledPast';
 import './mindset.css';
 
 /*
- * "Builder's Core": an original reactor-style core. Six arc segments are the six build habits; the
- * coil ring inside lights two coils per habit, and the core glows brighter as more habits are lit.
+ * "Builder's Core": my own arc reactor, drawn for this site — a bolted metal casing, a ring of copper coils
+ * and a glass core. Six slots in the casing are the six build habits; each lit habit lets light through
+ * its slot and between its two coils, and the core burns brighter as more habits are lit.
  * The section pins and scrolling charges the core one habit at a time. On narrow screens the core also turns
  * like a dial, bringing the current habit's segment to the top (the labels sit below it there, not around it).
  */
@@ -34,8 +35,18 @@ const sector = (r0: number, r1: number, a0: number, a1: number) =>
 /** Habit k is centred on -90 + 60k degrees (k = 0 at the top), matching the labels around the core. */
 const SEGMENTS = mindset.map((_, k) => sector(66, 84, -90 + 60 * k - 27.5, -90 + 60 * k + 27.5));
 /** Two coils per habit, either side of its centre. */
-const COILS = Array.from({ length: N * 2 }, (_, j) => sector(46, 59, -105 + 30 * j - 10, -105 + 30 * j + 10));
-const TICKS = Array.from({ length: 72 }, (_, i) => i * 5);
+const COILS = Array.from({ length: N * 2 }, (_, j) => sector(45, 61, -105 + 30 * j - 10.5, -105 + 30 * j + 10.5));
+/** Copper windings: radial turns across each coil */
+const WINDINGS = COILS.map((_, j) =>
+  Array.from({ length: 8 }, (_, w) => {
+    const a = -105 + 30 * j - 8.4 + w * 2.4;
+    return `M${pt(46.5, a)}L${pt(59.5, a)}`;
+  }).join(''),
+);
+/** The light behind each habit: the gaps between its coils and the strip in its slot */
+const GLOW = mindset.map((_, k) => sector(43, 63, -90 + 60 * k - 30, -90 + 60 * k + 30));
+const STRIPS = mindset.map((_, k) => sector(73, 77, -90 + 60 * k - 24, -90 + 60 * k + 24));
+const BOLTS = Array.from({ length: 12 }, (_, i) => pt(91, -75 + 30 * i).split(' '));
 
 export function Mindset() {
   const still = useReducedMotion();
@@ -44,29 +55,34 @@ export function Mindset() {
   const fits = useMedia(
     '(min-width: 901px) and (min-height: 640px), (max-width: 900px) and (min-height: 600px) and (pointer: coarse)',
   );
-  const pinned = fits && !still;
+  // Once scrolled past, it stays the click version: coming back up doesn't replay the whole pin
+  const section = useRef<HTMLElement>(null);
+  const past = useScrolledPast(section);
+  const pinned = fits && !still && !past;
   const height = N * (useMedia('(max-width: 900px) and (pointer: coarse)') ? STEP_TOUCH : STEP);
   return (
     <section
       id="mindset"
+      ref={section}
       className={`section${pinned ? ' section--pinned' : ''}`}
       // Pinned, it is several screens tall; say so before it first renders (content-visibility) so jumps land right
       style={pinned ? { containIntrinsicSize: `auto calc(100vh + ${height}vh)` } : undefined}
       aria-labelledby="mindset-title"
     >
-      {pinned ? <Pinned height={height} /> : <Clicked />}
+      {pinned ? <Pinned height={height} /> : <Clicked from={past ? N - 1 : 0} />}
     </section>
   );
 }
 
 const Head = () => <SectionHead id="mindset-title" eyebrow="Mindset" title="How I build" lead={mindsetIntro} />;
 
-/** Short screens and reduced motion: pick a habit; the core charges once when it scrolls into view. */
-function Clicked() {
+/** Short screens, reduced motion, and after the pinned version has played: pick a habit; the core charges
+    once when it scrolls into view. `from`: the habit shown first (the last one once the pin has played). */
+function Clicked({ from }: { from: number }) {
   const reduce = useReducedMotion();
   const stage = useRef<HTMLDivElement>(null);
   const charged = useInView(stage, { once: true, amount: 0.5 });
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(from);
   return (
     <div className="container">
       <Head />
@@ -111,8 +127,6 @@ function Core({
 }) {
   const { open } = useProjectRoute();
   const btns = useRef<(HTMLButtonElement | null)[]>([]);
-  const step = mindset[active];
-
   const onKey = (e: KeyboardEvent) => {
     const dir = e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 0;
     // Step from the focused label (which scrolling may have left behind the selected one)
@@ -135,24 +149,52 @@ function Core({
       >
         <svg className="bc-core" viewBox="-100 -100 200 200" aria-hidden="true">
           <defs>
-            <linearGradient id="bc-grad" x1="-80" y1="-80" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stopColor="var(--cyan)" />
-              <stop offset="1" stopColor="var(--violet)" />
+            <linearGradient id="bc-metal" x1="-90" y1="-90" x2="90" y2="90" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="var(--metal-hi)" />
+              <stop offset="0.3" stopColor="var(--metal-lo)" />
+              <stop offset="0.55" stopColor="var(--metal-mid)" />
+              <stop offset="0.8" stopColor="var(--metal-lo)" />
+              <stop offset="1" stopColor="var(--metal-mid)" />
             </linearGradient>
-            <radialGradient id="bc-halo">
-              <stop offset="0.55" stopColor="var(--cyan)" stopOpacity="0.55" />
-              <stop offset="0.8" stopColor="var(--cyan)" stopOpacity="0.18" />
-              <stop offset="1" stopColor="var(--cyan)" stopOpacity="0" />
+            <linearGradient id="bc-copper" x1="-60" y1="-60" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+              <stop offset="0" stopColor="#d8945c" />
+              <stop offset="0.45" stopColor="#8a4a22" />
+              <stop offset="0.7" stopColor="#c27a43" />
+              <stop offset="1" stopColor="#6e3817" />
+            </linearGradient>
+            <radialGradient id="bc-lens">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset="0.18" stopColor="#f2fbff" />
+              <stop offset="0.45" stopColor="rgb(var(--reactor-rgb))" />
+              <stop offset="0.8" stopColor="rgb(var(--reactor-rgb) / 0.35)" />
+              <stop offset="1" stopColor="rgb(var(--reactor-rgb) / 0)" />
+            </radialGradient>
+            <radialGradient id="bc-hot">
+              <stop offset="0" stopColor="#ffffff" />
+              <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.7" />
+              <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+            </radialGradient>
+            <radialGradient id="bc-bloom">
+              <stop offset="0.3" stopColor="rgb(var(--reactor-rgb) / 0.5)" />
+              <stop offset="1" stopColor="rgb(var(--reactor-rgb) / 0)" />
             </radialGradient>
           </defs>
 
-          <g className="bc-ticks">
-            {TICKS.map((a) => (
-              <line key={a} x1="0" y1={a % 30 ? -91 : -88} x2="0" y2="-95" transform={`rotate(${a})`} />
-            ))}
-          </g>
-          <circle className="bc-ring" r="62.5" />
+          {/* Casing: a bolted metal ring */}
+          <circle className="bc-casing" r="91" />
+          <circle className="bc-casing-edge" r="96" />
+          <circle className="bc-casing-edge" r="85.5" />
+          {BOLTS.map(([x, y]) => (
+            <g key={x + y} className="bc-bolt" transform={`translate(${x} ${y})`}>
+              <circle r="2.6" />
+              <path d="M-1.5 0H1.5" />
+            </g>
+          ))}
+
           <g className="bc-rotor">
+            {GLOW.map((d, k) => (
+              <path key={k} d={d} className="bc-glow" data-lit={k <= active ? '' : undefined} />
+            ))}
             {SEGMENTS.map((d, k) => (
               <path
                 key={k}
@@ -160,40 +202,38 @@ function Core({
                 className="bc-seg"
                 data-lit={k <= active ? '' : undefined}
                 data-on={k === active ? '' : undefined}
-                style={{ ['--k' as string]: k }}
                 onClick={() => select(k)}
               />
             ))}
-            {COILS.map((d, j) => (
+            {STRIPS.map((d, k) => (
               <path
-                key={j}
+                key={k}
                 d={d}
-                className="bc-coil"
-                data-lit={Math.floor(j / 2) <= active ? '' : undefined}
-                style={{ ['--k' as string]: Math.floor(j / 2) }}
+                className="bc-strip"
+                data-lit={k <= active ? '' : undefined}
+                data-on={k === active ? '' : undefined}
               />
             ))}
+            {COILS.map((d, j) => (
+              <g key={j} className="bc-coil" data-lit={Math.floor(j / 2) <= active ? '' : undefined}>
+                <path d={d} />
+                <path className="bc-wind" d={WINDINGS[j]} />
+              </g>
+            ))}
           </g>
-          <circle className="bc-halo" r="44" />
-          <circle className="bc-die" r="31" />
-          <circle className="bc-die-ring" r="34.5" />
-        </svg>
 
-        <div className="bc-center" aria-hidden="true">
-          <AnimatePresence mode="popLayout" initial={false}>
-            <motion.span
-              key={active}
-              className="bc-center-in"
-              initial={{ opacity: 0, scale: 0.7, filter: 'blur(4px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.2, filter: 'blur(4px)' }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <Icon name={step.icon} size={26} />
-              <span className="bc-center-num mono">{String(active + 1).padStart(2, '0')}</span>
-            </motion.span>
-          </AnimatePresence>
-        </div>
+          {/* Core: a glass lens over the light, in a machined collar */}
+          <circle className="bc-collar" r="39" />
+          <circle className="bc-die" r="33" />
+          <circle className="bc-light" r="33" />
+          {/* The emitter ring and the white-hot heart, both brighter with every habit lit */}
+          <circle className="bc-emitter" r="23" />
+          <circle className="bc-hot" r="13" />
+          {/* A flash of light through the lens each time the habit changes (re-keyed, so it replays) */}
+          <circle key={active} className="bc-flash" r="30" />
+          <circle className="bc-bloom" r="78" />
+          <ellipse className="bc-glint" cx="-11" cy="-14" rx="13" ry="6" transform="rotate(-35 -11 -14)" />
+        </svg>
 
         <div className="bc-labels" role="group" aria-label="Build habits" onKeyDown={onKey}>
           {mindset.map((s, k) => (

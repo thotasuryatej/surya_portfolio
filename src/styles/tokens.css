@@ -8,27 +8,32 @@
 :root {
   color-scheme: dark;
 
-  /* Surfaces */
-  --bg: #05070b;
-  --bg-2: #080b11;
-  --surface: #0b1018;
-  --surface-2: #0f1520;
-  --surface-3: #141c29;
+  /* Surfaces: a workshop at night — warm graphite, not navy. Colour comes from light, not from the walls.
+     Three colours, each with one job: molten gold (the accent: links, traces, actions), ember red
+     (study, the warm counter-light) and arc blue (anything powered or live, like the reactor). Every
+     other named colour below is a shade of one of the three. */
+  --bg: #0b0a09;
+  --bg-2: #0f0e0c;
+  --surface: #161412;
+  --surface-2: #1b1916;
+  --surface-3: #22201c;
 
   /* Channels (used as rgb(var(--x-rgb) / alpha)) */
-  --accent-rgb: 111 227 255;
-  --accent-2-rgb: 47 196 238;
-  --accent-deep-rgb: 0 80 120;
-  --violet-rgb: 157 140 255;
-  --line-rgb: 165 208 255;
-  --spec-rgb: 190 235 255; /* pointer-following specular tint on glass */
-  --amber-rgb: 251 207 111;
-  --green-rgb: 110 231 183;
-  --sky-rgb: 70 140 255;
-  --base-rgb: 12 18 28; /* translucent panels and glass body */
-  --raised-rgb: 17 24 36; /* cards that sit on panels */
-  --well-rgb: 5 8 13; /* insets: diagrams, media wells */
-  --tint-rgb: 18 36 54; /* coloured wells behind illustrations */
+  --accent-rgb: 232 176 88;
+  --accent-2-rgb: 214 146 52;
+  --accent-deep-rgb: 110 66 12;
+  --violet-rgb: 222 110 88; /* ember red, under its old name */
+  --line-rgb: 236 226 210;
+  --spec-rgb: 255 236 205; /* pointer-following specular tint on glass */
+  --reactor-rgb: 140 212 250; /* arc blue: the reactor's light, and anything powered or live */
+  --amber-rgb: 240 190 100; /* a lighter gold */
+  --green-rgb: 140 212 250; /* live / done: arc blue */
+  --sky-rgb: 140 212 250;
+  --copper-rgb: 214 142 88; /* PCB copper: the warm counter-light to the cyan signal */
+  --base-rgb: 20 19 17; /* translucent panels and glass body */
+  --raised-rgb: 27 25 22; /* cards that sit on panels */
+  --well-rgb: 7 6 5; /* insets: diagrams, media wells */
+  --tint-rgb: 28 23 18; /* coloured wells behind illustrations */
   --shadow-rgb: 0 0 0;
   --hi-rgb: 255 255 255; /* light catching an edge — white in both themes */
   --ink-rgb: 255 255 255; /* faint fills/strokes in the text colour */
@@ -38,43 +43,51 @@
   --line-3: rgb(var(--line-rgb) / 0.28);
 
   /* Text */
-  --text: #e9eff7;
-  --text-hi: #ffffff;
-  --text-2: #b4c0cf;
-  --text-3: #8592a3;
-  --text-4: #74808e;
+  --text: #eee8de;
+  --text-hi: #fffaf1;
+  --text-2: #bdb6ab;
+  --text-3: #918a80;
+  --text-4: #847d73;
 
   /* Light */
-  --cyan: #6fe3ff;
-  --cyan-2: #2fc4ee;
-  --ice: #cdeeff;
-  --violet: #9d8cff;
-  --violet-2: #7a68f0;
-  --green: #6ee7b7;
-  --amber: #fbcf6f;
-  --rose: #ff8fa3;
-  --on-accent: #03121a; /* text on a filled accent button */
-  --accent-hi: #a6f0ff; /* top of the primary button's gradient */
+  /* The accent keeps its old name (--cyan) so components need no change: it is molten gold now */
+  --cyan: #e8b058;
+  --cyan-2: #d69234;
+  --ice: #f7deb0;
+  --violet: #de6e58;
+  --violet-2: #c4553f;
+  --green: #8cd4fa;
+  --amber: #f0be64;
+  --rose: #e06a52;
+  --copper: #e0a274;
+  --on-accent: #1c1204; /* text on a filled accent button */
+  --accent-hi: #f6cf8a; /* top of the primary button's gradient */
 
   --cyan-a10: rgb(var(--accent-rgb) / 0.1);
   --cyan-a20: rgb(var(--accent-rgb) / 0.2);
   --violet-a12: rgb(var(--violet-rgb) / 0.12);
 
   /* Hero chip (CircuitCore): package, die and halo */
-  --pkg-1: #1a2333;
-  --pkg-2: #090d14;
-  --die-1: #0f2030;
-  --die-2: #0a121c;
-  --die-3: #181433;
-  --ice-2: #9fdcff;
-  --halo-2: #5a8cff;
+  --pkg-1: #1c2026;
+  --pkg-2: #0a0b0e;
+  --die-1: #241b10;
+  --die-2: #110d09;
+  --die-3: #1b1510;
+  --ice-2: #a0dcff;
+  --halo-2: #d08a3a;
+
+  /* Arc reactor (Mindset.tsx): machined steel */
+  --metal-hi: #9a9da3;
+  --metal-mid: #50535a;
+  --metal-lo: #1f2124;
+  --metal-pocket: #0c0d0f;
 
   /* Logo inks (src/components/brand/Monogram.tsx) */
-  --logo-1: #d9f6ff;
-  --logo-2: #6fe3ff;
-  --logo-3: #9d8cff;
-  --logo-pkg: #0e1622;
-  --logo-pin: #3b5675;
+  --logo-1: #fbe9c6;
+  --logo-2: #e8b058;
+  --logo-3: #de6e58;
+  --logo-pkg: #151310;
+  --logo-pin: #5e5548;
 
   /* Glow strength: glows are light sources in the dark and soft shadows in the light */
   --glow: 1;
@@ -82,7 +95,7 @@
   /* Evidence colours */
   --ev-professional: var(--cyan);
   --ev-academic: var(--violet);
-  --ev-exploring: var(--amber);
+  --ev-exploring: rgb(var(--reactor-rgb));
 
   /* Type */
   --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -90,7 +103,9 @@
 
   /* Display sizes also cap by viewport height, so short laptop screens keep a section on one screen */
   --fs-hero: min(clamp(2.5rem, 1.4rem + 4.6vw, 5.25rem), max(2.5rem, 7.4svh));
-  --fs-h2: min(clamp(2rem, 1.35rem + 2.4vw, 3.25rem), max(1.75rem, 5.4svh));
+  /* The name in the hero: the one oversized line on the page */
+  --fs-display: min(clamp(4.6rem, 1rem + 10.4vw, 10.5rem), max(4.6rem, 17svh));
+  --fs-h2: min(clamp(2rem, 1.3rem + 2.7vw, 3.6rem), max(1.75rem, 5.8svh));
   --fs-h3: clamp(1.2rem, 1.05rem + 0.5vw, 1.5rem);
   --fs-lead: clamp(1.06rem, 1rem + 0.3vw, 1.25rem);
   --fs-body: 1rem;
@@ -118,52 +133,57 @@
   --nav-h: 64px;
 }
 
-/* Light: cool white and grey surfaces, clear glass, deep-blue and indigo accents.
+/* Light: drafting paper and graphite ink, with its own three colours: drawing blue (the accent),
+   ochre gold and ember red, where dark has gold, ember and arc blue.
    Designed separately rather than inverted — accents are darker for contrast and glows become soft shadows. */
 :root[data-theme='light'] {
   color-scheme: light;
 
-  --bg: #f3f6fa;
-  --bg-2: #e9eef5;
-  --surface: #ffffff;
-  --surface-2: #f6f8fb;
-  --surface-3: #edf1f7;
+  /* Drafting paper: warm off-white and graphite ink, the blue of a technical drawing */
+  --bg: #f4f3ef;
+  --bg-2: #ecebe5;
+  --surface: #fdfcfa;
+  --surface-2: #f7f6f2;
+  --surface-3: #efeee8;
 
   --accent-rgb: 14 99 214;
   --accent-2-rgb: 10 84 184;
   --accent-deep-rgb: 8 48 120;
-  --violet-rgb: 92 64 208;
-  --line-rgb: 24 52 92;
+  --violet-rgb: 190 72 44;
+  --line-rgb: 38 42 52;
   --spec-rgb: 255 255 255;
+  --reactor-rgb: 36 150 232;
   --amber-rgb: 166 98 0;
-  --green-rgb: 6 128 84;
+  --green-rgb: 12 112 150;
   --sky-rgb: 110 165 255;
+  --copper-rgb: 168 92 36;
   --base-rgb: 255 255 255;
   --raised-rgb: 255 255 255;
-  --well-rgb: 232 238 246;
-  --tint-rgb: 222 234 250;
-  --shadow-rgb: 22 40 70;
+  --well-rgb: 236 235 230;
+  --tint-rgb: 228 233 238;
+  --shadow-rgb: 30 32 40;
   --hi-rgb: 255 255 255;
-  --ink-rgb: 16 32 56;
+  --ink-rgb: 20 22 28;
 
   --line: rgb(var(--line-rgb) / 0.11);
   --line-2: rgb(var(--line-rgb) / 0.18);
   --line-3: rgb(var(--line-rgb) / 0.3);
 
-  --text: #0c1422;
-  --text-hi: #050a14;
-  --text-2: #364252;
-  --text-3: #4f5b6b;
-  --text-4: #5d6878;
+  --text: #121316;
+  --text-hi: #050607;
+  --text-2: #3a3d44;
+  --text-3: #52565e;
+  --text-4: #5f636b;
 
   --cyan: #0e63d6;
   --cyan-2: #0a54b8;
   --ice: #12406f;
-  --violet: #5c40d0;
-  --violet-2: #4a30b8;
-  --green: #067f54;
+  --violet: #be482c;
+  --violet-2: #a33a20;
+  --green: #0c7096;
   --amber: #9a5b00;
-  --rose: #b4243f;
+  --rose: #be482c;
+  --copper: #8f4a17;
   --on-accent: #ffffff;
   --accent-hi: #3d8bff;
 
@@ -171,15 +191,21 @@
   --pkg-2: #dde5ef;
   --die-1: #e8f1fd;
   --die-2: #f6f9fe;
-  --die-3: #ebe7ff;
+  --die-3: #f6ece4;
   --ice-2: #7fb6ff;
   --halo-2: #6ea8ff;
 
+  --metal-hi: #ffffff;
+  --metal-mid: #c3c7cd;
+  --metal-lo: #8e949c;
+  --metal-pocket: #1e2630;
+
   --logo-1: #0b4f8a;
   --logo-2: #1662d6;
-  --logo-3: #5b3fd0;
+  --logo-3: #be482c;
   --logo-pkg: #ffffff;
   --logo-pin: #9fb3cf;
 
   --glow: 0.45;
+  --ev-exploring: var(--amber);
 }

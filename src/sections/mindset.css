@@ -21,114 +21,180 @@
   overflow: visible;
 }
 
-/* Outer ticks turn slowly; everything else stays aligned with the labels */
-.bc-ticks {
-  stroke: rgb(var(--line-rgb) / 0.3);
-  stroke-width: 0.7;
-  stroke-linecap: round;
-  /* The ticks are symmetric about the centre, so their own box turns about it */
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: bc-spin 90s linear infinite;
-}
-@keyframes bc-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-.bc-ring {
-  fill: none;
-  stroke: rgb(var(--line-rgb) / 0.16);
-  stroke-width: 0.6;
+/* The room around the reactor takes its light: dark until it charges, then a cool wash that grows with it */
+.bc-stage::before {
+  content: '';
+  position: absolute;
+  inset: -30%;
+  border-radius: 50%;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgb(var(--reactor-rgb) / 0.26), rgb(var(--reactor-rgb) / 0.07) 50%, transparent);
+  /* A faint idle light even before any habit is lit, so the reactor reads as a power source in a dark room */
+  opacity: calc((0.25 + var(--charge, 0) * 0.75) * var(--glow));
+  transition: opacity 0.8s var(--ease-out);
 }
 
-/* Habit segments */
+/* Casing */
+.bc-casing {
+  fill: none;
+  stroke: url(#bc-metal);
+  stroke-width: 10.5;
+}
+.bc-casing-edge {
+  fill: none;
+  stroke: rgb(var(--hi-rgb) / 0.12);
+  stroke-width: 0.5;
+}
+.bc-bolt circle {
+  fill: var(--metal-lo);
+  stroke: rgb(var(--hi-rgb) / 0.22);
+  stroke-width: 0.5;
+}
+.bc-bolt path {
+  stroke: rgb(0 0 0 / 0.6);
+  stroke-width: 0.7;
+}
+
+/* Habit slots: machined pockets in the casing, each with a light strip that shows when its habit is lit */
 .bc-seg {
-  fill: rgb(var(--line-rgb) / 0.05);
-  stroke: rgb(var(--line-rgb) / 0.22);
-  stroke-width: 0.8;
+  fill: var(--metal-pocket);
+  stroke: rgb(var(--hi-rgb) / 0.1);
+  stroke-width: 0.6;
   cursor: pointer;
-  transition:
-    fill 0.4s var(--ease-out),
-    stroke 0.4s var(--ease-out),
-    filter 0.4s var(--ease-out);
-}
-/* Before the core charges, every segment is dark */
-.bc-stage:not([data-charged]) .bc-seg {
-  fill: rgb(var(--line-rgb) / 0.03);
-  stroke: rgb(var(--line-rgb) / 0.12);
-}
-.bc-stage[data-charged] .bc-seg[data-lit] {
-  fill: rgb(var(--accent-rgb) / 0.16);
-  stroke: rgb(var(--accent-rgb) / 0.55);
-}
-.bc-stage[data-charged] .bc-seg[data-on] {
-  fill: url(#bc-grad);
-  stroke: rgb(var(--accent-rgb) / 0.9);
-  filter: drop-shadow(0 0 6px rgb(var(--accent-rgb) / 0.55));
+  transition: stroke 0.4s var(--ease-out);
 }
 .bc-seg:hover {
-  stroke: rgb(var(--accent-rgb) / 0.8);
+  stroke: rgb(var(--reactor-rgb) / 0.7);
+}
+.bc-strip {
+  fill: rgb(var(--reactor-rgb) / 0.06);
+  pointer-events: none;
+  transition:
+    fill 0.5s var(--ease-out),
+    filter 0.5s var(--ease-out);
+}
+.bc-stage[data-charged] .bc-strip[data-lit] {
+  fill: rgb(var(--reactor-rgb) / 0.55);
+  filter: drop-shadow(0 0 calc(3px * var(--glow)) rgb(var(--reactor-rgb) / 0.8));
+}
+.bc-stage[data-charged] .bc-strip[data-on] {
+  fill: #fff;
+  filter: drop-shadow(0 0 calc(5px * var(--glow)) rgb(var(--reactor-rgb)));
 }
 
-/* Coil ring: two coils per habit */
+/* Light behind the coils: it shows through the gaps between them */
+.bc-glow {
+  fill: rgb(var(--reactor-rgb) / 0.04);
+  transition: fill 0.6s var(--ease-out);
+}
+.bc-stage[data-charged] .bc-glow[data-lit] {
+  fill: rgb(var(--reactor-rgb) / 0.75);
+}
+
+/* Copper coils with their windings; lit ones catch the light on their edges */
+.bc-coil path:first-child {
+  fill: url(#bc-copper);
+  stroke: rgb(0 0 0 / 0.5);
+  stroke-width: 0.5;
+}
+.bc-wind {
+  fill: none;
+  stroke: rgb(40 16 4 / 0.55);
+  stroke-width: 0.55;
+}
 .bc-coil {
-  fill: rgb(var(--line-rgb) / 0.06);
-  stroke: rgb(var(--line-rgb) / 0.2);
-  stroke-width: 0.6;
-  transition:
-    fill 0.4s var(--ease-out),
-    stroke 0.4s var(--ease-out);
+  filter: brightness(0.55) saturate(0.7);
+  transition: filter 0.6s var(--ease-out);
 }
 .bc-stage[data-charged] .bc-coil[data-lit] {
-  fill: rgb(var(--accent-rgb) / 0.55);
-  stroke: rgb(var(--accent-rgb) / 0.9);
-  filter: drop-shadow(0 0 3px rgb(var(--accent-rgb) / 0.6));
+  filter: brightness(1) drop-shadow(0 0 calc(2.5px * var(--glow)) rgb(var(--reactor-rgb) / 0.7));
 }
 
-/* The core: brighter with every habit lit */
-.bc-halo {
-  fill: url(#bc-halo);
-  opacity: calc(0.15 + var(--charge, 0) * 0.85);
+/* The core: a lens over the light, brighter with every habit lit */
+.bc-collar {
+  fill: none;
+  stroke: url(#bc-metal);
+  stroke-width: 7;
+}
+.bc-die {
+  fill: var(--metal-pocket);
+}
+.bc-light {
+  fill: url(#bc-lens);
+  opacity: 0.12;
+  transition: opacity 0.6s var(--ease-out);
+}
+.bc-stage[data-charged] .bc-light {
+  opacity: calc(0.5 + var(--charge, 0) * 0.5);
+}
+.bc-bloom {
+  fill: url(#bc-bloom);
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
-  transition: opacity 0.5s var(--ease-out);
+  transition: opacity 0.8s var(--ease-out);
+}
+.bc-stage[data-charged] .bc-bloom {
+  opacity: calc(var(--charge, 0) * 0.75 * var(--glow));
   animation: bc-breathe 3.2s ease-in-out infinite;
 }
 @keyframes bc-breathe {
   50% {
-    transform: scale(1.06);
+    transform: scale(1.05);
   }
 }
-.bc-die {
-  fill: var(--logo-pkg, var(--bg));
-}
-.bc-die-ring {
+.bc-emitter {
   fill: none;
-  stroke: url(#bc-grad);
+  stroke: rgb(var(--reactor-rgb));
   stroke-width: 1.4;
-  opacity: calc(0.4 + var(--charge, 0) * 0.6);
-  filter: drop-shadow(0 0 calc(var(--charge, 0) * 5px) rgb(var(--accent-rgb) / 0.8));
-  transition: opacity 0.5s var(--ease-out);
+  opacity: 0.15;
+  transition:
+    opacity 0.6s var(--ease-out),
+    stroke-width 0.6s var(--ease-out);
 }
-
-.bc-center {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
+.bc-stage[data-charged] .bc-emitter {
+  opacity: calc(0.35 + var(--charge, 0) * 0.65);
+  stroke-width: calc(1 + var(--charge, 0) * 1.6);
+  filter: drop-shadow(0 0 calc(5px * var(--glow)) rgb(var(--reactor-rgb)));
+}
+.bc-hot {
+  fill: url(#bc-hot);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity 0.6s var(--ease-out),
+    transform 0.6s var(--ease-out);
+}
+.bc-stage[data-charged] .bc-hot {
+  opacity: calc(0.35 + var(--charge, 0) * 0.65);
+  transform: scale(calc(0.6 + var(--charge, 0) * 0.6));
+}
+.bc-flash {
+  fill: url(#bc-hot);
   pointer-events: none;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
 }
-.bc-center-in {
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  color: var(--cyan);
+.bc-stage[data-charged] .bc-flash {
+  animation: bc-flash 0.9s var(--ease-out);
 }
-.bc-center-num {
-  font-size: 0.72rem;
-  letter-spacing: 0.14em;
-  color: var(--text-3);
+@keyframes bc-flash {
+  0% {
+    opacity: 0.85;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
+.bc-glint {
+  fill: rgb(255 255 255 / 0.16);
+  pointer-events: none;
 }
 
 /* Labels sit around the core, one per hexagon edge (angle -90 + 60k) */
@@ -148,7 +214,7 @@
   padding: 7px 13px;
   border-radius: 999px;
   border: 1px solid var(--line-2);
-  background: rgb(8 12 18 / 0.55);
+  background: rgb(var(--base-rgb) / 0.6);
   -webkit-backdrop-filter: blur(12px) saturate(160%);
   backdrop-filter: blur(12px) saturate(160%);
   color: var(--text-2);
@@ -180,6 +246,47 @@
 }
 .bc-label[aria-pressed='true'] .bc-label-num {
   color: var(--cyan);
+}
+/* Light: the reactor is a lit device sitting on paper. It casts a shadow, its light tints the page
+   around it instead of glowing in the dark, the bloom paints normally (screen does nothing on white),
+   and unlit copper stays readable rather than going muddy */
+:root[data-theme='light'] .bc-core {
+  filter: drop-shadow(0 14px 22px rgb(var(--shadow-rgb) / 0.22)) drop-shadow(0 2px 4px rgb(var(--shadow-rgb) / 0.18));
+}
+:root[data-theme='light'] .bc-stage::before {
+  inset: -22%;
+  background: radial-gradient(closest-side, rgb(var(--reactor-rgb) / 0.2), rgb(var(--reactor-rgb) / 0.06) 55%, transparent);
+  opacity: calc(0.3 + var(--charge, 0) * 0.7);
+}
+:root[data-theme='light'] .bc-casing-edge {
+  stroke: rgb(var(--shadow-rgb) / 0.28);
+  stroke-width: 0.7;
+}
+:root[data-theme='light'] .bc-coil {
+  filter: brightness(0.8) saturate(0.85);
+}
+:root[data-theme='light'] .bc-stage[data-charged] .bc-coil[data-lit] {
+  filter: brightness(1.08) saturate(1.05) drop-shadow(0 0 1.5px rgb(var(--reactor-rgb) / 0.9));
+}
+:root[data-theme='light'] .bc-stage[data-charged] .bc-strip[data-lit] {
+  fill: rgb(var(--reactor-rgb) / 0.85);
+  filter: drop-shadow(0 0 2px rgb(var(--reactor-rgb) / 0.9));
+}
+:root[data-theme='light'] .bc-stage[data-charged] .bc-strip[data-on] {
+  fill: #e9f6ff;
+  filter: drop-shadow(0 0 3px rgb(var(--reactor-rgb)));
+}
+:root[data-theme='light'] .bc-stage[data-charged] .bc-glow[data-lit] {
+  fill: rgb(var(--reactor-rgb) / 0.95);
+}
+:root[data-theme='light'] .bc-bloom {
+  mix-blend-mode: normal;
+}
+:root[data-theme='light'] .bc-stage[data-charged] .bc-bloom {
+  opacity: calc(var(--charge, 0) * 0.45);
+}
+:root[data-theme='light'] .bc-glint {
+  fill: rgb(255 255 255 / 0.4);
 }
 :root[data-theme='light'] .bc-label {
   background: rgb(255 255 255 / 0.6);
@@ -248,7 +355,8 @@
   transition: background 0.4s var(--ease-out);
 }
 .bc-meter i[data-lit] {
-  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  background: rgb(var(--reactor-rgb));
+  box-shadow: 0 0 calc(8px * var(--glow)) rgb(var(--reactor-rgb) / 0.6);
 }
 
 @media (max-width: 900px) {
@@ -270,12 +378,6 @@
     width: 72%;
     height: auto;
     aspect-ratio: 1;
-    margin: 0 auto;
-  }
-  .bc-center {
-    bottom: auto;
-    aspect-ratio: 1;
-    width: 72%;
     margin: 0 auto;
   }
   .bc-labels {
@@ -355,14 +457,6 @@
     height: var(--core);
     margin: 0 auto;
   }
-  .bc--pinned .bc-center {
-    inset: 0 auto auto 50%;
-    translate: -50% 0;
-    width: var(--core);
-    height: var(--core);
-    aspect-ratio: auto;
-    margin: 0;
-  }
   .bc--pinned .bc-rotor {
     transform: rotate(calc(var(--turn, 0) * -60deg));
   }
@@ -418,8 +512,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bc-ticks,
-  .bc-halo {
+  .bc-stage[data-charged] .bc-bloom,
+  .bc-stage[data-charged] .bc-flash {
     animation: none;
   }
   .bc-rotor {

@@ -86,6 +86,33 @@ function daliPath(value: number) {
   return { d, bits };
 }
 
+/** A bulb whose filament, glass and rays follow the slider through --lvl, so brightness reads as light, not colour */
+function Bulb() {
+  const rays = [-150, -120, -90, -60, -30, 0, 180];
+  return (
+    <svg className="dim-lamp" viewBox="0 0 44 60" aria-hidden="true">
+      <circle className="dim-lamp-halo" cx="22" cy="20" r="21" />
+      <g className="dim-lamp-rays">
+        {rays.map((a) => (
+          <line key={a} x1="22" y1="-1" x2="22" y2="-6" transform={`rotate(${a + 90} 22 20)`} />
+        ))}
+      </g>
+      <path className="dim-lamp-glass" d={GLASS} />
+      <path className="dim-lamp-glass dim-lamp-glass--lit" d={GLASS} />
+      <path className="dim-lamp-wire" d="M18 37V28M26 37V28" />
+      <path className="dim-lamp-fil" d="M18 28l1.3-4 1.4 3 1.3-3 1.4 3 1.3-3 1.3 4" />
+      <path className="dim-lamp-fil dim-lamp-fil--lit" d="M18 28l1.3-4 1.4 3 1.3-3 1.4 3 1.3-3 1.3 4" />
+      <g className="dim-lamp-base">
+        <rect x="15" y="40" width="14" height="3.2" rx="1.2" />
+        <rect x="15.5" y="44" width="13" height="3.2" rx="1.2" />
+        <rect x="16" y="48" width="12" height="3.2" rx="1.2" />
+        <path d="M18 52h8l-1.5 3.5h-5z" />
+      </g>
+    </svg>
+  );
+}
+const GLASS = 'M22 4a15 15 0 0 1 9.4 26.7c-1.9 1.6-2.4 3.4-2.4 5.6V39H15v-2.7c0-2.2-.5-4-2.4-5.6A15 15 0 0 1 22 4z';
+
 export function DimmingDemo() {
   const [mode, setMode] = useState<Mode>('phase');
   const [pct, setPct] = useState(60);
@@ -118,7 +145,7 @@ export function DimmingDemo() {
             </button>
           ))}
         </div>
-        <span className="dim-lamp" aria-hidden="true" />
+        <Bulb />
       </div>
 
       <figure className="dim-scope">

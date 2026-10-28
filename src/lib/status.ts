@@ -7,6 +7,7 @@ export const projectStatusColor: Record<ProjectStatus, string> = {
   Prototype: 'var(--violet)',
   Research: 'var(--violet)',
   Academic: 'var(--text-2)',
+  'Passion project': 'var(--violet)',
   Concept: 'var(--amber)',
 };
 

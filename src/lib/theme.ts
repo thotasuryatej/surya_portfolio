@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { site } from '../content';
 import { prefersReducedMotion } from './motion';
 import { canTransition, viewTransition } from './viewTransition';
@@ -6,15 +6,6 @@ import { canTransition, viewTransition } from './viewTransition';
 export type Theme = 'dark' | 'light';
 const KEY = 'theme';
 
-const stored = (): Theme | null => {
-  try {
-    const t = localStorage.getItem(KEY);
-    return t === 'light' || t === 'dark' ? t : null;
-  } catch {
-    return null;
-  }
-};
-const system = (): Theme => (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
 /** index.html sets data-theme before first paint; read it back so React starts in agreement. */
 const current = (): Theme => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
 
@@ -43,18 +34,6 @@ function transition(theme: Theme) {
 
 export function useTheme() {
   const [theme, setTheme] = useState<Theme>(current);
-
-  // Follow the OS setting until the visitor makes an explicit choice.
-  useEffect(() => {
-    const mq = matchMedia('(prefers-color-scheme: light)');
-    const onChange = () => {
-      if (stored()) return;
-      apply(system());
-      setTheme(system());
-    };
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
-  }, []);
 
   const toggle = useCallback(() => {
     const next: Theme = current() === 'light' ? 'dark' : 'light';

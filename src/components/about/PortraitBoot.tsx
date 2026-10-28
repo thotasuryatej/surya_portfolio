@@ -5,7 +5,7 @@ import './portrait-boot.css';
 import { asset } from '../../lib/asset';
 
 /**
- * The portrait as a small display on a board: as it scrolls into view, the screen "boots" —
+ * The portrait, large and framed like a display panel: as it scrolls into view, the screen "boots" —
  * a scan line sweeps down, revealing the photo, then the status LED turns on.
  * Scroll-linked, transform/clip-path only. Reduced motion shows it fully on.
  * To use a real photo: save it in public/images/ under a new filename (browsers cache
@@ -16,7 +16,7 @@ import { asset } from '../../lib/asset';
 export function PortraitBoot({ role }: { role: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const still = useReducedMotion();
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.95', 'center 0.55'] });
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start 0.95', 'start 0.35'] });
   const clip = useTransform(scrollYProgress, (p) => `inset(0 0 ${((1 - p) * 100).toFixed(2)}% 0 round 14px)`);
   const scale = useTransform(scrollYProgress, [0, 1], [1.12, 1]);
   const scanY = useTransform(scrollYProgress, (p) => `${(p * 100).toFixed(2)}%`);
@@ -27,9 +27,7 @@ export function PortraitBoot({ role }: { role: string }) {
 
   return (
     <figure className="pb" ref={ref}>
-      <div className="pb-board glass">
-        <span className="pb-pins pb-pins--l" aria-hidden="true" />
-        <span className="pb-pins pb-pins--r" aria-hidden="true" />
+      <div className="pb-board">
         <div className="pb-screen">
           <span className="pb-off" aria-hidden="true">
             <span className="mono">BOOTING…</span>

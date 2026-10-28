@@ -10,6 +10,9 @@ import './circuit-core.css';
  * The hero's signature visual: a microcontroller "core" with PCB traces routed at
  * 45° to each of the things I work on. Traces are computed, not drawn by hand, so
  * adding or removing a node in src/content/hero.ts re-routes the board.
+ * On load the traces draw out, then the chip flickers on like a bench supply being
+ * switched in; after that a slow scan beam sweeps the board and each node answers
+ * as the beam passes it.
  */
 
 const SIZE = 600;
@@ -67,7 +70,8 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
 
   const routes = useMemo(() => {
     const step = (Math.PI * 2) / nodes.length;
-    return nodes.map((n, i) => ({ ...n, ...route(-Math.PI / 2 + step * i + step / 2) }));
+    // angle: degrees clockwise from 12 o'clock, so the scan beam knows when it passes the node
+    return nodes.map((n, i) => ({ ...n, angle: ((step * i + step / 2) * 180) / Math.PI, ...route(-Math.PI / 2 + step * i + step / 2) }));
   }, [nodes]);
   const decor = useMemo(stubs, []);
   const current = routes.find((r) => r.id === (selected ?? hovered)) ?? null;
@@ -118,6 +122,11 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
               <stop offset=".5" style={{ stopColor: 'var(--cyan)' }} />
               <stop offset="1" style={{ stopColor: 'var(--violet)' }} />
             </linearGradient>
+            <radialGradient id={`${uid}-heart`}>
+              <stop offset="0" style={{ stopColor: 'rgb(var(--reactor-rgb))' }} stopOpacity=".55" />
+              <stop offset=".45" style={{ stopColor: 'rgb(var(--reactor-rgb))' }} stopOpacity=".16" />
+              <stop offset="1" style={{ stopColor: 'rgb(var(--reactor-rgb))' }} stopOpacity="0" />
+            </radialGradient>
             <pattern id={`${uid}-grid`} width="8" height="8" patternUnits="userSpaceOnUse">
               <path d="M8 0H0V8" fill="none" style={{ stroke: 'var(--cyan)' }} strokeOpacity=".07" strokeWidth=".6" />
             </pattern>
@@ -160,6 +169,8 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
           {/* Lens + chip */}
           <g className="core-chip">
             <circle cx={C} cy={C} r="122" fill={`url(#${uid}-lens)`} stroke={`url(#${uid}-rim)`} strokeWidth="1" />
+            {/* Arc-blue light from under the package: off until the chip powers on */}
+            <circle className="chip-heart" cx={C} cy={C} r="118" fill={`url(#${uid}-heart)`} />
             {pins.map((p, i) => (
               <rect key={i} className="pin" x={p.x} y={p.y} width={p.w} height={p.h} rx="1.5" />
             ))}
@@ -184,17 +195,19 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
           </g>
         </svg>
 
+        <div className="core-scan" aria-hidden="true" />
+
         {/* Interactive nodes (HTML for accessibility) */}
         <ul className="core-nodes" role="list" aria-label="What I work on — select to learn more">
           {routes.map((r) => (
             <li
               key={r.id}
               className="core-node-wrap"
-              style={{ left: `${(r.node.x / SIZE) * 100}%`, top: `${(r.node.y / SIZE) * 100}%` }}
+              style={{ left: `${(r.node.x / SIZE) * 100}%`, top: `${(r.node.y / SIZE) * 100}%`, '--a': r.angle } as CSSProperties}
             >
               <button
                 type="button"
-                className={`core-node glass glass--thin glass--pill${active === r.id ? ' is-active' : ''}`}
+                className={`core-node${active === r.id ? ' is-active' : ''}`}
                 aria-pressed={selected === r.id}
                 aria-label={r.label}
                 onClick={() => setSelected((s) => (s === r.id ? null : r.id))}

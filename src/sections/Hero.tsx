@@ -2,9 +2,10 @@ import { useEffect, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { ease } from '../lib/motion';
 import { ArrowRight } from 'lucide-react';
-import { hero } from '../content';
+import { hero, profile } from '../content';
 import { ButtonLink } from '../components/ui/Button';
 import { CircuitCore } from '../components/hero/CircuitCore';
+import { introDelay } from '../components/layout/Intro';
 import './hero.css';
 
 function Title() {
@@ -20,11 +21,21 @@ function Title() {
   );
 }
 
+// Entrances wait for the opening card (Intro.tsx) when it plays, so they are seen rather than hidden under it
 const rise = (delay: number) => ({
   initial: { opacity: 0, y: 18 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.8, ease: ease.out, delay },
+  transition: { duration: 0.8, ease: ease.out, delay: introDelay + delay },
 });
+
+// Each line of the name rises out of a clip that opens from its baseline; done in under a second
+const wipe = (delay: number) => ({
+  initial: { y: '0.5em', clipPath: 'inset(0 -4% 100% -4%)' },
+  animate: { y: '0em', clipPath: 'inset(-12% -4% -12% -4%)' },
+  transition: { duration: 0.9, ease: ease.out, delay: introDelay + delay },
+});
+
+const [first, ...restOfName] = profile.name.split(' ');
 
 export function Hero() {
   const ref = useRef<HTMLElement>(null);
@@ -68,24 +79,39 @@ export function Hero() {
     <section id="home" ref={ref} className="hero" aria-labelledby="hero-title">
       <div className="container hero-grid">
         <motion.div className="hero-copy" style={out ? { y: copyY, opacity: fade } : undefined}>
-          <motion.p className="hero-eyebrow" {...rise(0.05)}>
+          <motion.p className="hero-kicker mono" {...rise(0)}>
+            <span className="hero-kicker-rule" aria-hidden="true" />
+            <span>The Inventor&rsquo;s Lab</span>
+          </motion.p>
+
+          <h1 id="hero-title" className="hero-name">
+            <motion.span className="hero-name-line" {...(reduce ? {} : wipe(0.05))}>
+              {first}
+            </motion.span>{' '}
+            <motion.span className="hero-name-line" {...(reduce ? {} : wipe(0.14))}>
+              {restOfName.join(' ')}
+              <span className="hero-name-pad" aria-hidden="true" />
+            </motion.span>
+          </h1>
+
+          <motion.p className="hero-role" {...rise(0.28)}>
             {hero.eyebrow.map((e, i) => (
               <span key={e}>
-                {i > 0 && <span className="hero-eyebrow-sep" aria-hidden="true">·</span>}
+                {i > 0 && <span className="hero-eyebrow-sep" aria-hidden="true">/</span>}
                 {e}
               </span>
             ))}
           </motion.p>
 
-          <motion.h1 id="hero-title" className="hero-title" {...rise(0.12)}>
+          <motion.p className="hero-tagline" {...rise(0.36)}>
             <Title />
-          </motion.h1>
+          </motion.p>
 
-          <motion.p className="hero-lead" {...rise(0.2)}>
+          <motion.p className="hero-lead" {...rise(0.42)}>
             {hero.lead}
           </motion.p>
 
-          <motion.div className="hero-actions" {...rise(0.28)}>
+          <motion.div className="hero-actions" {...rise(0.48)}>
             <ButtonLink variant="primary" href={hero.primaryAction.href} iconEnd={<ArrowRight size={18} className="btn-arrow" aria-hidden="true" />}>
               {hero.primaryAction.label}
             </ButtonLink>
@@ -95,7 +121,7 @@ export function Hero() {
           </motion.div>
 
           {hero.now && (
-            <motion.p className="hero-now" {...rise(0.36)}>
+            <motion.p className="hero-now" {...rise(0.54)}>
               <span className="badge-dot is-live" aria-hidden="true" />
               {hero.now}
             </motion.p>
@@ -106,7 +132,7 @@ export function Hero() {
           className="hero-visual"
           initial={{ opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.1, ease: ease.out, delay: 0.1 }}
+          transition={{ duration: 1.2, ease: ease.out, delay: introDelay + 0.2 }}
         >
           <motion.div ref={coreRef} style={out ? { scale: coreScale, opacity: coreFade } : undefined}>
             <CircuitCore nodes={hero.nodes} />

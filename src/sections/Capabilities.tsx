@@ -13,6 +13,7 @@ import { evidenceColor, evidenceLabel } from '../lib/status';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { useMedia } from '../hooks/useMedia';
 import { useScrollSteps } from '../hooks/useScrollSteps';
+import { useScrolledPast } from '../hooks/useScrolledPast';
 import './capabilities.css';
 
 const LEGEND: Evidence[] = ['professional', 'academic', 'exploring'];
@@ -38,7 +39,10 @@ export function Capabilities() {
   const narrow = useMedia('(max-width: 960px)');
   const roomy = useMedia('(min-height: 640px)');
   const still = useReducedMotion();
-  const pinned = !narrow && roomy && !still;
+  // Once scrolled past, it stays plain tabs: coming back up doesn't replay the whole pin
+  const section = useRef<HTMLElement>(null);
+  const past = useScrolledPast(section);
+  const pinned = !narrow && roomy && !still && !past;
 
   const head = (
     <SectionHead
@@ -56,6 +60,7 @@ export function Capabilities() {
   return (
     <section
       id="build"
+      ref={section}
       className={`section${pinned ? ' section--pinned' : ''}`}
       // Pinned, it is several screens tall; say so before it first renders (content-visibility) so jumps land right
       style={pinned ? { containIntrinsicSize: `auto calc(100vh + ${HEIGHT}vh)` } : undefined}
@@ -185,16 +190,28 @@ function Tabs({ index, select, fill }: { index: number; select: (i: number) => v
           </span>
         </div>
         <Glass id="cap-panel" role="tabpanel" aria-labelledby={`cap-tab-${active.id}`} className="cap-panel">
-          <AnimatePresence mode="wait" initial={false}>
-            <motion.div
+          {/* Every area sits in the same cell, so the panel keeps the tallest one's size and never changes
+              shape between areas; the chosen one crossfades in over the others */}
+          <div className="cap-stack">
+            {capabilities.map((c, i) => (
+              <div key={c.id} className="cap-slide" data-on={i === index || undefined} inert={i !== index}>
+                <Detail c={c} />
+              </div>
+            ))}
+          </div>
+          {/* The area's number, set large behind the text like a chapter mark; it wipes in from below on each change */}
+          <AnimatePresence initial={false}>
+            <motion.span
               key={active.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.22, ease: ease.out }}
+              className="cap-num"
+              aria-hidden="true"
+              initial={{ opacity: 0, clipPath: 'inset(100% 0 0 0)' }}
+              animate={{ opacity: 1, clipPath: 'inset(0% 0 0 0)' }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              transition={{ duration: 0.6, ease: ease.out }}
             >
-              <Detail c={active} />
-            </motion.div>
+              {String(index + 1).padStart(2, '0')}
+            </motion.span>
           </AnimatePresence>
         </Glass>
       </Reveal>

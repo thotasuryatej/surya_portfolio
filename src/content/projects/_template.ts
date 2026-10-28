@@ -12,7 +12,7 @@ export default defineProject({
   title: 'My New Project',
   category: 'Embedded & IoT', // reuse an existing category to keep the filters tidy
   summary: 'One sentence that explains what it is and why it matters.',
-  status: 'In progress', // 'In progress' | 'Deployed' | 'Completed' | 'Prototype' | 'Research' | 'Academic' | 'Concept'
+  status: 'In progress', // 'In progress' | 'Deployed' | 'Completed' | 'Prototype' | 'Research' | 'Academic' | 'Passion project' | 'Concept'
   period: { start: '2026-11' }, // add `end: '2027-02'` or `end: 'present'`
   updated: '2026-11',
   role: 'What I did on this project', // optional — delete if your individual role isn't documented

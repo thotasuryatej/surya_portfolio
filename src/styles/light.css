@@ -16,47 +16,47 @@
   background: radial-gradient(closest-side, rgb(var(--aura) / var(--aura-a)), rgb(var(--aura) / 0) 100%);
 }
 .aura--1 {
-  --aura: 60 130 255;
-  --aura-a: 0.13;
+  --aura: 232 176 88;
+  --aura-a: 0.035;
   top: -32vmax;
   right: -18vmax;
 }
 .aura--2 {
-  --aura: 130 100 255;
-  --aura-a: 0.11;
+  --aura: 214 142 88;
+  --aura-a: 0.03;
   top: 22vh;
   left: -30vmax;
 }
 .aura--3 {
-  --aura: 40 190 200;
-  --aura-a: 0.08;
+  --aura: 160 220 255;
+  --aura-a: 0.025;
   bottom: -40vmax;
   right: 4vmax;
 }
 
 :root[data-theme='light'] {
-  --bg: #eef3fb;
-  --bg-2: #e8eef9;
-  --shadow-rgb: 40 72 140;
+  --bg: #f4f3ef;
+  --bg-2: #eceae4;
+  --shadow-rgb: 40 44 60;
 }
 
 :root[data-theme='light'] .atmosphere {
-  background: linear-gradient(180deg, #f3f7fd 0%, #eaf0fa 55%, #eef0fb 100%);
+  background: linear-gradient(180deg, #f6f5f1 0%, #efeee9 55%, #ebeae4 100%);
 }
 :root[data-theme='light'] .atmosphere::before {
   opacity: 0.6;
 }
 :root[data-theme='light'] .aura--1 {
-  --aura: 96 160 255;
-  --aura-a: 0.85;
+  --aura: 120 170 240;
+  --aura-a: 0.42;
 }
 :root[data-theme='light'] .aura--2 {
-  --aura: 170 140 255;
-  --aura-a: 0.7;
+  --aura: 230 180 130;
+  --aura-a: 0.34;
 }
 :root[data-theme='light'] .aura--3 {
-  --aura: 90 214 200;
-  --aura-a: 0.6;
+  --aura: 150 200 210;
+  --aura-a: 0.3;
 }
 
 /* Glass: clearer, brighter, with a crisp white rim */
@@ -116,17 +116,15 @@
     transform var(--t-med) var(--ease-out),
     box-shadow var(--t-slow) var(--ease-out);
 }
-:root[data-theme='light'] .pc:hover,
-:root[data-theme='light'] .pc:focus-within {
-  border-color: rgb(255 255 255 / 1);
+/* Project frames on paper: a pale mount with a soft drop, instead of a dark well */
+:root[data-theme='light'] .ps-media {
+  background: radial-gradient(90% 80% at 50% 0%, rgb(255 255 255 / 0.95), rgb(232 235 238 / 0.75));
   box-shadow:
-    inset 0 1px 0 rgb(255 255 255 / 1),
-    0 0 0 1px rgb(var(--accent-rgb) / 0.14),
-    0 28px 60px -26px rgb(var(--shadow-rgb) / 0.32);
+    inset 0 1px 0 rgb(255 255 255 / 0.9),
+    0 36px 70px -44px rgb(var(--shadow-rgb) / 0.35);
 }
-:root[data-theme='light'] .pc-media {
-  background: radial-gradient(120% 100% at 50% 0%, rgb(255 255 255 / 0.7), rgb(226 236 252 / 0.55));
-  border-bottom-color: rgb(255 255 255 / 0.8);
+:root[data-theme='light'] .pi-thumb {
+  background: rgb(255 255 255 / 0.6);
 }
 
 /* Diagram wells pick up the same frost */

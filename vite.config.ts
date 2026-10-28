@@ -30,8 +30,8 @@ function seoFromContent(): Plugin {
         `<meta name="description" content="${esc(site.description)}" />`,
         `<meta name="keywords" content="${esc(site.keywords.join(', '))}" />`,
         `<meta name="author" content="${esc(profile.name)}" />`,
-        `<meta name="theme-color" media="(prefers-color-scheme: dark)" content="${site.themeColor}" />`,
-        `<meta name="theme-color" media="(prefers-color-scheme: light)" content="${site.themeColorLight}" />`,
+        // Dark is the default theme whatever the OS prefers; theme.ts updates this once the visitor picks light
+        `<meta name="theme-color" content="${site.themeColor}" />`,
         `<meta property="og:type" content="profile" />`,
         `<meta property="og:title" content="${esc(site.title)}" />`,
         `<meta property="og:description" content="${esc(site.description)}" />`,

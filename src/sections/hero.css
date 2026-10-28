@@ -6,6 +6,14 @@
   display: flex;
   align-items: center;
 }
+.hero::before {
+  /* Vignette: the frame darkens toward its edges so the eye lands on the title and the core */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 95% at 62% 42%, transparent 50%, rgb(var(--well-rgb) / 0.6) 100%);
+}
 .hero::after {
   /* horizon line that separates hero from content */
   content: '';
@@ -14,10 +22,11 @@
   right: 0;
   bottom: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent, rgb(var(--accent-rgb) / 0.25), rgb(var(--violet-rgb) / 0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgb(var(--accent-rgb) / 0.22), rgb(var(--copper-rgb) / 0.16), transparent);
 }
 
 .hero-grid {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   align-items: center;
@@ -26,51 +35,104 @@
 
 .hero-copy {
   display: grid;
-  gap: min(26px, 2.6svh);
+  gap: min(22px, 2.3svh);
   justify-items: start;
 }
 
-.hero-eyebrow {
+/* Kicker: the name of the place, a hairline, where it is */
+.hero-kicker {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px 0;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--text-3);
 }
-.hero-eyebrow > span:first-child {
-  color: var(--cyan);
+.hero-kicker > span {
+  white-space: nowrap;
+}
+@media (max-width: 480px) {
+  .hero-kicker {
+    gap: 10px;
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+  }
+}
+.hero-kicker-rule {
+  width: clamp(28px, 4vw, 56px);
+  height: 1px;
+  background: linear-gradient(90deg, rgb(var(--accent-rgb) / 0.7), rgb(var(--copper-rgb) / 0.5));
+}
+
+/* The name: the one oversized line on the page. Two lines, flush left, ending in a solder pad */
+.hero-name {
+  display: grid;
+  font-size: var(--fs-display);
+  font-weight: 650;
+  line-height: 0.86;
+  letter-spacing: -0.065em;
+  color: var(--text-hi);
+  margin: 0.04em 0 0 -0.05em; /* optical: the S's overhang lines up with the kicker */
+}
+.hero-name-line {
+  display: block;
+  padding-bottom: 0.06em; /* room for descenders inside the reveal's clip */
+}
+.hero-name-line + .hero-name-line {
+  padding-left: 0.42em; /* the second line steps in, like a trace taking its 45° jog */
+}
+.hero-name-pad {
+  display: inline-block;
+  width: 0.15em;
+  height: 0.15em;
+  margin-left: 0.07em;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 calc(0.18em * var(--glow)) rgb(var(--accent-rgb) / 0.55);
+}
+
+.hero-role {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 0;
+  font-size: clamp(0.95rem, 0.88rem + 0.3vw, 1.1rem);
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--text);
 }
 .hero-eyebrow-sep {
-  margin-inline: 10px;
+  margin-inline: 12px;
   color: var(--text-4);
+  font-weight: 400;
 }
-/* Too narrow for one line: the main role gets its own line and the rest start flush beneath it,
-   instead of wrapping wherever they happen to and leaving a separator at the start of a line */
+/* Too narrow for one line: the main role gets its own line and the rest start flush beneath it */
 @media (max-width: 560px) {
-  .hero-eyebrow > span:first-child {
+  .hero-role > span:first-child {
     flex-basis: 100%;
   }
-  .hero-eyebrow > span:nth-child(2) > .hero-eyebrow-sep {
+  .hero-role > span:nth-child(2) > .hero-eyebrow-sep {
     display: none;
   }
 }
 
-.hero-title {
-  font-size: var(--fs-hero);
-  line-height: 1.02;
-  letter-spacing: -0.045em;
-  font-weight: 600;
+.hero-tagline {
+  max-width: 22ch;
+  font-size: clamp(1.35rem, 1.05rem + 1vw, 1.9rem);
+  font-weight: 550;
+  line-height: 1.18;
+  letter-spacing: -0.03em;
+  color: var(--text);
   text-wrap: balance;
-  max-width: 13ch;
+  padding-top: min(10px, 1svh);
+  border-top: 1px solid var(--line);
+  padding-right: 2ch;
 }
 
 .hero-lead {
-  max-width: 34rem;
-  font-size: var(--fs-lead);
-  line-height: 1.6;
+  max-width: 33rem;
+  font-size: clamp(0.98rem, 0.94rem + 0.2vw, 1.08rem);
+  line-height: 1.62;
   color: var(--text-2);
   text-wrap: pretty;
 }
@@ -96,8 +158,21 @@
 }
 
 .hero-visual {
+  position: relative;
   width: 100%;
   min-width: 0;
+}
+/* Spotlight behind the core: a plain gradient, no blur */
+.hero-visual::before {
+  content: '';
+  position: absolute;
+  inset: -12%;
+  z-index: -1;
+  pointer-events: none;
+  /* The bench light: cool on the chip, a warm copper falloff beneath it */
+  background:
+    radial-gradient(closest-side, rgb(var(--accent-rgb) / 0.11), transparent 70%),
+    radial-gradient(40% 24% at 50% 74%, rgb(var(--copper-rgb) / 0.09), transparent 100%);
 }
 
 @media (max-width: 960px) {
@@ -107,12 +182,13 @@
   .hero-grid {
     grid-template-columns: minmax(0, 1fr);
   }
-  .hero-title {
-    max-width: 14ch;
-  }
   .hero-visual {
     max-width: 560px;
     margin-inline: auto;
+  }
+  /* Single column: the spotlight stays inside the column, or it would widen the page */
+  .hero-visual::before {
+    inset: -8% 0;
   }
 }
 
