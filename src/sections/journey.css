@@ -247,12 +247,13 @@ button.jr-btn:hover .jr-go {
 .jr-rail--swipe:focus-visible .jr-line {
   background: rgb(var(--accent-rgb) / 0.4);
 }
-/* The padding at the far end is lost inside a scroller; a spacer keeps the last stop off the edge */
+/* The padding at the far end is lost inside a scroller; a spacer keeps the last stop off the edge.
+   --edge can't be used here: its 100% would resolve against the track, thousands of pixels wide. */
 .jr-rail--swipe .jr-track::after {
   content: '';
   flex: none;
   width: 1px;
-  margin-left: calc(var(--edge) - 21px);
+  margin-left: calc(max(var(--gutter), (100vw - var(--maxw)) / 2) - 21px);
 }
 .jr-rail--swipe .jr-stop {
   scroll-snap-align: start;

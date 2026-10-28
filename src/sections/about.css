@@ -110,6 +110,13 @@
   }
 }
 
+/* Side by side, the portrait sits at the inner edge of its column, next to the text rather than the margin */
+@media (min-width: 861px) {
+  .about-portrait .pb {
+    margin-left: auto;
+  }
+}
+
 /* Short desktop windows: the sticky portrait fits under the nav with its caption */
 @media (min-width: 861px) and (max-height: 900px) {
   .about-portrait .pb {

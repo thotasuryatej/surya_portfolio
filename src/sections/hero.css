@@ -65,7 +65,7 @@
   background: linear-gradient(90deg, rgb(var(--accent-rgb) / 0.7), rgb(var(--copper-rgb) / 0.5));
 }
 
-/* The name: the one oversized line on the page. Two lines, flush left, ending in a solder pad */
+/* The name: the one oversized line on the page, ending in a solder pad */
 .hero-name {
   display: grid;
   font-size: var(--fs-display);
@@ -78,9 +78,6 @@
 .hero-name-line {
   display: block;
   padding-bottom: 0.06em; /* room for descenders inside the reveal's clip */
-}
-.hero-name-line + .hero-name-line {
-  padding-left: 0.42em; /* the second line steps in, like a trace taking its 45° jog */
 }
 .hero-name-pad {
   display: inline-block;
@@ -204,21 +201,16 @@
   }
 }
 
-/* Wider than a phone: the name on one line, scaled to fit its column (the copy column is a size container) */
-@media (min-width: 701px) {
-  .hero-copy {
-    container-type: inline-size;
-  }
-  .hero-name {
-    display: flex;
-    flex-wrap: nowrap;
-    gap: 0.2em;
-    font-size: min(var(--fs-display), 23cqi);
-    white-space: nowrap;
-  }
-  .hero-name-line + .hero-name-line {
-    padding-left: 0;
-  }
+/* The name on one line, scaled to fit its column (the copy column is a size container) */
+.hero-copy {
+  container-type: inline-size;
+}
+.hero-name {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.2em;
+  font-size: min(var(--fs-display), 23cqi);
+  white-space: nowrap;
 }
 
 /* Phones: one centred column. The name's two lines stack on the centre line instead of stepping in */
@@ -228,11 +220,8 @@
     text-align: center;
   }
   .hero-name {
-    justify-items: center;
+    justify-content: center;
     margin-inline: 0;
-  }
-  .hero-name-line + .hero-name-line {
-    padding-left: 0;
   }
   .hero-role {
     justify-content: center;

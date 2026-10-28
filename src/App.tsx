@@ -12,6 +12,17 @@ import { ChapterContext } from './lib/chapter';
 
 const navItems = visibleSections.filter((s) => s.nav).map(({ id, label }) => ({ id, label }));
 const sectionIds = visibleSections.map((s) => s.id);
+const TOUCH = '(max-width: 900px) and (pointer: coarse)';
+
+/** Whether a pinned section lies between the current scroll position and `el`. */
+const crossesPin = (el: Element) => {
+  const to = el.getBoundingClientRect().top;
+  const [lo, hi] = to < 0 ? [to, 0] : [0, to];
+  return [...document.querySelectorAll('.section--pinned')].some((pin) => {
+    const r = pin.getBoundingClientRect();
+    return pin !== el && r.top < hi && r.bottom > lo;
+  });
+};
 
 export default function App() {
   // Sections below the fold use content-visibility:auto (base.css), so their heights are estimates until
@@ -37,6 +48,13 @@ export default function App() {
       if (id && sectionIds.includes(id)) {
         target = id;
         tries = 0;
+        // On phones, a smooth scroll past a pinned section would play its whole ride on the way; jump instead
+        const el = document.getElementById(id);
+        if (el && matchMedia(TOUCH).matches && crossesPin(el)) {
+          e.preventDefault();
+          history.pushState(null, '', `#${id}`);
+          el.scrollIntoView({ behavior: 'instant' });
+        }
       }
     };
     const initial = location.hash.slice(1);

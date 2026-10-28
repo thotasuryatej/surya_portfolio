@@ -4,16 +4,43 @@ import { useEffect, useLayoutEffect, useState, type RefObject } from 'react';
  * Pinned sections take several screens of scroll to play through. Once the reader has scrolled past one,
  * scrolling back up shouldn't make them play it through again, so the section swaps to its compact version.
  * The swap waits until scrolling stops (a smooth jump keeps its target), happens while the section is above
- * the screen, and the page then moves by the height it lost, so nothing on screen jumps.
+ * the screen, and the page then moves by the height it lost, so nothing on screen jumps. Several sections can
+ * swap in one pass and commit in separate frames, so the section on screen is held in place for a moment,
+ * through every layout change, rather than corrected once.
  */
 const watched = new Map<Element, () => void>();
-let before: { y: number; h: number } | null = null;
 let timer = 0;
+
+/** The section on screen when the swap began, and where its top was */
+let anchor: { el: Element; top: number } | null = null;
+const holder = typeof ResizeObserver === 'function' ? new ResizeObserver(() => hold()) : null;
+const release = () => {
+  anchor = null;
+  holder?.disconnect();
+  removeEventListener('wheel', release);
+  removeEventListener('touchstart', release);
+  removeEventListener('keydown', release);
+};
+const hold = () => {
+  if (!anchor) return;
+  const d = anchor.el.getBoundingClientRect().top - anchor.top;
+  if (Math.abs(d) > 1) scrollBy({ top: d, behavior: 'instant' });
+};
 
 const settle = () => {
   const past = [...watched].filter(([el]) => el.getBoundingClientRect().bottom <= 0);
   if (!past.length) return;
-  before = { y: scrollY, h: document.documentElement.scrollHeight };
+  const el = [...document.querySelectorAll('main > section')].find((s) => s.getBoundingClientRect().bottom > 0);
+  if (el) {
+    release();
+    anchor = { el, top: el.getBoundingClientRect().top };
+    holder?.observe(document.body);
+    // Let go once the swaps are done, or as soon as the reader scrolls on their own
+    addEventListener('wheel', release, { passive: true });
+    addEventListener('touchstart', release, { passive: true });
+    addEventListener('keydown', release);
+    window.setTimeout(release, 1000);
+  }
   for (const [el, mark] of past) {
     watched.delete(el);
     mark();
@@ -38,12 +65,9 @@ export function useScrolledPast(ref: RefObject<Element | null>) {
     };
   }, [ref, past]);
 
-  // Every section that swapped in this pass commits together; the first one to get here moves the page.
+  // Keep the section on screen where it was, before the browser paints the shorter page
   useLayoutEffect(() => {
-    if (!past || !before) return;
-    const { y, h } = before;
-    before = null;
-    scrollTo({ top: y + document.documentElement.scrollHeight - h, behavior: 'instant' });
+    if (past) hold();
   }, [past]);
 
   return past;
