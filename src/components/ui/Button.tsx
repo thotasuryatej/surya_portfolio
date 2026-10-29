@@ -30,7 +30,7 @@ export function ButtonLink({
   const cls = [
     'btn',
     `btn--${variant}`,
-    variant === 'glass' && 'glass glass--thin',
+    variant === 'glass' && 'glass glass--thin liquid-clear',
     size === 'sm' && 'btn--sm',
     className,
   ]

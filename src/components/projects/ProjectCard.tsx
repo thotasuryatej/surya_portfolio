@@ -37,7 +37,7 @@ const TILT = 7;
  * Copyright (c) 2026 David Haz) and the "Read the case study" label follows the pointer.
  * The card's stretched link sits on top of the frame, so the card listens and the frame is measured.
  */
-function useCursorLabel() {
+export function useCursorLabel() {
   const ref = useRef<HTMLDivElement>(null);
   const frame = useRef(0);
   const onPointerMove = (e: PointerEvent<HTMLElement>) => {

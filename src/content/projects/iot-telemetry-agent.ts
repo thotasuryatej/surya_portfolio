@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'iot-telemetry-agent',
   title: 'IoT Telemetry Device Agent',
+  short: 'Telemetry Agent',
   category: 'Embedded & IoT',
   summary:
     'A simulated firmware agent that buffers sensor data durably on flash and uploads it reliably over an unreliable link — within a 256 KB RAM / 8 MB flash budget.',

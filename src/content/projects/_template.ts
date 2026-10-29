@@ -10,6 +10,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'my-new-project', // lowercase-with-dashes, must be unique; becomes /#project/my-new-project
   title: 'My New Project',
+  short: 'New Project', // optional: a few words for the row of names under the carousel
   category: 'Embedded & IoT', // reuse an existing category to keep the filters tidy
   summary: 'One sentence that explains what it is and why it matters.',
   status: 'In progress', // 'In progress' | 'Deployed' | 'Completed' | 'Prototype' | 'Research' | 'Academic' | 'Passion project' | 'Concept'

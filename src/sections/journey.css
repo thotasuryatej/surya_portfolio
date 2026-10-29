@@ -140,17 +140,15 @@ button.jr-btn:hover .jr-go {
 .jr-pin .section-head {
   margin-bottom: clamp(1.5rem, 1rem + 2vw, 3rem);
 }
-/* Full width, so stops can slide out past the content column; padded to line up with it. Stops fade
-   as they leave the column, so they never cross the page's signal trace in the margin. The vertical
-   padding keeps card shadows inside the mask. */
+/* Full width, so stops can slide out past the content column to the screen edge; padded to line up with it.
+   Clipped sideways rather than faded with a mask: a mask would cut the cards' clear glass off from the page
+   behind them, leaving a flat tint. The vertical padding keeps card shadows in. */
 .jr-rail {
   --edge: max(var(--gutter), (100% - var(--maxw)) / 2);
   width: 100%;
   padding: 24px var(--edge) 64px;
   margin-block: -24px -64px;
-  overflow: visible;
-  -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--edge) - min(48px, var(--edge) * 0.45)), #000 var(--edge));
-  mask-image: linear-gradient(90deg, transparent calc(var(--edge) - min(48px, var(--edge) * 0.45)), #000 var(--edge));
+  overflow-x: clip;
 }
 /* Scoped under the rail to outrank the global ol[role=list] reset, which zeroes padding */
 .jr-rail .jr-track {
@@ -219,21 +217,6 @@ button.jr-btn:hover .jr-go {
   scroll-snap-type: x proximity;
   scroll-padding-inline: var(--edge);
   scrollbar-width: none;
-  /* Fade out at both edges, so it is clear there is more either way */
-  -webkit-mask-image: linear-gradient(
-    90deg,
-    transparent calc(var(--edge) - min(28px, var(--edge) * 0.6)),
-    #000 var(--edge),
-    #000 calc(100% - var(--edge)),
-    transparent calc(100% - var(--edge) + min(28px, var(--edge) * 0.6))
-  );
-  mask-image: linear-gradient(
-    90deg,
-    transparent calc(var(--edge) - min(28px, var(--edge) * 0.6)),
-    #000 var(--edge),
-    #000 calc(100% - var(--edge)),
-    transparent calc(100% - var(--edge) + min(28px, var(--edge) * 0.6))
-  );
 }
 .jr-rail--swipe {
   margin-block: -24px -48px;
@@ -319,7 +302,7 @@ button.jr-btn:hover .jr-go {
 
 /* No backdrop filter on these cards: they fade as the current reaches them and slide with the track, and Chrome
    redraws a blurred backdrop under a changing opacity or a moving layer with visible glitches. A fuller fill stands
-   in for the blur. */
+   in for the blur. Where liquid glass is drawn, the clear plate of the top bar (glass.css) replaces this. */
 .jr-card.glass {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;

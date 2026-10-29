@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'smart-home-iot-hub',
   title: 'Smart Home Automation & IoT Hub',
+  short: 'Smart Home Hub',
   category: 'Embedded & IoT',
   summary:
     'Firmware for Wi-Fi smart switches and multi-technique lighting dimmers — and a Matter-based hub to connect them with voice-assistant ecosystems.',

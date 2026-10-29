@@ -130,6 +130,12 @@
     0 12px 32px -16px rgb(var(--shadow-rgb) / 0.6);
 }
 
+/* Clear glass is just the bent backdrop and its edge light, like the top bar: no frosted tint, rim or shine */
+.glass.liquid-clear[data-liquid]::before,
+.glass.liquid-clear[data-liquid]::after {
+  content: none;
+}
+
 /* Solid surfaces for content (not glass) */
 .surface {
   position: relative;

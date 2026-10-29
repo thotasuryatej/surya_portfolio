@@ -864,3 +864,436 @@ html.vt-project-swap::view-transition-group(pj-title) {
 .pc {
   cursor: pointer;
 }
+
+/* ------------------------------------------------------------- Gallery (ProjectGallery.tsx)
+   A fan of cards with the centre project's details below. ProjectGallery sets each card's transform and the
+   --face / --outline / --shade / --ring mix every frame; everything else is here. */
+.pg {
+  display: grid;
+  gap: clamp(14px, 2svh, 22px);
+}
+.pg-stage {
+  /* the illustrations' own shape, 400 × 250 (ProjectGallery's ASPECT) */
+  --ch: calc(var(--cw) * 0.625);
+  position: relative;
+  height: calc(var(--ch) * 1.16);
+  /* Cards fan out past the column on narrow screens; clip them at the page edge, not above or below */
+  overflow: clip visible;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+.pg-stage:active {
+  cursor: grabbing;
+}
+.pg-card {
+  position: absolute;
+  left: 50%;
+  top: calc(var(--ch) * 0.05);
+  width: var(--cw);
+  height: var(--ch);
+  margin-left: calc(var(--cw) / -2);
+  border-radius: 20px;
+  will-change: transform;
+  -webkit-tap-highlight-color: transparent;
+}
+.pg-face {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  opacity: var(--face, 1);
+  border: 1px solid var(--line-2);
+  background: radial-gradient(90% 80% at 50% 0%, rgb(var(--tint-rgb) / 0.9), transparent 70%), rgb(var(--well-rgb));
+  box-shadow:
+    inset 0 1px 0 rgb(var(--hi-rgb) / 0.05),
+    0 30px 60px -30px rgb(var(--shadow-rgb) / 0.85);
+}
+:root[data-theme='light'] .pg-face {
+  background: radial-gradient(90% 80% at 50% 0%, rgb(var(--raised-rgb) / 0.95), rgb(var(--well-rgb) / 0.8));
+  box-shadow:
+    inset 0 1px 0 rgb(var(--hi-rgb) / 0.9),
+    0 28px 56px -30px rgb(var(--shadow-rgb) / 0.4);
+}
+.pg-media {
+  position: absolute;
+  inset: 0;
+}
+/* A screenshot of another shape is shown whole, not cropped */
+.pg-media > .pc-img {
+  object-fit: contain;
+}
+.pg-media > .pv {
+  position: absolute;
+  inset: 0;
+}
+.pg-media::after {
+  /* the same warm bench light as the frames had */
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(70% 40% at 50% 104%, rgb(var(--copper-rgb) / 0.1), transparent 70%);
+}
+/* Side cards recede into the page */
+.pg-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: rgb(var(--well-rgb));
+  opacity: var(--shade, 0);
+}
+.pg-ring,
+.pg-outline {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+}
+/* The accent ring marks the centre card and fades as it leaves the middle */
+.pg-ring {
+  box-shadow:
+    inset 0 0 0 2px var(--cyan),
+    0 0 0 4px rgb(var(--accent-rgb) / 0.12),
+    0 24px 60px -28px rgb(var(--accent-2-rgb) / 0.55);
+  opacity: var(--ring, 0);
+}
+.pg-outline {
+  border: 1px solid rgb(var(--line-rgb) / 0.9);
+  opacity: var(--outline, 0);
+}
+/* Only the centre illustration moves, and only once the section has been seen */
+.pg-card:not([data-centre]) .pv *,
+.pg:not([data-in]) .pv * {
+  animation-play-state: paused;
+}
+
+/* The centre card answers the mouse: it tips toward it, catches the light, and the label follows the pointer */
+.pg-face[data-cursor] .ps-glare {
+  opacity: 1;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pg-card[data-centre] {
+    cursor: pointer;
+  }
+  .pg-face[data-cursor] .ps-cursor {
+    opacity: 1;
+    transform: translate(calc(var(--cx, 50%) - 50%), calc(var(--cy, 50%) - 50%)) scale(1);
+    transition:
+      opacity 180ms var(--ease-out),
+      transform 120ms var(--ease-out);
+  }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .pg-card[data-centre] .pg-face {
+    transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition: transform 700ms var(--ease-out);
+  }
+  .pg-card[data-centre] .pg-face[data-cursor] {
+    transition: transform 160ms var(--ease-out);
+  }
+}
+
+/* Arrows and the count */
+.pg-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.pg-arrow {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: var(--text);
+  background: rgb(var(--raised-rgb) / 0.8);
+  box-shadow: inset 0 0 0 1px var(--line-2);
+  cursor: pointer;
+  transition:
+    box-shadow var(--t-fast),
+    color var(--t-fast),
+    opacity var(--t-fast);
+}
+.pg-arrow:hover:not(:disabled) {
+  color: var(--cyan);
+}
+.pg-arrow:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.pg-count {
+  min-width: 5.5em;
+  text-align: center;
+  font-size: var(--fs-label);
+  letter-spacing: 0.12em;
+  color: var(--text-4);
+}
+.pg-count span {
+  font-family: var(--font-sans);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+
+/* The row of names */
+.pg-names {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 6px;
+  width: min(100% - 2 * var(--gutter, 16px), 1100px);
+  margin-inline: auto;
+}
+.pg-name {
+  padding: 7px 14px;
+  border-radius: var(--r-pill);
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--text-3);
+  transition:
+    color var(--t-fast),
+    background-color var(--t-fast),
+    box-shadow var(--t-fast);
+}
+.pg-name:hover {
+  color: var(--text);
+}
+.pg-name[aria-current] {
+  color: var(--text-hi);
+  background: rgb(var(--accent-rgb) / 0.12);
+  box-shadow: inset 0 0 0 1px rgb(var(--accent-rgb) / 0.45);
+}
+
+/* The centre project's details */
+.pg-detail {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  max-width: 42rem;
+  min-height: 14.5rem;
+  margin-inline: auto;
+  align-content: start;
+  text-align: center;
+}
+.pg-detail .pc-meta,
+.pg-detail .tag-list {
+  justify-content: center;
+}
+.pg-title {
+  font-size: clamp(1.3rem, 1rem + 1vw, 1.85rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.pg-sum {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-2);
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.pg-detail:hover .pg-cta,
+.pg-detail:focus-within .pg-cta {
+  background-size: 100% 1px;
+}
+.pg-detail:hover .pg-cta svg {
+  transform: translate(2px, -2px);
+}
+.pg-detail:has(.pc-link:focus-visible) {
+  outline-offset: 10px;
+}
+
+/* Each new project's details rise in, one line after another */
+@media (prefers-reduced-motion: no-preference) {
+  .pg:not([data-in]) .pg-detail {
+    opacity: 0;
+  }
+  .pg[data-in] .pg-reveal {
+    animation: pg-in 650ms var(--ease-out) both;
+  }
+  .pg-reveal:nth-child(3) {
+    animation-delay: 50ms;
+  }
+  .pg-reveal:nth-child(4) {
+    animation-delay: 100ms;
+  }
+  .pg-reveal:nth-child(5) {
+    animation-delay: 150ms;
+  }
+  .pg-reveal:nth-child(6) {
+    animation-delay: 200ms;
+  }
+  .pg-reveal:nth-child(7) {
+    animation-delay: 250ms;
+  }
+}
+@keyframes pg-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+    filter: blur(5px);
+  }
+}
+
+/* Phones: the names become one line that scrolls sideways, and the details tighten */
+@media (max-width: 600px) {
+  .pg-names {
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    padding-inline: 16px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-mask: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    mask: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  }
+  .pg-names::-webkit-scrollbar {
+    display: none;
+  }
+  .pg-detail {
+    gap: 10px;
+    min-height: 16rem;
+  }
+  .pg-sum {
+    font-size: 0.95rem;
+    -webkit-line-clamp: 4;
+    line-clamp: 4;
+  }
+}
+
+/* Desktops: the details stay short (status, dates, title, recognition); the case study has the rest */
+@media (min-width: 901px) {
+  .pg-sum,
+  .pg-detail .tag-list {
+    display: none;
+  }
+  .pg-detail {
+    min-height: 8.5rem;
+    gap: 10px;
+  }
+}
+/* Pinned: the whole gallery fits one screen under the top bar */
+.pg-outer {
+  position: relative;
+}
+.pg-pin .section-head {
+  margin-bottom: clamp(0.75rem, 3svh, 2rem);
+}
+/* The lead gives its room to the cards; the heading says enough here */
+.pg-pin .section-head .lead {
+  display: none;
+}
+.pg--pinned .pg-nav .pg-names {
+  width: auto;
+  margin-inline: 0;
+}
+.pg--pinned {
+  gap: clamp(10px, 1.6svh, 18px);
+}
+
+/* ---------------------------------------------------------------- strip (phones and tablets): swiped like Journey */
+.pst {
+  --edge: max(var(--gutter, 16px), (100% - var(--maxw)) / 2);
+  display: grid;
+  gap: 14px;
+}
+.pst-rail {
+  display: flex;
+  gap: 14px;
+  padding-inline: var(--edge);
+  padding-block: 4px 12px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--edge);
+  scrollbar-width: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.pst-rail::-webkit-scrollbar {
+  display: none;
+}
+.pst-rail:focus-visible {
+  outline: 2px solid rgb(var(--accent-rgb) / 0.5);
+  outline-offset: -2px;
+}
+/* The padding at the far end is lost inside a scroller; a spacer keeps the last card off the edge */
+.pst-rail::after {
+  content: '';
+  flex: none;
+  width: 1px;
+  margin-left: calc(var(--gutter, 16px) - 15px);
+}
+.pst-card {
+  flex: none;
+  width: min(84vw, 420px);
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  scroll-snap-align: start;
+  cursor: pointer;
+}
+.pst-media {
+  position: relative;
+  aspect-ratio: 400 / 250;
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgb(var(--raised-rgb));
+  box-shadow: inset 0 0 0 1px var(--line-2);
+}
+.pst-media > .pv {
+  position: absolute;
+  inset: 0;
+}
+.pst-media > .pc-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.pst-body {
+  display: grid;
+  justify-items: start;
+  gap: 10px;
+  padding-inline: 2px;
+}
+.pst-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.pst-sum {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--text-2);
+  text-wrap: pretty;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.pst-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.pst-nav .pg-count {
+  text-align: left;
+}
+.pst-btns {
+  display: flex;
+  gap: 8px;
+}

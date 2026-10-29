@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'smart-microgrid',
   title: 'Smart Microgrid as a Service',
+  short: 'Smart Microgrid',
   category: 'Energy',
   summary:
     'A platform to monitor how a microgrid generates, distributes and consumes energy — with analytics and usage suggestions. Smart India Hackathon 2023 finalist.',

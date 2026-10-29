@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'pat-iot-website',
   title: 'PAT IoT Solutions Website',
+  short: 'PAT IoT Website',
   category: 'Web',
   summary:
     'Designed and deployed the company website alongside my firmware role, using Claude AI for UI development, deployment and workflow integration.',

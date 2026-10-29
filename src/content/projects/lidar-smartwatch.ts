@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'lidar-smartwatch',
   title: 'LiDAR-Enabled Smartwatch for Visually Impaired Users',
+  short: 'LiDAR Smartwatch',
   category: 'Assistive Tech',
   summary:
     'A wearable concept that uses LiDAR sensing to help visually impaired people perceive their surroundings. Selected for the Grand Contest 2024.',

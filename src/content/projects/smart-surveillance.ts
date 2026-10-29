@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'smart-surveillance',
   title: 'Smart and Sustainable Surveillance',
+  short: 'Smart Surveillance',
   category: 'AI & Vision',
   summary:
     'Real-time object detection, face recognition and motion detection on webcam and CCTV feeds, with a monitoring interface for event tracking.',

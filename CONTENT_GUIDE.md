@@ -31,6 +31,7 @@ The project appears in the Projects grid automatically, and its case study opens
 | --- | --- |
 | `status` | `In progress`, `Deployed`, `Completed`, `Prototype`, `Research`, `Academic` or `Concept`. Be honest: in-progress work is shown as in progress. |
 | `period` | `{ start: '2026-11' }`, plus `end: '2027-02'` or `end: 'present'`. Dates can be `2026`, `2026-11` or `2026-11-14`. |
+| `short` | A few words for the row of names under the Projects carousel, e.g. `'Smart Home Hub'`. Without it, the full title is used. |
 | `featured` | `true` gives the large card at the top. Only one project should be featured. |
 | `order` | A lower number shows earlier. Without it, projects are sorted newest first. |
 | `visual` | The card illustration when there's no photo: `iot-hub`, `web`, `queue`, `vision`, `microgrid`, `lidar` or `blueprint`. Cards using one are labelled "Illustration". |

@@ -3,6 +3,7 @@ import { defineProject } from '../schema';
 export default defineProject({
   slug: 'fq-codel-iot-wifi',
   title: 'FQ-CoDel Scheduling for IoT Traffic in Wi-Fi Networks',
+  short: 'FQ-CoDel for IoT',
   category: 'Network Research',
   summary:
     'Fair-queuing congestion control so small, time-sensitive IoT packets are not stuck behind bulk traffic — simulated and analysed in NS-3.',

@@ -181,6 +181,8 @@ export interface Project {
   /** URL-safe id, also used in the share link: /#project/<slug> */
   slug: string;
   title: string;
+  /** A few words for the row of names under the Projects carousel. Defaults to the title. */
+  short?: string;
   category: string;
   /** One sentence for cards. */
   summary: string;
