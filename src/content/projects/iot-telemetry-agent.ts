@@ -11,7 +11,7 @@ export default defineProject({
   updated: '2026-10',
   role: 'Sole author — architecture, C++17 implementation, simulator and documentation',
   technologies: ['C++17', 'CMake', 'Embedded systems', 'Flash storage', 'CRC16 / CRC32', 'IoT telemetry'],
-  order: 2,
+  order: 5,
   visual: 'telemetry',
   diagram: 'telemetry-replay',
   overview: [

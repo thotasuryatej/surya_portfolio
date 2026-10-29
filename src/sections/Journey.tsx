@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { journey, journeyPhases, milestoneDate, projectBySlug } from '../content';
@@ -7,7 +7,6 @@ import { Icon } from '../components/ui/Icon';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { asset } from '../lib/asset';
 import { useScrolledPast } from '../hooks/useScrolledPast';
-import { useLiquidGlass } from '../components/ui/LiquidGlass';
 import './journey.css';
 
 /** Where the section pins and scrolls sideways; phones get the strip, swiped or stepped with the arrows */
@@ -47,37 +46,6 @@ export function Journey() {
   );
 }
 
-/**
- * Keeps the rail's copy of the blueprint board on the page board's lines (both repeat every 120px): the shift is
- * set only when it changes, so while the rail is pinned it is set once and nothing repaints as the page scrolls.
- */
-function useBoardShift(rail: RefObject<HTMLDivElement | null>) {
-  useEffect(() => {
-    const r = rail.current;
-    if (!r) return;
-    let frame = 0;
-    let last = '';
-    const set = () => {
-      frame = 0;
-      const top = Math.round(r.getBoundingClientRect().top);
-      if (top > innerHeight || top < -r.offsetHeight) return;
-      const y = `${-(((top % 120) + 120) % 120)}px`;
-      if (y !== last) r.style.setProperty('--grid-y', (last = y));
-    };
-    const on = () => {
-      if (!frame) frame = requestAnimationFrame(set);
-    };
-    set();
-    addEventListener('scroll', on, { passive: true });
-    addEventListener('resize', on);
-    return () => {
-      cancelAnimationFrame(frame);
-      removeEventListener('scroll', on);
-      removeEventListener('resize', on);
-    };
-  }, [rail]);
-}
-
 function Head() {
   return (
     <SectionHead
@@ -95,7 +63,6 @@ function Pinned() {
   const track = useRef<HTMLOListElement>(null);
   const [dist, setDist] = useState(0);
   const [lit, setLit] = useState(0);
-  useBoardShift(rail);
 
   useLayoutEffect(() => {
     const r = rail.current;
@@ -158,7 +125,6 @@ function Swipe() {
   const still = useReducedMotion();
   const rail = useRef<HTMLDivElement>(null);
   const { scrollXProgress } = useScroll({ container: rail });
-  useBoardShift(rail);
   const [lit, setLit] = useState(0);
   const [ends, setEnds] = useState({ start: true, end: false });
   useMotionValueEvent(scrollXProgress, 'change', (p) => {
@@ -241,14 +207,11 @@ function Swipe() {
 function Stop({ m }: { m: (typeof journey)[number] }) {
   const { open } = useProjectRoute();
   const p = m.project ? projectBySlug(m.project) : undefined;
-  const card = useRef<HTMLSpanElement>(null);
-  const liquid = useLiquidGlass(card);
   const body = (
     <>
-      {liquid}
       <span className="jr-pad" aria-hidden="true" />
       <span className="jr-when mono">{milestoneDate(m)}</span>
-      <span ref={card} className="jr-card glass glass--thin">
+      <span className="jr-card glass glass--thin">
         <span className="jr-top">
           {m.logo ? (
             <img className="jr-logo" src={asset(m.logo.src)} alt={m.logo.alt} width={40} height={40} loading="lazy" />

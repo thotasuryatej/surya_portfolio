@@ -10,7 +10,7 @@ export default defineProject({
   period: { start: '2024-03' },
   role: 'Developer — detection pipeline and monitoring interface',
   technologies: ['Python', 'OpenCV', 'YOLO', 'Computer vision'],
-  order: 4,
+  order: 7,
   visual: 'vision',
   diagram: 'vision-pipeline',
   overview: [

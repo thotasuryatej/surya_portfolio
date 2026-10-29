@@ -11,7 +11,7 @@ export default defineProject({
   role: 'Team leader — coordinated development and built the platform',
   technologies: ['Python', 'Machine learning', 'Energy monitoring', 'Analytics'],
   recognition: 'Smart India Hackathon 2023 — Finalist',
-  order: 3,
+  order: 2,
   visual: 'microgrid',
   diagram: 'energy-flow',
   overview: [

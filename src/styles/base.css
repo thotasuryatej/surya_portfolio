@@ -150,11 +150,6 @@ button {
 :root {
   --grid-minor: rgb(var(--ink-rgb) / 0.028);
   --grid-major: rgb(var(--ink-rgb) / 0.06);
-}
-/* Declared again on anything that repaints the board in its own line colours (a custom property takes the
-   colours where it is declared) */
-:root,
-.jr-rail {
   --blueprint:
     linear-gradient(var(--grid-major) 1px, transparent 1px) 50% 0 / 120px 120px,
     linear-gradient(90deg, var(--grid-major) 1px, transparent 1px) 50% 0 / 120px 120px,

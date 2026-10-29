@@ -859,3 +859,8 @@ html.vt-project-swap::view-transition-group(pj-title) {
     0 0 0 1px var(--line-2),
     0 10px 30px -12px rgb(var(--shadow-rgb) / 0.6);
 }
+
+/* The whole card opens the project (ProjectCard.tsx), the picture included */
+.pc {
+  cursor: pointer;
+}

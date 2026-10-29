@@ -10,7 +10,7 @@ export default defineProject({
   period: { start: '2024' },
   technologies: ['LiDAR', 'Wearables', 'Assistive technology'],
   recognition: 'Grand Contest 2024 — Selected',
-  order: 6,
+  order: 4,
   visual: 'lidar',
   diagram: 'lidar-concept',
   overview: [

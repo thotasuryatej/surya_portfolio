@@ -83,12 +83,27 @@ function useOpen(slug: string) {
 }
 
 /**
+ * A click anywhere on the card opens the project, the picture included. The stretched link can't promise that:
+ * the scroll animation leaves a transform on the text column, which keeps the link's overlay inside it.
+ * Clicks on the link itself, or that end a text selection, are left alone.
+ */
+function useCardClick(slug: string) {
+  const { open } = useProjectRoute();
+  return (e: MouseEvent<HTMLElement>) => {
+    if (e.button !== 0 || (e.target as Element).closest('a, button') || getSelection()?.toString()) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey) window.open(`#project/${slug}`, '_blank', 'noopener');
+    else open(slug);
+  };
+}
+
+/**
  * A project in the showcase. Either way it is a real link (#project/<slug>), so it can be opened, copied or shared.
  * - spotlight: a large composition, illustration and text side by side, alternating sides down the page
  * - index: one scannable row in the list that follows
  */
 export function ProjectCard({ project, index, total, variant, flip }: { project: Project; index: number; total: number; variant: 'spotlight' | 'index'; flip?: boolean }) {
   const onClick = useOpen(project.slug);
+  const onCardClick = useCardClick(project.slug);
   const cursor = useCursorLabel();
   const pill = useRef<HTMLSpanElement>(null);
   const liquid = useLiquidGlass(pill, { enabled: variant === 'spotlight' });
@@ -101,7 +116,7 @@ export function ProjectCard({ project, index, total, variant, flip }: { project:
 
   if (variant === 'index') {
     return (
-      <article className="pc pi" data-project-card={project.slug}>
+      <article className="pc pi" data-project-card={project.slug} onClick={onCardClick}>
         <span className="pi-num mono" aria-hidden="true">
           {nn(index + 1)}
         </span>
@@ -129,6 +144,7 @@ export function ProjectCard({ project, index, total, variant, flip }: { project:
     <article
       className={`pc ps${flip ? ' ps--flip' : ''}`}
       data-project-card={project.slug}
+      onClick={onCardClick}
       onPointerMove={cursor.onPointerMove}
       onPointerLeave={cursor.onPointerLeave}
     >

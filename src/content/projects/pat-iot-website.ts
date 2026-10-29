@@ -11,7 +11,7 @@ export default defineProject({
   updated: '2026-04',
   role: 'Designer & developer — UI, content structure, deployment',
   technologies: ['HTML', 'CSS', 'Responsive UI', 'Deployment', 'Claude AI'],
-  order: 2,
+  order: 3,
   visual: 'web',
   diagram: 'site-anatomy',
   // A real screenshot of the live home page, captured 2026-10-28 (1440 × 810)
