@@ -85,18 +85,19 @@ export function useLiquidGlass<T extends HTMLElement>(
     return () => ro.disconnect();
   }, [ref, id, enabled, radius, border]);
 
-  // Switch the element over only once its filter is in the page, so it never points at a missing one
+  // Switch the element over only once its filter is in the page, so it never points at a missing one.
+  // Re-run on `enabled` too: an element that unmounts and returns (an open dialog's panel) is a new node.
   const ready = !!href;
   useEffect(() => {
     const el = ref.current;
-    if (!el || !ready) return;
+    if (!el || !ready || !enabled) return;
     el.style.setProperty('--liquid', `url(#${id})`);
     el.setAttribute('data-liquid', '');
     return () => {
       el.removeAttribute('data-liquid');
       el.style.removeProperty('--liquid');
     };
-  }, [ref, id, ready]);
+  }, [ref, id, ready, enabled]);
 
   const channel = (offset: number, matrix: string, name: string) => (
     <>

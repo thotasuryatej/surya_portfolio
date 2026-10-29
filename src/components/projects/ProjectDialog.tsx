@@ -8,13 +8,18 @@ import { formatDate, formatPeriod } from '../../lib/format';
 import { projectStatusColor } from '../../lib/status';
 import { useProjectRoute } from '../../hooks/useProjectRoute';
 import { asset } from '../../lib/asset';
+import { useLiquidGlass } from '../ui/LiquidGlass';
+import { ButtonLink } from '../ui/Button';
 
 /** Case-study view in a native modal <dialog>: focus trapping, Escape and inert background come from the browser. */
 export function ProjectDialog() {
   const { openSlug, open, close } = useProjectRoute();
   const ref = useRef<HTMLDialogElement>(null);
   const scroller = useRef<HTMLDivElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const project = openSlug ? projectBySlug(openSlug) : undefined;
+  // The panel exists only while a case study is open
+  const liquid = useLiquidGlass(panel, { enabled: !!project });
 
   // Layout effect: the dialog must be open before a prev/next View Transition captures the new state.
   useLayoutEffect(() => {
@@ -58,7 +63,8 @@ export function ProjectDialog() {
       }}
     >
       {project && (
-        <div className="dlg-panel glass glass--strong">
+        <div ref={panel} className="dlg-panel glass glass--strong">
+          {liquid}
           <header className="dlg-bar">
             <span className="mono dlg-crumb">
               Projects / {String(idx + 1).padStart(2, '0')}
@@ -216,11 +222,18 @@ export function ProjectDialog() {
                   <ul role="list" className="dlg-links">
                     {project.links.map((l) => (
                       <li key={l.href}>
-                        <a className="btn btn--glass glass glass--thin btn--sm" href={asset(l.href)} target="_blank" rel="noopener noreferrer">
+                        <ButtonLink
+                          size="sm"
+                          magnetic={false}
+                          className="liquid-clear"
+                          href={asset(l.href)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          iconEnd={<ArrowUpRight size={16} aria-hidden="true" />}
+                        >
                           {l.label}
-                          <ArrowUpRight size={16} aria-hidden="true" />
-                          <span className="sr-only">(opens in a new tab)</span>
-                        </a>
+                          <span className="sr-only"> (opens in a new tab)</span>
+                        </ButtonLink>
                       </li>
                     ))}
                   </ul>

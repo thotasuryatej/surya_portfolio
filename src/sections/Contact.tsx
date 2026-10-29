@@ -7,6 +7,7 @@ import { BrandIcon } from '../components/ui/BrandIcon';
 import { useChapter } from '../lib/chapter';
 import { asset } from '../lib/asset';
 import { notify } from '../lib/island';
+import { useLiquidGlass } from '../components/ui/LiquidGlass';
 import './contact.css';
 
 /**
@@ -17,6 +18,8 @@ export function Contact() {
   const chapter = useChapter();
   const [copied, setCopied] = useState<'idle' | 'ok' | 'fail'>('idle');
   const timer = useRef<number>(undefined);
+  const copyBtn = useRef<HTMLButtonElement>(null);
+  const liquid = useLiquidGlass(copyBtn);
   useEffect(() => () => window.clearTimeout(timer.current), []);
 
   const copy = async () => {
@@ -66,7 +69,8 @@ export function Contact() {
                   <Mail size={22} aria-hidden="true" />
                   {profile.email}
                 </a>
-                <button type="button" className="icon-btn ct-copy-btn" onClick={copy} aria-label="Copy email address">
+                <button ref={copyBtn} type="button" className="icon-btn ct-copy-btn liquid-clear" onClick={copy} aria-label="Copy email address">
+                  {liquid}
                   {copied === 'ok' ? <Check size={18} aria-hidden="true" /> : <Copy size={18} aria-hidden="true" />}
                 </button>
                 <span className="ct-status" role="status">

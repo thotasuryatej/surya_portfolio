@@ -1,6 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import { Pause, Play, RotateCcw, StepForward } from 'lucide-react';
 import { useInView, usePrefersReducedMotion } from '../../hooks/useInView';
+import { useLiquidGlass } from '../ui/LiquidGlass';
 
 /**
  * A toy model — not simulation data. Each tick the link sends one packet.
@@ -108,6 +109,8 @@ export function FqCodelSim() {
   const reduced = usePrefersReducedMotion();
   const [playing, setPlaying] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const playBtn = useRef<HTMLButtonElement>(null);
+  const liquid = useLiquidGlass(playBtn);
   const inView = useInView(ref, '0px');
 
   useEffect(() => {
@@ -119,7 +122,8 @@ export function FqCodelSim() {
   return (
     <div className="dg fq" ref={ref}>
       <div className="fq-controls">
-        <button type="button" className="btn btn--glass glass glass--thin btn--sm" onClick={() => setPlaying((p) => !p)} aria-pressed={playing}>
+        <button ref={playBtn} type="button" className="btn btn--glass glass glass--thin btn--sm liquid-clear" onClick={() => setPlaying((p) => !p)} aria-pressed={playing}>
+          {liquid}
           {playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
           {playing ? 'Pause' : 'Play'}
         </button>

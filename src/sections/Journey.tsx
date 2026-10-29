@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
 import { animate, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { journey, journeyPhases, milestoneDate, projectBySlug } from '../content';
@@ -7,6 +7,7 @@ import { Icon } from '../components/ui/Icon';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { asset } from '../lib/asset';
 import { useScrolledPast } from '../hooks/useScrolledPast';
+import { useLiquidGlass } from '../components/ui/LiquidGlass';
 import './journey.css';
 
 /** Where the section pins and scrolls sideways; phones get the strip, swiped or stepped with the arrows */
@@ -192,26 +193,41 @@ function Swipe() {
           {String(lit + 1).padStart(2, '0')} / {String(journey.length).padStart(2, '0')}
         </span>
         <span className="jr-nav-btns">
-          <button type="button" className="jr-arrow" onClick={() => nudge(-1)} disabled={ends.start} aria-label="Earlier stops">
+          <Arrow onClick={() => nudge(-1)} disabled={ends.start} label="Earlier stops">
             <ArrowLeft size={18} aria-hidden="true" />
-          </button>
-          <button type="button" className="jr-arrow" onClick={() => nudge(1)} disabled={ends.end} aria-label="Later stops">
+          </Arrow>
+          <Arrow onClick={() => nudge(1)} disabled={ends.end} label="Later stops">
             <ArrowRight size={18} aria-hidden="true" />
-          </button>
+          </Arrow>
         </span>
       </div>
     </>
   );
 }
 
+/** A round control under the phone timeline, on the same clear liquid glass as the top bar */
+function Arrow({ onClick, disabled, label, children }: { onClick: () => void; disabled: boolean; label: string; children: ReactNode }) {
+  const ref = useRef<HTMLButtonElement>(null);
+  const liquid = useLiquidGlass(ref);
+  return (
+    <button ref={ref} type="button" className="jr-arrow liquid-clear" onClick={onClick} disabled={disabled} aria-label={label}>
+      {liquid}
+      {children}
+    </button>
+  );
+}
+
 function Stop({ m }: { m: (typeof journey)[number] }) {
   const { open } = useProjectRoute();
+  const card = useRef<HTMLSpanElement>(null);
+  const liquid = useLiquidGlass(card);
   const p = m.project ? projectBySlug(m.project) : undefined;
   const body = (
     <>
       <span className="jr-pad" aria-hidden="true" />
       <span className="jr-when mono">{milestoneDate(m)}</span>
-      <span className="jr-card glass glass--thin">
+      <span ref={card} className="jr-card glass glass--thin liquid-clear">
+        {liquid}
         <span className="jr-top">
           {m.logo ? (
             <img className="jr-logo" src={asset(m.logo.src)} alt={m.logo.alt} width={40} height={40} loading="lazy" />
