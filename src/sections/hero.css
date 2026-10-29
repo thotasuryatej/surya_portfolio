@@ -79,6 +79,22 @@
   display: block;
   padding-bottom: 0.06em; /* room for descenders inside the reveal's clip */
 }
+.hn-ch,
+.hn-in {
+  display: inline-block;
+}
+.hn-ch {
+  transition:
+    transform 420ms var(--ease-spring),
+    color 200ms;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hn-ch:hover {
+    transform: translateY(-0.09em) rotate(-3deg);
+    color: var(--cyan);
+    transition-duration: 160ms;
+  }
+}
 .hero-name-pad {
   display: inline-block;
   width: 0.15em;

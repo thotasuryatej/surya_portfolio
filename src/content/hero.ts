@@ -4,8 +4,6 @@ export const hero: HeroContent = {
   eyebrow: ['Embedded Software Developer', 'IoT Engineer', 'Inventor'],
   title: 'I love turning ideas into things that work.',
   accent: 'things that work.',
-  lead:
-    'I build connected systems, explore emerging technologies and enjoy bringing ambitious ideas to life — from firmware and IoT to new experiments with AI.',
   primaryAction: { label: 'Explore my builds', href: '#projects' },
   secondaryAction: { label: 'About me', href: '#about' },
 

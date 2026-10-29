@@ -25,7 +25,7 @@ export const site: SiteConfig = {
   ],
   ogImage: '/og-image.png',
   themeColor: '#0b0a09',
-  themeColorLight: '#f4f3ef',
+  themeColorLight: '#f5f2eb',
 
   // Order here = order on the page. `nav` controls the navigation bar.
   // To add a new section: create the component, register it in
@@ -34,7 +34,8 @@ export const site: SiteConfig = {
     { id: 'home', label: 'Home', nav: true, enabled: true },
     { id: 'about', label: 'About', nav: true, enabled: true },
     { id: 'journey', label: 'Journey', nav: true, enabled: true },
-    { id: 'build', label: 'What I Build', nav: true, enabled: true },
+    // Off: About, Projects and Experience already cover these areas, and the page reads simpler without it
+    { id: 'build', label: 'What I Build', nav: true, enabled: false },
     { id: 'projects', label: 'Projects', nav: true, enabled: true },
     { id: 'mindset', label: 'Mindset', nav: false, enabled: true },
     { id: 'experience', label: 'Experience', nav: true, enabled: true },

@@ -4,6 +4,8 @@ import { Icon } from '../ui/Icon';
 import { Badge } from '../ui/Badge';
 import { evidenceColor, evidenceLabel } from '../../lib/status';
 import { useInView } from '../../hooks/useInView';
+import { useLiquidGlass } from '../ui/LiquidGlass';
+import { LiquidButton } from '../ui/LiquidButton';
 import './circuit-core.css';
 
 /*
@@ -65,6 +67,8 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [hovered, setHovered] = useState<string | null>(null);
   const wrap = useRef<HTMLDivElement>(null);
+  const readout = useRef<HTMLDivElement>(null);
+  const liquid = useLiquidGlass(readout);
   const inView = useInView(wrap);
   const active = hovered ?? selected;
 
@@ -205,8 +209,9 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
               className="core-node-wrap"
               style={{ left: `${(r.node.x / SIZE) * 100}%`, top: `${(r.node.y / SIZE) * 100}%`, '--a': r.angle } as CSSProperties}
             >
-              <button
-                type="button"
+              <LiquidButton
+                scale={-40}
+                chroma={1}
                 className={`core-node${active === r.id ? ' is-active' : ''}`}
                 aria-pressed={selected === r.id}
                 aria-label={r.label}
@@ -219,13 +224,14 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
               >
                 <Icon name={r.icon} size={16} />
                 <span className="core-node-label">{r.label}</span>
-              </button>
+              </LiquidButton>
             </li>
           ))}
         </ul>
 
         {/* Node detail sits over the chip, inside the circle */}
-        <div className="core-readout glass glass--strong" aria-live="polite" data-show={current ? '' : undefined}>
+        {liquid}
+        <div ref={readout} className="core-readout glass glass--strong" aria-live="polite" data-show={current ? '' : undefined}>
           {current && (
             <>
               <span className="core-readout-title">

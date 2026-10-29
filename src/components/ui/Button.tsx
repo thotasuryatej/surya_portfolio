@@ -1,5 +1,6 @@
 import { useRef, type AnchorHTMLAttributes, type ReactNode } from 'react';
 import { useMagnetic, usePointerLight } from '../../hooks/usePointerLight';
+import { useLiquidGlass } from './LiquidGlass';
 
 type Variant = 'primary' | 'glass' | 'ghost';
 
@@ -25,6 +26,7 @@ export function ButtonLink({
   const ref = useRef<HTMLAnchorElement>(null);
   useMagnetic(ref, magnetic);
   usePointerLight(ref, variant === 'glass');
+  const liquid = useLiquidGlass(ref, { enabled: variant === 'glass' });
   const cls = [
     'btn',
     `btn--${variant}`,
@@ -36,6 +38,7 @@ export function ButtonLink({
     .join(' ');
   return (
     <a ref={ref} className={cls} {...rest}>
+      {liquid}
       {icon}
       <span>{children}</span>
       {iconEnd}

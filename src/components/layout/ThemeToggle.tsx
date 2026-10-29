@@ -1,5 +1,6 @@
 import { useId } from 'react';
 import { useTheme } from '../../lib/theme';
+import { notify } from '../../lib/island';
 import './theme-toggle.css';
 
 const PINS = [12, 16, 20];
@@ -29,14 +30,17 @@ export function ThemeToggle({ className = '' }: { className?: string }) {
       className={`icon-btn theme-chip${light ? ' is-on' : ''} ${className}`}
       aria-label={label}
       title={label}
-      onClick={toggle}
+      onClick={() => {
+        toggle();
+        notify(light ? 'Dark theme on' : 'Light theme on');
+      }}
     >
       <svg viewBox="0 0 32 32" width="30" height="30" fill="none" aria-hidden="true">
         <defs>
           <radialGradient id={`${id}-die`} cx="50%" cy="50%" r="60%">
-            <stop offset="0" stopColor="#fff6d6" />
-            <stop offset=".55" stopColor="#ffd36b" />
-            <stop offset="1" stopColor="#ff9f2e" stopOpacity="0" />
+            <stop offset="0" stopColor="var(--sun-1)" />
+            <stop offset=".55" stopColor="var(--sun-2)" />
+            <stop offset="1" stopColor="var(--sun-3)" stopOpacity="0" />
           </radialGradient>
           <mask id={`${id}-moon`}>
             <rect width="32" height="32" fill="#fff" />

@@ -57,7 +57,7 @@ export function PortraitBoot({ role }: { role: string }) {
         </div>
       </div>
       <figcaption className="pb-cap">
-        <strong>{profile.name}</strong>
+        <strong>{profile.fullName}</strong>
         <span>{role}</span>
         <span className="pb-loc mono">{profile.location}</span>
       </figcaption>

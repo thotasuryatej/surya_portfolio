@@ -1,4 +1,5 @@
 import { useId, useMemo, useState, type CSSProperties } from 'react';
+import './dimming-demo.css';
 
 /**
  * Interactive explainer for the four dimming techniques I work with.

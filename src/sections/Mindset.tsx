@@ -4,6 +4,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { mindset, mindsetIntro, projectBySlug } from '../content';
 import { SectionHead } from '../components/ui/Reveal';
 import { Glass } from '../components/ui/Glass';
+import { LiquidButton } from '../components/ui/LiquidButton';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { useMedia } from '../hooks/useMedia';
 import { useScrollSteps } from '../hooks/useScrollSteps';
@@ -186,22 +187,22 @@ function Core({
               <stop offset="1" stopColor="var(--metal-mid)" />
             </linearGradient>
             <linearGradient id="bc-copper" x1="-60" y1="-60" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-              <stop offset="0" stopColor="#d8945c" />
-              <stop offset="0.45" stopColor="#8a4a22" />
-              <stop offset="0.7" stopColor="#c27a43" />
-              <stop offset="1" stopColor="#6e3817" />
+              <stop offset="0" stopColor="var(--wind-1)" />
+              <stop offset="0.45" stopColor="var(--wind-2)" />
+              <stop offset="0.7" stopColor="var(--wind-3)" />
+              <stop offset="1" stopColor="var(--wind-4)" />
             </linearGradient>
             <radialGradient id="bc-lens">
-              <stop offset="0" stopColor="#ffffff" />
-              <stop offset="0.18" stopColor="#f2fbff" />
+              <stop offset="0" stopColor="var(--core-hot)" />
+              <stop offset="0.18" stopColor="var(--core-warm)" />
               <stop offset="0.45" stopColor="rgb(var(--reactor-rgb))" />
               <stop offset="0.8" stopColor="rgb(var(--reactor-rgb) / 0.35)" />
               <stop offset="1" stopColor="rgb(var(--reactor-rgb) / 0)" />
             </radialGradient>
             <radialGradient id="bc-hot">
-              <stop offset="0" stopColor="#ffffff" />
-              <stop offset="0.5" stopColor="#ffffff" stopOpacity="0.7" />
-              <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="0" stopColor="var(--core-hot)" />
+              <stop offset="0.5" stopColor="var(--core-hot)" stopOpacity="0.7" />
+              <stop offset="1" stopColor="var(--core-hot)" stopOpacity="0" />
             </radialGradient>
             <radialGradient id="bc-bloom">
               <stop offset="0.3" stopColor="rgb(var(--reactor-rgb) / 0.5)" />
@@ -266,12 +267,13 @@ function Core({
 
         <div className="bc-labels" role="group" aria-label="Build habits" onKeyDown={onKey}>
           {mindset.map((s, k) => (
-            <button
+            <LiquidButton
               key={s.short}
               ref={(el) => {
                 btns.current[k] = el;
               }}
-              type="button"
+              scale={-40}
+              chroma={1}
               className="bc-label"
               aria-pressed={k === active}
               tabIndex={k === active ? 0 : -1}
@@ -282,7 +284,7 @@ function Core({
                 {String(k + 1).padStart(2, '0')}
               </span>
               {s.short}
-            </button>
+            </LiquidButton>
           ))}
         </div>
         {pinned && (

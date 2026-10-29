@@ -3,7 +3,7 @@ import type { Profile } from './schema';
 export const profile: Profile = {
   name: 'Surya Tej',
   /** Shown in the top bar. */
-  fullName: 'Thota Suryatej',
+  fullName: 'Surya Tej Thota',
   shortName: 'Surya',
   initials: 'ST',
   headline: 'An engineer who turns ideas into things that work.',

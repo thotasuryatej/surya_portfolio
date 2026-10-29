@@ -198,3 +198,14 @@
     border-top: 1px solid rgb(var(--accent-rgb) / 0.5);
   }
 }
+
+/* Tablets upright: one column, so the caption moves up beside the portrait instead of leaving the row half empty */
+@media (min-width: 701px) and (max-width: 860px) {
+  .about-portrait .pb {
+    max-width: none;
+    grid-template-columns: 260px auto;
+    justify-content: start;
+    align-items: end;
+    gap: 32px;
+  }
+}

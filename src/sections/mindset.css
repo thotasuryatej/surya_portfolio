@@ -247,6 +247,26 @@
 .bc-label[aria-pressed='true'] .bc-label-num {
   color: var(--cyan);
 }
+/* Where liquid glass draws (LiquidButton), the labels clear to glass that bends the reactor's
+   light and the page around them at the rim; they stay in their ring, clear of the casing. Light theme keeps its paper tint, thinner. */
+.bc-label[data-liquid] {
+  background: rgb(var(--base-rgb) / 0.3);
+  border-color: transparent;
+  -webkit-backdrop-filter: var(--liquid) blur(1px) saturate(170%) brightness(1.08);
+  backdrop-filter: var(--liquid) blur(1px) saturate(170%) brightness(1.08);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--hi-rgb) / 0.22),
+    inset 0 -1px 0 rgb(var(--hi-rgb) / 0.06),
+    0 0 0 1px var(--line-2);
+}
+.bc-label[data-liquid][aria-pressed='true'] {
+  box-shadow:
+    inset 0 1px 0 rgb(var(--hi-rgb) / 0.3),
+    0 0 0 1px rgb(var(--accent-rgb) / 0.6),
+    0 0 0 4px rgb(var(--accent-rgb) / 0.12),
+    0 8px 24px -10px rgb(var(--accent-rgb) / 0.5);
+}
+
 /* Light: the reactor is a lit device sitting on paper. It casts a shadow, its light tints the page
    around it instead of glowing in the dark, the bloom paints normally (screen does nothing on white),
    and unlit copper stays readable rather than going muddy */
@@ -273,7 +293,7 @@
   filter: drop-shadow(0 0 2px rgb(var(--reactor-rgb) / 0.9));
 }
 :root[data-theme='light'] .bc-stage[data-charged] .bc-strip[data-on] {
-  fill: #e9f6ff;
+  fill: var(--core-face);
   filter: drop-shadow(0 0 3px rgb(var(--reactor-rgb)));
 }
 :root[data-theme='light'] .bc-stage[data-charged] .bc-glow[data-lit] {
@@ -286,11 +306,11 @@
   opacity: calc(var(--charge, 0) * 0.45);
 }
 :root[data-theme='light'] .bc-glint {
-  fill: rgb(255 255 255 / 0.4);
+  fill: rgb(var(--hi-rgb) / 0.4);
 }
 :root[data-theme='light'] .bc-label {
-  background: rgb(255 255 255 / 0.6);
-  border-color: rgb(255 255 255 / 0.9);
+  background: rgb(var(--raised-rgb) / 0.6);
+  border-color: rgb(var(--hi-rgb) / 0.9);
   box-shadow: 0 4px 14px -8px rgb(var(--shadow-rgb) / 0.25);
 }
 
@@ -558,4 +578,10 @@
 }
 .bc-intro .section-head {
   margin-bottom: 0;
+}
+
+:root[data-theme='light'] .bc-label[data-liquid] {
+  background: rgb(var(--raised-rgb) / 0.45);
+  -webkit-backdrop-filter: var(--liquid) blur(1px) saturate(140%) brightness(1.04);
+  backdrop-filter: var(--liquid) blur(1px) saturate(140%) brightness(1.04);
 }

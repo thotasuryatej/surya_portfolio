@@ -152,6 +152,21 @@ button.jr-btn:hover .jr-go {
   -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--edge) - min(48px, var(--edge) * 0.45)), #000 var(--edge));
   mask-image: linear-gradient(90deg, transparent calc(var(--edge) - min(48px, var(--edge) * 0.45)), #000 var(--edge));
 }
+/* The rail's mask makes it the cards' backdrop root, so the glass cards can only bend what the rail itself
+   paints. It paints the page's blueprint board again, shifted (--grid-y, from Journey.tsx) to line up with the
+   board on screen, so the cards have the same lines to bend; the copy is fainter, as it sits on top of the board.
+   Not background-attachment: fixed, which makes Chrome repaint on every scroll frame and flickers the cards. */
+.jr-rail {
+  background: var(--blueprint);
+  background-position: 50% var(--grid-y, 0px);
+  --grid-minor: rgb(var(--ink-rgb) / 0.012);
+  --grid-major: rgb(var(--ink-rgb) / 0.03);
+}
+:root[data-theme='light'] .jr-rail {
+  --grid-minor: rgb(var(--accent-rgb) / 0.02);
+  --grid-major: rgb(var(--accent-rgb) / 0.05);
+}
+
 /* Scoped under the rail to outrank the global ol[role=list] reset, which zeroes padding */
 .jr-rail .jr-track {
   --band-h: 44px;
@@ -315,4 +330,13 @@ button.jr-btn:hover .jr-go {
   font-size: var(--fs-label);
   letter-spacing: 0.08em;
   color: var(--text-3);
+}
+
+/* Where liquid glass draws, the cards clear so the board's dots show through and bend at the rim */
+.jr-card.glass[data-liquid] {
+  --liquid-blur: 0.6px;
+  background: linear-gradient(180deg, var(--glass-tint-top), transparent), rgb(var(--base-rgb) / 0.3);
+}
+:root[data-theme='light'] .jr-card.glass[data-liquid] {
+  background: linear-gradient(180deg, rgb(var(--raised-rgb) / 0.5), rgb(var(--raised-rgb) / 0.2));
 }

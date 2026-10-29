@@ -14,7 +14,7 @@ export default defineProject({
   featured: true,
   order: 1,
   visual: 'iot-hub',
-  diagram: 'device-topology',
+  diagram: ['device-topology', 'dimming'],
   overview: [
     'Smart homes are made of many small devices that need to be reliable on their own and work together as a system. This is my main area of professional work: firmware for smart-home automation products built on ESP32, ESP8266 and Nuvoton microcontrollers.',
     'The products include Wi-Fi-enabled smart switches and dimming controllers for lighting automation. The dimmers support four techniques — Phase-Cut, PWM, DALI and analog dimming — because different lamps and fixtures need different control methods.',

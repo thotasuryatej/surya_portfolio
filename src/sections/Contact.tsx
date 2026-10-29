@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { Check, Copy, Mail, MapPin, Phone } from 'lucide-react';
+import { Check, Copy, Download, Mail, MapPin, Phone } from 'lucide-react';
 import { profile } from '../content';
 import { Reveal } from '../components/ui/Reveal';
 import { ButtonLink } from '../components/ui/Button';
 import { BrandIcon } from '../components/ui/BrandIcon';
 import { useChapter } from '../lib/chapter';
+import { asset } from '../lib/asset';
+import { notify } from '../lib/island';
 import './contact.css';
 
 /**
@@ -21,6 +23,7 @@ export function Contact() {
     try {
       await navigator.clipboard.writeText(profile.email);
       setCopied('ok');
+      notify('Email address copied');
     } catch {
       setCopied('fail');
     }
@@ -82,6 +85,13 @@ export function Contact() {
                   icon={<Mail size={18} aria-hidden="true" />}
                 >
                   Send an email
+                </ButtonLink>
+                <ButtonLink
+                  href={asset(profile.resume.file)}
+                  download={profile.resume.downloadName}
+                  icon={<Download size={18} aria-hidden="true" />}
+                >
+                  Download résumé
                 </ButtonLink>
                 {profile.socials.map((s) => (
                   <ButtonLink

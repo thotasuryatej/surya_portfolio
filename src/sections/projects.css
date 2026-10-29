@@ -141,10 +141,15 @@
    timelines only (no script), skipped for reduced motion; without support everything is simply shown. */
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
+    /* ...and as it leaves past the top it sinks back and dims, the way a stack of cards recedes */
     .ps-media {
-      animation: ps-open linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry 80%;
+      animation:
+        ps-open linear both,
+        ps-recede linear both;
+      animation-timeline: view(), view();
+      animation-range:
+        entry 0% entry 80%,
+        exit 10% exit 100%;
     }
     .ps-body {
       animation: ps-settle linear both;
@@ -161,6 +166,12 @@
   to {
     clip-path: inset(0 round var(--r-lg));
     opacity: 1;
+  }
+}
+@keyframes ps-recede {
+  to {
+    scale: 0.9;
+    filter: brightness(0.6) saturate(0.7);
   }
 }
 @keyframes ps-settle {
@@ -285,7 +296,7 @@
   right: 12px;
   bottom: 10px;
   z-index: 1;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-4);
@@ -763,4 +774,88 @@ html.vt-project-swap::view-transition-group(pj-title) {
   .dlg[open] {
     animation: none;
   }
+}
+
+/* The cursor label: a pill that follows the mouse over a spotlight frame and pops in on enter */
+.ps-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 14px;
+  border-radius: var(--r-pill);
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--on-accent);
+  background: var(--cyan);
+  box-shadow: 0 10px 30px -10px rgb(var(--accent-2-rgb) / 0.7);
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(calc(var(--cx, 50%) - 50%), calc(var(--cy, 50%) - 50%)) scale(0.4);
+  transition:
+    opacity 180ms var(--ease-out),
+    transform 380ms var(--ease-spring);
+}
+@media (hover: hover) and (pointer: fine) {
+  .ps-media[data-cursor] .ps-cursor {
+    opacity: 1;
+    transform: translate(calc(var(--cx, 50%) - 50%), calc(var(--cy, 50%) - 50%)) scale(1);
+    transition:
+      opacity 180ms var(--ease-out),
+      transform 120ms var(--ease-out);
+  }
+}
+
+/* Tilt and glare: the frame tips toward the mouse in 3D and a soft light follows it across the glass, while
+   the illustration inside drifts the other way for a little depth. Mouse only, and still for reduced motion. */
+.ps-glare {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at var(--cx, 50%) var(--cy, 50%), rgb(var(--hi-rgb) / 0.2), transparent 42%);
+  mix-blend-mode: soft-light;
+  transition: opacity 300ms var(--ease-out);
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .ps {
+    perspective: 1200px;
+  }
+  .ps-media {
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transition:
+      border-color var(--t-med),
+      box-shadow var(--t-slow) var(--ease-out),
+      transform 700ms var(--ease-out);
+  }
+  .ps-media[data-cursor] {
+    transition:
+      border-color var(--t-med),
+      box-shadow var(--t-slow) var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+  .ps-media[data-cursor] .ps-glare {
+    opacity: 1;
+  }
+  .ps:hover .ps-frame {
+    transform: translate(calc(var(--nx, 0) * -10px), calc(var(--ny, 0) * -8px)) scale(1.05);
+  }
+}
+
+/* Where liquid glass draws, the cursor label turns from a solid pill into a clear lens over the illustration */
+.ps-cursor[data-liquid] {
+  color: var(--text-hi);
+  background: rgb(var(--base-rgb) / 0.5);
+  -webkit-backdrop-filter: var(--liquid) blur(4px) saturate(160%) brightness(1.06);
+  backdrop-filter: var(--liquid) blur(4px) saturate(160%) brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--hi-rgb) / 0.35),
+    inset 0 -1px 0 rgb(var(--hi-rgb) / 0.08),
+    0 0 0 1px var(--line-2),
+    0 10px 30px -12px rgb(var(--shadow-rgb) / 0.6);
 }

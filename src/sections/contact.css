@@ -63,9 +63,9 @@
   align-items: center;
   gap: 12px;
   min-width: 0;
-  font-size: clamp(1.15rem, 0.9rem + 1.1vw, 1.75rem);
-  font-weight: 550;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.25rem, 0.7rem + 2.1vw, 2.6rem);
+  font-weight: 600;
+  letter-spacing: -0.035em;
   color: var(--text);
   overflow-wrap: anywhere;
   border-radius: 6px;
@@ -76,6 +76,8 @@
 }
 .ct-addr svg {
   flex: none;
+  width: 0.8em;
+  height: 0.8em;
   color: var(--cyan);
 }
 .ct-addr:hover {
@@ -122,24 +124,111 @@
 }
 
 /* ---------------------------------------------------------------- Footer */
+/* A typographic close: the section index in one row, with the name sunk behind the bottom edge */
 .footer {
+  --footer-bg: rgb(6 6 5 / 0.9);
   position: relative;
-  padding: 36px 0 calc(44px + env(safe-area-inset-bottom, 0px));
-  border-top: 1px solid var(--line);
-  font-size: 0.85rem;
+  padding: clamp(48px, 2rem + 4vw, 96px) 0 0;
+  /* Its own plate over the blueprint board: a hairline border alone reads as one more grid line */
+  background: linear-gradient(180deg, rgb(var(--ink-rgb) / 0.025), transparent 40%), var(--footer-bg);
+  border-top: 1px solid var(--line-2);
+  box-shadow: 0 -24px 48px -24px rgb(0 0 0 / 0.35);
+  font-size: 0.9rem;
   color: var(--text-3);
+  overflow: hidden;
 }
-.footer-inner {
+/* A lit seam along the top edge, brightest at the left where the page's signal trace comes down */
+.footer::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgb(var(--accent-rgb) / 0.6) 12%, var(--line-2) 45%, transparent);
+}
+:root[data-theme='light'] .footer {
+  --footer-bg: rgb(234 229 218 / 0.92);
+  box-shadow: 0 -24px 48px -24px rgb(60 40 10 / 0.12);
+}
+.ft-label {
+  margin: 0 0 14px;
+  font-size: var(--fs-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-4);
+}
+.ft-col ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 28px;
+  margin: 0;
+  padding: 0;
+}
+.ft-col a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-2);
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition:
+    color var(--t-fast),
+    background-size var(--t-med) var(--ease-out),
+    transform var(--t-med) var(--ease-out);
+}
+.ft-col a:hover {
+  color: var(--cyan);
+  background-size: 100% 1px;
+  transform: translateX(3px);
+}
+.ft-num {
+  font-size: 0.7rem;
+  color: var(--text-4);
+}
+.ft-note {
+  font-size: 0.78rem;
+  color: var(--text-4);
+}
+/* The name behind the last line: far larger than the page, a faint fade of the text colour,
+   sunk past the footer's bottom so only the upper half of each letter shows. It is there, but barely. */
+.ft-mark {
+  position: relative;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  margin: clamp(-40px, -2vw, -12px) 0 -0.42em;
+  font-size: clamp(4.5rem, 1rem + 16vw, 16rem);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.03em; /* letters must not overlap, or the faint fill doubles where they meet */
+  white-space: nowrap;
+  user-select: none;
+  pointer-events: none;
+  --ft-fade: 0.1;
+}
+:root[data-theme='light'] .ft-mark {
+  --ft-fade: 0.075;
+}
+.ft-ch {
+  /* each letter carries the fade itself (not the line), so the text clip holds while the letters move */
+  display: inline-block;
+  color: transparent;
+  background: linear-gradient(180deg, rgb(var(--ink-rgb) / var(--ft-fade)) 15%, rgb(var(--ink-rgb) / 0.012) 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.ft-base {
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 14px 24px;
-}
-.footer-id {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 10px 24px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+  font-size: 0.78rem;
 }
 .footer-top {
   display: inline-flex;
@@ -150,4 +239,20 @@
 }
 .footer-top:hover {
   color: var(--cyan);
+}
+
+/* Touch: index links, the address and "Back to top" get finger-sized targets */
+@media (pointer: coarse) {
+  .ft-col ul {
+    gap: 0 28px;
+  }
+  .ft-col a {
+    padding-block: 10px;
+  }
+  .footer-top {
+    padding-block: 12px;
+  }
+  .ct-addr {
+    min-height: 44px;
+  }
 }

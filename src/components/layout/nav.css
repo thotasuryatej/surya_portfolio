@@ -282,3 +282,91 @@
     transform: none;
   }
 }
+
+/* ---------------------------------------------------------------- Island
+   A glass pill in the middle of the bar: the chapter you are in, your progress down the page along its lower
+   edge, and for a moment a notice. Its width follows its content (Motion layout), so it morphs between them. */
+.nav-island {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 18px 0 7px;
+  overflow: hidden;
+  border: 0;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 550;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: var(--text);
+  cursor: pointer;
+  pointer-events: auto;
+  background: rgb(var(--base-rgb) / 0.72);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 12px 32px -16px rgb(var(--shadow-rgb) / 0.6);
+}
+.nav-island[inert] {
+  pointer-events: none;
+}
+.nav-island:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+.isl-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.isl-dot {
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding-inline: 6px;
+  border-radius: var(--r-pill);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--on-accent);
+  background: var(--cyan);
+}
+.isl-dot--ok {
+  background: var(--green);
+}
+.isl-bar {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cyan), var(--violet));
+  transform-origin: left;
+  opacity: 0.85;
+}
+@media (max-width: 760px) {
+  .nav-island {
+    display: none;
+  }
+}
+
+/* Liquid glass on the scrolled bar and the island (see glass.css); elsewhere the plain blur above stays. */
+.nav.is-scrolled:not(.is-open) .nav-mark[data-liquid],
+.nav.is-scrolled:not(.is-open) .nav-end[data-liquid],
+.nav-island[data-liquid] {
+  background: rgb(var(--base-rgb) / 0.34);
+  -webkit-backdrop-filter: var(--liquid) blur(2px) saturate(170%) brightness(1.04);
+  backdrop-filter: var(--liquid) blur(2px) saturate(170%) brightness(1.04);
+  box-shadow:
+    inset 0 1px 0 rgb(var(--hi-rgb) / 0.22),
+    inset 0 -1px 0 rgb(var(--hi-rgb) / 0.06),
+    0 0 0 1px var(--line-2),
+    0 12px 32px -16px rgb(var(--shadow-rgb) / 0.6);
+}

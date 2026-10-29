@@ -1,5 +1,5 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
+import { useEffect, useLayoutEffect, useRef, useState, type RefObject } from 'react';
+import { animate, motion, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from 'motion/react';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { journey, journeyPhases, milestoneDate, projectBySlug } from '../content';
 import { SectionHead } from '../components/ui/Reveal';
@@ -7,12 +7,11 @@ import { Icon } from '../components/ui/Icon';
 import { useProjectRoute } from '../hooks/useProjectRoute';
 import { asset } from '../lib/asset';
 import { useScrolledPast } from '../hooks/useScrolledPast';
+import { useLiquidGlass } from '../components/ui/LiquidGlass';
 import './journey.css';
 
-/** Where the section pins and scrolls sideways: wide screens, and phones tall enough for the board */
-const WIDE = '(min-width: 900px), (pointer: coarse) and (min-height: 600px)';
-/** On phones a swipe travels far; the board takes more scroll per stop, so it moves at a readable pace */
-const TOUCH = '(max-width: 899px) and (pointer: coarse)';
+/** Where the section pins and scrolls sideways; phones get the strip, swiped or stepped with the arrows */
+const WIDE = '(min-width: 900px)';
 
 /** The phase that starts at stop i, with how many stops it spans; undefined mid-phase. */
 const phaseAt = (i: number) => {
@@ -23,8 +22,8 @@ const phaseAt = (i: number) => {
 };
 
 /**
- * Journey: a PCB trace from 2021 to now. On wide screens and phones the section pins and scrolling moves
- * the board sideways; each milestone "powers on" as the current reaches it. On short or narrow desktop
+ * Journey: a PCB trace from 2021 to now. On wide screens the section pins and scrolling moves
+ * the board sideways; each milestone "powers on" as the current reaches it. On phones, narrow
  * windows, with reduced motion, and once scrolled past, the same board is a strip you swipe or scroll sideways.
  */
 export function Journey() {
@@ -48,6 +47,37 @@ export function Journey() {
   );
 }
 
+/**
+ * Keeps the rail's copy of the blueprint board on the page board's lines (both repeat every 120px): the shift is
+ * set only when it changes, so while the rail is pinned it is set once and nothing repaints as the page scrolls.
+ */
+function useBoardShift(rail: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const r = rail.current;
+    if (!r) return;
+    let frame = 0;
+    let last = '';
+    const set = () => {
+      frame = 0;
+      const top = Math.round(r.getBoundingClientRect().top);
+      if (top > innerHeight || top < -r.offsetHeight) return;
+      const y = `${-(((top % 120) + 120) % 120)}px`;
+      if (y !== last) r.style.setProperty('--grid-y', (last = y));
+    };
+    const on = () => {
+      if (!frame) frame = requestAnimationFrame(set);
+    };
+    set();
+    addEventListener('scroll', on, { passive: true });
+    addEventListener('resize', on);
+    return () => {
+      cancelAnimationFrame(frame);
+      removeEventListener('scroll', on);
+      removeEventListener('resize', on);
+    };
+  }, [rail]);
+}
+
 function Head() {
   return (
     <SectionHead
@@ -65,7 +95,7 @@ function Pinned() {
   const track = useRef<HTMLOListElement>(null);
   const [dist, setDist] = useState(0);
   const [lit, setLit] = useState(0);
-  const slow = typeof matchMedia === 'function' && matchMedia(TOUCH).matches ? 1.5 : 1;
+  useBoardShift(rail);
 
   useLayoutEffect(() => {
     const r = rail.current;
@@ -85,12 +115,13 @@ function Pinned() {
 
   const { scrollYProgress } = useScroll({ target: outer, offset: ['start start', 'end end'] });
   const smooth = useSpring(scrollYProgress, { stiffness: 140, damping: 30, mass: 0.35 });
-  const x = useTransform(smooth, (p) => -p * dist);
+  // Whole pixels only: a fractional slide smears the cards' text while it moves
+  const x = useTransform(smooth, (p) => Math.round(-p * dist));
   const fill = useTransform(smooth, [0, 1], [0.03, 1]);
   useMotionValueEvent(smooth, 'change', (p) => setLit(Math.round(p * (journey.length - 1))));
 
   return (
-    <div ref={outer} className="jr-outer" style={{ height: `calc(100vh + ${dist * slow}px)` }}>
+    <div ref={outer} className="jr-outer" style={{ height: `calc(100vh + ${dist}px)` }}>
       {/* Pinned content stays put while the page scrolls, so the page-long signal trace doesn't tap into it */}
       <div className="jr-pin" data-signal-skip="">
         <div className="container">
@@ -127,6 +158,7 @@ function Swipe() {
   const still = useReducedMotion();
   const rail = useRef<HTMLDivElement>(null);
   const { scrollXProgress } = useScroll({ container: rail });
+  useBoardShift(rail);
   const [lit, setLit] = useState(0);
   const [ends, setEnds] = useState({ start: true, end: false });
   useMotionValueEvent(scrollXProgress, 'change', (p) => {
@@ -135,8 +167,33 @@ function Swipe() {
     if (r) setEnds({ start: r.scrollLeft < 4, end: r.scrollLeft + r.clientWidth >= r.scrollWidth - 4 });
   });
   const fill = useTransform(scrollXProgress, [0, 1], [0.03, 1]);
-  // Mouse users get buttons; each press moves about two stops
-  const nudge = (dir: number) => rail.current?.scrollBy({ left: dir * 560, behavior: still ? 'auto' : 'smooth' });
+  // Each arrow press glides one stop, slowly enough to read along the way. Snapping is off while it glides,
+  // or the browser would grab the strip mid-way; a press during a glide carries on from where it is.
+  const glide = useRef<ReturnType<typeof animate>>(null);
+  const nudge = (dir: number) => {
+    const r = rail.current;
+    const stops = r?.querySelectorAll<HTMLElement>('.jr-stop');
+    if (!r || !stops || stops.length < 2) return;
+    const pitch = stops[1].offsetLeft - stops[0].offsetLeft;
+    const max = r.scrollWidth - r.clientWidth;
+    const to = Math.min(max, Math.max(0, (Math.round(r.scrollLeft / pitch) + dir) * pitch));
+    glide.current?.stop();
+    if (still) {
+      r.scrollLeft = to;
+      return;
+    }
+    r.style.scrollSnapType = 'none';
+    glide.current = animate(r.scrollLeft, to, {
+      duration: 0.75,
+      ease: [0.33, 1, 0.68, 1],
+      onUpdate: (v) => {
+        r.scrollLeft = v;
+      },
+      onComplete: () => {
+        r.style.scrollSnapType = '';
+      },
+    });
+  };
 
   return (
     <>
@@ -184,11 +241,14 @@ function Swipe() {
 function Stop({ m }: { m: (typeof journey)[number] }) {
   const { open } = useProjectRoute();
   const p = m.project ? projectBySlug(m.project) : undefined;
+  const card = useRef<HTMLSpanElement>(null);
+  const liquid = useLiquidGlass(card);
   const body = (
     <>
+      {liquid}
       <span className="jr-pad" aria-hidden="true" />
       <span className="jr-when mono">{milestoneDate(m)}</span>
-      <span className="jr-card glass glass--thin">
+      <span ref={card} className="jr-card glass glass--thin">
         <span className="jr-top">
           {m.logo ? (
             <img className="jr-logo" src={asset(m.logo.src)} alt={m.logo.alt} width={40} height={40} loading="lazy" />

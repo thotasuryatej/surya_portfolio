@@ -51,7 +51,7 @@
   stroke: rgb(var(--accent-rgb) / 0.7);
 }
 .theme-chip.is-on .tc-core {
-  fill: #ffb21f;
+  fill: var(--sun-core);
   transform: scale(0.82);
 }
 .theme-chip.is-on .tc-bite {

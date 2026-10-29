@@ -1,18 +1,51 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, type Variants } from 'motion/react';
+import { AnimatePresence, motion, useScroll, type Variants } from 'motion/react';
 import { ease } from '../../lib/motion';
-import { Download, Mail, Plus } from 'lucide-react';
+import { Check, Download, Mail, Plus } from 'lucide-react';
 import { profile } from '../../content';
 import { ThemeToggle } from './ThemeToggle';
 import { Monogram } from '../brand/Monogram';
 import { BrandIcon } from '../ui/BrandIcon';
 import { useActiveSection } from '../../hooks/useActiveSection';
+import { useLiquidGlass } from '../ui/LiquidGlass';
+import { ISLAND_EVENT } from '../../lib/island';
 import './nav.css';
 import { asset } from '../../lib/asset';
 
 export interface NavItem {
   id: string;
   label: string;
+}
+
+const spring = { type: 'spring', stiffness: 380, damping: 30 } as const;
+const island: Variants = {
+  out: { opacity: 0, scale: 0.6, y: -10, transition: { duration: 0.2 } },
+  in: { opacity: 1, scale: 1, y: 0, transition: spring },
+};
+const swap = {
+  initial: { opacity: 0, y: 10, filter: 'blur(4px)' },
+  animate: { opacity: 1, y: 0, filter: 'blur(0px)' },
+  exit: { opacity: 0, y: -10, filter: 'blur(4px)' },
+  transition: { duration: 0.28, ease: ease.out },
+};
+
+/** Short notices from elsewhere on the page (an address copied, the theme switched) that the island shows for a moment. */
+function useNotice() {
+  const [notice, setNotice] = useState<string | null>(null);
+  useEffect(() => {
+    let timer = 0;
+    const on = (e: Event) => {
+      setNotice((e as CustomEvent<string>).detail);
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => setNotice(null), 2200);
+    };
+    window.addEventListener(ISLAND_EVENT, on);
+    return () => {
+      window.removeEventListener(ISLAND_EVENT, on);
+      window.clearTimeout(timer);
+    };
+  }, []);
+  return notice;
 }
 
 const list: Variants = { show: { transition: { staggerChildren: 0.045, delayChildren: 0.12 } } };
@@ -25,9 +58,20 @@ const row: Variants = {
  * The top bar is just the mark and three controls; the sections live in one menu, the same on every screen size:
  * a panel from the right edge with large links numbered like the section chapters, over a dimmed page.
  * Escape, the scrim or any link closes it, and focus returns to the Menu button.
+ *
+ * Between them, once the hero is left behind, an island: a small glass pill that names the chapter you are in,
+ * fills along its bottom edge with your progress down the page, and morphs for a moment to show a notice.
+ * It opens the same menu. Wide screens only; on a phone the bar has no room for it.
  */
-export function Nav({ items, sectionIds }: { items: NavItem[]; sectionIds: string[] }) {
+export function Nav({ items, chapters }: { items: NavItem[]; chapters: NavItem[] }) {
+  const sectionIds = chapters.map((c) => c.id);
   const active = useActiveSection(sectionIds);
+  const notice = useNotice();
+  const { scrollYProgress } = useScroll();
+  const markRef = useRef<HTMLAnchorElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
+  const islandRef = useRef<HTMLButtonElement>(null);
+  const glass = [useLiquidGlass(markRef), useLiquidGlass(endRef), useLiquidGlass(islandRef)];
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
@@ -71,16 +115,54 @@ export function Nav({ items, sectionIds }: { items: NavItem[]; sectionIds: strin
   const navIds = items.map((i) => i.id);
   const current = navIds.includes(active) ? active : (navIds[Math.max(0, sectionIds.indexOf(active) - 1)] ?? active);
   const close = () => setOpen(false);
+  const chapter = chapters.find((c) => c.id === active);
+  const showIsland = !open && ((scrolled && active !== sectionIds[0]) || !!notice);
 
   return (
     <header
       className={`nav${scrolled ? ' is-scrolled' : ''}${open ? ' is-open' : ''}`}>
+      {glass}
       <div className="nav-bar">
-        <a href="#home" className="nav-mark" aria-label={`${profile.fullName} — back to top`} onClick={close}>
+        <a href="#home" ref={markRef} className="nav-mark" aria-label={`${profile.fullName} — back to top`} onClick={close}>
           <Monogram size={30} />
         </a>
 
-        <div className="nav-end">
+        <motion.button
+          ref={islandRef}
+          type="button"
+          className="nav-island"
+          layout
+          style={{ borderRadius: 999 }}
+          variants={island}
+          initial="out"
+          animate={showIsland ? 'in' : 'out'}
+          transition={spring}
+          inert={!showIsland}
+          aria-hidden={!showIsland}
+          aria-label={chapter ? `In ${chapter.label}. Open the section menu` : 'Open the section menu'}
+          onClick={() => setOpen(true)}
+        >
+          <AnimatePresence mode="popLayout" initial={false}>
+            {notice ? (
+              <motion.span key={`n-${notice}`} className="isl-content" {...swap}>
+                <span className="isl-dot isl-dot--ok" aria-hidden="true">
+                  <Check size={14} />
+                </span>
+                {notice}
+              </motion.span>
+            ) : (
+              <motion.span key={active} className="isl-content" {...swap}>
+                <span className="isl-dot mono" aria-hidden="true">
+                  {String(Math.max(0, sectionIds.indexOf(active))).padStart(2, '0')}
+                </span>
+                {chapter?.label}
+              </motion.span>
+            )}
+          </AnimatePresence>
+          <motion.span className="isl-bar" aria-hidden="true" style={{ scaleX: scrollYProgress }} />
+        </motion.button>
+
+        <div className="nav-end" ref={endRef}>
           <ThemeToggle />
           <a className="nav-resume" href={asset(profile.resume.file)} download={profile.resume.downloadName}>
             <Download size={16} aria-hidden="true" />

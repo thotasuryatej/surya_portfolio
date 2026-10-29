@@ -95,7 +95,8 @@ export interface HeroContent {
   title: string;
   /** Words within the title that receive the accent treatment. */
   accent?: string;
-  lead: string;
+  /** Optional paragraph under the title. Left out for now: visitors asked for less to read up front. */
+  lead?: string;
   /** Optional "currently" line under the buttons. */
   now?: string;
   primaryAction: { label: string; href: string };
@@ -200,8 +201,8 @@ export interface Project {
   visual?: string;
   /** Optional image to use instead of the illustration on the card. */
   cover?: Media;
-  /** Interactive diagram key shown in the case study (src/components/diagrams). */
-  diagram?: string;
+  /** Interactive diagram key(s) shown in the case study, in order (src/components/diagrams). */
+  diagram?: string | string[];
   overview: string[];
   /** Separate verified, finished work from work that is still in progress. */
   progress?: { done: string[]; ongoing?: string[] };

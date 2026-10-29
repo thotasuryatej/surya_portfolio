@@ -11,7 +11,8 @@ import { sectionComponents, visibleSections } from './sections/registry';
 import { ChapterContext } from './lib/chapter';
 
 const navItems = visibleSections.filter((s) => s.nav).map(({ id, label }) => ({ id, label }));
-const sectionIds = visibleSections.map((s) => s.id);
+const chapters = visibleSections.map(({ id, label }) => ({ id, label }));
+const sectionIds = chapters.map((s) => s.id);
 const TOUCH = '(max-width: 900px) and (pointer: coarse)';
 
 /** Whether a pinned section lies between the current scroll position and `el`. */
@@ -85,7 +86,7 @@ export default function App() {
         </div>
         <VisualDefs />
         <Intro />
-        <Nav items={navItems} sectionIds={sectionIds} />
+        <Nav items={navItems} chapters={chapters} />
         <main id="main" tabIndex={-1}>
           <SignalTrace />
           {visibleSections.map((s, i) => {
@@ -97,7 +98,7 @@ export default function App() {
             );
           })}
         </main>
-        <Footer />
+        <Footer items={navItems} />
         <ProjectDialog />
       </ProjectRouteProvider>
     </MotionConfig>

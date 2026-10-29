@@ -135,7 +135,9 @@ export function ProjectDialog() {
                   </section>
                 )}
 
-                {project.diagram && <Diagram name={project.diagram} />}
+                {[project.diagram ?? []].flat().map((d) => (
+                  <Diagram key={d} name={d} />
+                ))}
 
                 {!!project.highlights?.length && (
                   <section>

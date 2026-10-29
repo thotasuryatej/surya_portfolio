@@ -36,14 +36,14 @@ export const journey: Milestone[] = [
     when: 'Sep 2025',
     until: 'Present',
     title: 'Embedded Software Developer',
-    text: 'PAT IoT Solutions — smart switches and lighting dimmers (Phase-Cut, PWM, DALI, analog).',
+    text: 'PAT IoT Solutions — firmware for smart-home products.',
     icon: 'Microchip',
     kind: 'work',
     logo: { src: '/images/companies/pat-iot-solutions.webp', alt: 'PAT IoT Solutions logo' },
   },
-  { phase: 'pat', when: '2025', until: 'Present', title: 'Building a Matter hub', text: 'Alexa, Siri and Google Assistant on one smart-home hub.', icon: 'House', kind: 'work', project: 'smart-home-iot-hub' },
+  { phase: 'pat', when: '2025', until: 'Present', title: 'Building a Matter hub', text: 'A smart-home hub on the Matter protocol, in progress.', icon: 'House', kind: 'work', project: 'smart-home-iot-hub' },
   { phase: 'pat', when: 'Apr 2026', title: 'patiot.in, built with Claude AI', text: 'Designed and deployed the company website.', icon: 'Globe', kind: 'build', project: 'pat-iot-website' },
-  { phase: 'pat', when: 'Jul 2026', title: 'IoT Telemetry Device Agent', text: 'Take-home assignment: C++17 agent with a durable flash buffer.', icon: 'Server', kind: 'build', project: 'iot-telemetry-agent' },
+  { phase: 'pat', when: 'Jul 2026', title: 'IoT Telemetry Device Agent', text: 'A take-home assignment in C++17.', icon: 'Server', kind: 'build', project: 'iot-telemetry-agent' },
 ];
 
 /** The date label for a stop: "Sep 2025", or "Sep 2025 – Present" when it has an end. */

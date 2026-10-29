@@ -82,28 +82,19 @@ const errors = [];
     await page.waitForFunction(() => /Improve/.test(document.querySelector('.bc-body > :last-child .bc-title')?.textContent ?? ''), null, { timeout: 2000 });
   });
 
-  await check('capability tabs: arrow keys move selection', async () => {
-    await page.locator('#build').scrollIntoViewIfNeeded();
-    const tabs = page.locator('#build').getByRole('tab');
-    await tabs.first().focus();
-    await page.keyboard.press('ArrowDown');
-    const sel = await page.evaluate(() => document.activeElement.getAttribute('aria-selected'));
-    assert(sel === 'true', 'focused tab not selected');
-    await page.keyboard.press('End');
-    assert((await tabs.last().getAttribute('aria-selected')) === 'true', 'End did not select last tab');
-  });
-
-  await check('dimming demo: slider and modes update the readout', async () => {
-    const tab = page.getByRole('tab', { name: /Lighting Control/ });
-    await tab.click();
-    const slider = page.locator('#cap-panel input[type="range"]');
-    await slider.waitFor();
-    const before = await page.locator('#cap-panel svg[role="img"]').getAttribute('aria-label');
-    await slider.fill('20');
-    const after = await page.locator('#cap-panel svg[role="img"]').getAttribute('aria-label');
+  await check('dimming demo (IoT hub case study): slider and modes update the readout', async () => {
+    await page.evaluate(() => (location.hash = '#project/smart-home-iot-hub'));
+    const demo = page.locator('dialog[open] .dim');
+    await demo.waitFor();
+    const scope = demo.locator('svg[role="img"]');
+    const before = await scope.getAttribute('aria-label');
+    await demo.locator('input[type="range"]').fill('20');
+    const after = await scope.getAttribute('aria-label');
     assert(before !== after && after.includes('20%'), `label: ${after}`);
-    await page.locator('.dim-modes button', { hasText: 'DALI' }).click();
-    assert((await page.locator('#cap-panel svg[role="img"]').getAttribute('aria-label')).startsWith('DALI'), 'mode did not switch');
+    await demo.locator('.dim-modes button', { hasText: 'DALI' }).click();
+    assert((await scope.getAttribute('aria-label')).startsWith('DALI'), 'mode did not switch');
+    await page.keyboard.press('Escape');
+    await page.locator('dialog[open]').waitFor({ state: 'detached' });
   });
 
   await check('project card opens dialog; Escape closes it', async () => {

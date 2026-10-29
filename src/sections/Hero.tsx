@@ -28,12 +28,25 @@ const rise = (delay: number) => ({
   transition: { duration: 0.8, ease: ease.out, delay: introDelay + delay },
 });
 
-// Each line of the name rises out of a clip that opens from its baseline; done in under a second
-const wipe = (delay: number) => ({
-  initial: { y: '0.5em', clipPath: 'inset(0 -4% 100% -4%)' },
-  animate: { y: '0em', clipPath: 'inset(-12% -4% -12% -4%)' },
-  transition: { duration: 0.9, ease: ease.out, delay: introDelay + delay },
-});
+/**
+ * The name, one letter at a time: each rises and settles in a quick stagger (all done in under a second),
+ * and each lifts on its own under the pointer. The outer span takes the hover lift (CSS) so it never
+ * fights the entrance transform on the inner one.
+ */
+function Letters({ text, delay, still }: { text: string; delay: number; still: boolean }) {
+  return [...text].map((c, i) => (
+    <span key={i} className="hn-ch">
+      <motion.span
+        className="hn-in"
+        initial={still ? false : { y: '0.7em', opacity: 0, rotate: 8 }}
+        animate={{ y: '0em', opacity: 1, rotate: 0 }}
+        transition={{ duration: 0.7, ease: ease.out, delay: introDelay + delay + i * 0.045 }}
+      >
+        {c}
+      </motion.span>
+    </span>
+  ));
+}
 
 const [first, ...restOfName] = profile.name.split(' ');
 
@@ -85,13 +98,19 @@ export function Hero() {
           </motion.p>
 
           <h1 id="hero-title" className="hero-name">
-            <motion.span className="hero-name-line" {...(reduce ? {} : wipe(0.05))}>
-              {first}
-            </motion.span>{' '}
-            <motion.span className="hero-name-line" {...(reduce ? {} : wipe(0.14))}>
-              {restOfName.join(' ')}
-              <span className="hero-name-pad" aria-hidden="true" />
-            </motion.span>
+            <span className="sr-only">{profile.name}</span>
+            <span className="hero-name-line" aria-hidden="true">
+              <Letters text={first} delay={0.05} still={!!reduce} />
+            </span>{' '}
+            <span className="hero-name-line" aria-hidden="true">
+              <Letters text={restOfName.join(' ')} delay={0.05 + first.length * 0.045} still={!!reduce} />
+              <motion.span
+                className="hero-name-pad"
+                initial={reduce ? false : { scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring', stiffness: 420, damping: 14, delay: introDelay + 0.65 }}
+              />
+            </span>
           </h1>
 
           <motion.p className="hero-role" {...rise(0.28)}>
@@ -107,9 +126,11 @@ export function Hero() {
             <Title />
           </motion.p>
 
-          <motion.p className="hero-lead" {...rise(0.42)}>
-            {hero.lead}
-          </motion.p>
+          {hero.lead && (
+            <motion.p className="hero-lead" {...rise(0.42)}>
+              {hero.lead}
+            </motion.p>
+          )}
 
           <motion.div className="hero-actions" {...rise(0.48)}>
             <ButtonLink variant="primary" href={hero.primaryAction.href} iconEnd={<ArrowRight size={18} className="btn-arrow" aria-hidden="true" />}>

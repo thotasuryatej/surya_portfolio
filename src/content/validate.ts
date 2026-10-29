@@ -60,7 +60,8 @@ export function validateContent(fileExists: (publicPath: string) => boolean): Is
     checkDate(where, 'period.end', p.period.end, true);
     checkDate(where, 'updated', p.updated);
     if (p.visual && !(visualKeys as readonly string[]).includes(p.visual)) err(where, `unknown visual "${p.visual}". Options: ${visualKeys.join(', ')}`);
-    if (p.diagram && !(diagramKeys as readonly string[]).includes(p.diagram)) err(where, `unknown diagram "${p.diagram}". Options: ${diagramKeys.join(', ')}`);
+    for (const d of [p.diagram ?? []].flat())
+      if (!(diagramKeys as readonly string[]).includes(d)) err(where, `unknown diagram "${d}". Options: ${diagramKeys.join(', ')}`);
     if (p.featured) featured++;
     for (const m of [...(p.media ?? []), ...(p.cover ? [p.cover] : [])]) {
       checkAsset(where, m.src);

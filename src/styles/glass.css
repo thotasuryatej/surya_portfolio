@@ -92,6 +92,32 @@
 }
 
 
+/* Liquid glass (components/ui/LiquidGlass.tsx): where the browser can draw it, the plate's rim bends what
+   lies beneath it. The bend does the work the blur did, so the blur drops to just enough to keep text over
+   it legible; heavier plates keep more of it. Elsewhere the blur above stays. */
+.lg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+.glass[data-liquid] {
+  --liquid-blur: 6px;
+  -webkit-backdrop-filter: var(--liquid) blur(var(--liquid-blur)) saturate(170%);
+  backdrop-filter: var(--liquid) blur(var(--liquid-blur)) saturate(170%);
+}
+.glass--thin[data-liquid],
+.btn--glass.glass[data-liquid] {
+  --liquid-blur: 3px;
+}
+.glass--strong[data-liquid] {
+  --liquid-blur: 12px;
+}
+:root[data-theme='light'] .glass[data-liquid] {
+  -webkit-backdrop-filter: var(--liquid) blur(var(--liquid-blur)) saturate(140%) brightness(1.02);
+  backdrop-filter: var(--liquid) blur(var(--liquid-blur)) saturate(140%) brightness(1.02);
+}
+
 /* Solid surfaces for content (not glass) */
 .surface {
   position: relative;

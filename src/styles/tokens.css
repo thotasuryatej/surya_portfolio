@@ -81,6 +81,20 @@
   --metal-mid: #50535a;
   --metal-lo: #1f2124;
   --metal-pocket: #0c0d0f;
+  /* Its copper winding and white-hot core */
+  --wind-1: #d8945c;
+  --wind-2: #8a4a22;
+  --wind-3: #c27a43;
+  --wind-4: #6e3817;
+  --core-hot: #ffffff;
+  --core-warm: #f2fbff;
+  --core-face: #e9f6ff;
+
+  /* Theme toggle sun */
+  --sun-1: #fff6d6;
+  --sun-2: #ffd36b;
+  --sun-3: #ff9f2e;
+  --sun-core: #ffb21f;
 
   /* Logo inks (src/components/brand/Monogram.tsx) */
   --logo-1: #fbe9c6;
@@ -133,79 +147,79 @@
   --nav-h: 64px;
 }
 
-/* Light: drafting paper and graphite ink, with its own three colours: drawing blue (the accent),
-   ochre gold and ember red, where dark has gold, ember and arc blue.
-   Designed separately rather than inverted — accents are darker for contrast and glows become soft shadows. */
+/* Light: an editorial publication on warm paper. Ink text, one ink-blue accent for actions and
+   active states, and brass and ember as the secondary colours in diagrams, so it pairs with dark's
+   gold rather than inverting it. Glows become soft shadows. */
 :root[data-theme='light'] {
   color-scheme: light;
 
-  /* Drafting paper: warm off-white and graphite ink, the blue of a technical drawing */
-  --bg: #f4f3ef;
-  --bg-2: #ecebe5;
-  --surface: #fdfcfa;
-  --surface-2: #f7f6f2;
-  --surface-3: #efeee8;
+  --bg: #f5f2eb;
+  --bg-2: #ede9e0;
+  --surface: #fcfaf6;
+  --surface-2: #f8f5ef;
+  --surface-3: #eeeae2;
 
-  --accent-rgb: 14 99 214;
-  --accent-2-rgb: 10 84 184;
-  --accent-deep-rgb: 8 48 120;
-  --violet-rgb: 190 72 44;
-  --line-rgb: 38 42 52;
+  --accent-rgb: 30 78 156; /* ink blue */
+  --accent-2-rgb: 22 62 128;
+  --accent-deep-rgb: 12 36 80;
+  --violet-rgb: 176 74 48; /* ember */
+  --line-rgb: 28 30 36;
   --spec-rgb: 255 255 255;
-  --reactor-rgb: 36 150 232;
-  --amber-rgb: 166 98 0;
-  --green-rgb: 12 112 150;
-  --sky-rgb: 110 165 255;
-  --copper-rgb: 168 92 36;
-  --base-rgb: 255 255 255;
-  --raised-rgb: 255 255 255;
-  --well-rgb: 236 235 230;
-  --tint-rgb: 228 233 238;
-  --shadow-rgb: 30 32 40;
+  --reactor-rgb: 48 112 190;
+  --amber-rgb: 150 104 30; /* brass */
+  --green-rgb: 36 110 120;
+  --sky-rgb: 96 140 200;
+  --copper-rgb: 160 92 40;
+  --base-rgb: 252 250 246;
+  --raised-rgb: 255 254 251;
+  --well-rgb: 236 232 224;
+  --tint-rgb: 232 230 224;
+  --shadow-rgb: 40 36 30;
   --hi-rgb: 255 255 255;
-  --ink-rgb: 20 22 28;
+  --ink-rgb: 20 22 26;
 
   --line: rgb(var(--line-rgb) / 0.11);
   --line-2: rgb(var(--line-rgb) / 0.18);
   --line-3: rgb(var(--line-rgb) / 0.3);
 
-  --text: #121316;
-  --text-hi: #050607;
-  --text-2: #3a3d44;
-  --text-3: #52565e;
-  --text-4: #5f636b;
+  --text: #16181c;
+  --text-hi: #0a0b0d;
+  --text-2: #3b3e44;
+  --text-3: #53565c;
+  --text-4: #5e6167;
 
-  --cyan: #0e63d6;
-  --cyan-2: #0a54b8;
-  --ice: #12406f;
-  --violet: #be482c;
-  --violet-2: #a33a20;
-  --green: #0c7096;
-  --amber: #9a5b00;
-  --rose: #be482c;
-  --copper: #8f4a17;
+  --cyan: #1e4e9c;
+  --cyan-2: #163e80;
+  --ice: #12305f;
+  --violet: #b04a30;
+  --violet-2: #943c24;
+  --green: #246e78;
+  --amber: #8a5f17;
+  --rose: #b04a30;
+  --copper: #8f4f1f;
   --on-accent: #ffffff;
-  --accent-hi: #3d8bff;
+  --accent-hi: #3567b8;
 
   --pkg-1: #ffffff;
-  --pkg-2: #dde5ef;
-  --die-1: #e8f1fd;
-  --die-2: #f6f9fe;
-  --die-3: #f6ece4;
-  --ice-2: #7fb6ff;
-  --halo-2: #6ea8ff;
+  --pkg-2: #e4e0d7;
+  --die-1: #eef2f9;
+  --die-2: #f9f8f4;
+  --die-3: #f3ebe0;
+  --ice-2: #7fa3d6;
+  --halo-2: #c99a52;
 
   --metal-hi: #ffffff;
-  --metal-mid: #c3c7cd;
-  --metal-lo: #8e949c;
-  --metal-pocket: #1e2630;
+  --metal-mid: #c6c5c1;
+  --metal-lo: #8f8e8a;
+  --metal-pocket: #1f252d;
+  --core-face: #eef4fb;
 
-  --logo-1: #0b4f8a;
-  --logo-2: #1662d6;
-  --logo-3: #be482c;
+  --logo-1: #16181c;
+  --logo-2: #1e4e9c;
+  --logo-3: #b04a30;
   --logo-pkg: #ffffff;
-  --logo-pin: #9fb3cf;
+  --logo-pin: #a9a69e;
 
-  --glow: 0.45;
+  --glow: 0.4;
   --ev-exploring: var(--amber);
 }

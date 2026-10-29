@@ -7,6 +7,7 @@ import { VisionPipeline } from './VisionPipeline';
 import { SiteAnatomy } from './SiteAnatomy';
 import { LidarConcept } from './LidarConcept';
 import { TelemetryReplay } from './TelemetryReplay';
+import { DimmingDemo } from '../capabilities/DimmingDemo';
 import './diagrams.css';
 
 const DIAGRAMS: Record<DiagramKey, { title: string; Component: ComponentType }> = {
@@ -17,6 +18,7 @@ const DIAGRAMS: Record<DiagramKey, { title: string; Component: ComponentType }> 
   'site-anatomy': { title: 'Anatomy of the site', Component: SiteAnatomy },
   'lidar-concept': { title: 'The sensing idea', Component: LidarConcept },
   'telemetry-replay': { title: 'Replay the simulator', Component: TelemetryReplay },
+  dimming: { title: 'Lighting control: the four dimming techniques', Component: DimmingDemo },
 };
 
 export function Diagram({ name }: { name: string }) {
