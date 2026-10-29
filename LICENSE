@@ -1,0 +1,14 @@
+Copyright (c) 2026 Surya Tej Thota. All rights reserved.
+
+This repository holds the source of my personal portfolio, https://suryatejpatel.in: its code, design,
+written content, résumé, photographs, illustrations, and the ST logo.
+
+It is public so that it can be read. No licence is granted to copy, modify, redistribute, or reuse any
+part of it, in whole or in part, including its design or content, for your own site or any other purpose,
+without my written permission.
+
+To ask for permission, write to thotasuryatej@gmail.com.
+
+Third-party code keeps its own licence and is not covered by this notice: the components adapted from
+React Bits (MIT, Copyright (c) 2026 David Haz), marked as such in their files, and the npm dependencies
+listed in package.json, each under its own licence.

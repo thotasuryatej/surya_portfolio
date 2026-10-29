@@ -102,3 +102,9 @@ It checks:
 - **Contact:** that the résumé PDF is served, copying the email address, and the mailto link.
 - **Mobile:** the mobile menu, reduced-motion behaviour, and no horizontal overflow.
 - Any console errors.
+
+## Copyright
+
+Copyright (c) 2026 Surya Tej Thota. All rights reserved. The code, design, content, images, and ST logo
+are mine; this repository is public to read, not to reuse. Copying or adapting any of it requires my
+written permission. See [LICENSE](LICENSE). Third-party components keep their own licences.
