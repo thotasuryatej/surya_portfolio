@@ -44,6 +44,19 @@ export default function App() {
       window.clearTimeout(timer);
       if (target) timer = window.setTimeout(settle, 150);
     };
+    // The reader scrolling on their own ends the jump: never pull them back to where it landed
+    const letGo = () => {
+      target = null;
+      window.clearTimeout(timer);
+    };
+    const keys = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ']);
+    const onKey = (e: KeyboardEvent) => {
+      if (keys.has(e.key)) letGo();
+    };
+    // A press on the page's own scrollbar lands on <html>
+    const onPress = (e: PointerEvent) => {
+      if (e.target === document.documentElement) letGo();
+    };
     const onClick = (e: MouseEvent) => {
       const id = (e.target as Element).closest?.('a[href^="#"]')?.getAttribute('href')?.slice(1);
       if (id && sectionIds.includes(id)) {
@@ -66,9 +79,17 @@ export default function App() {
     }
     document.addEventListener('click', onClick);
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('wheel', letGo, { passive: true });
+    window.addEventListener('touchstart', letGo, { passive: true });
+    window.addEventListener('keydown', onKey);
+    window.addEventListener('pointerdown', onPress, { passive: true });
     return () => {
       document.removeEventListener('click', onClick);
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('wheel', letGo);
+      window.removeEventListener('touchstart', letGo);
+      window.removeEventListener('keydown', onKey);
+      window.removeEventListener('pointerdown', onPress);
       window.clearTimeout(timer);
     };
   }, []);

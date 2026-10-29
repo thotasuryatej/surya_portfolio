@@ -100,8 +100,8 @@
   --logo-1: #fbe9c6;
   --logo-2: #e8b058;
   --logo-3: #de6e58;
-  --logo-pkg: #151310;
-  --logo-pin: #5e5548;
+  --logo-ink: #efe7df;
+  --logo-copper: #e2894e;
 
   /* Glow strength: glows are light sources in the dark and soft shadows in the light */
   --glow: 1;
@@ -217,8 +217,8 @@
   --logo-1: #16181c;
   --logo-2: #1e4e9c;
   --logo-3: #b04a30;
-  --logo-pkg: #ffffff;
-  --logo-pin: #a9a69e;
+  --logo-ink: #1b1a19;
+  --logo-copper: #b4582a;
 
   --glow: 0.4;
   --ev-exploring: var(--amber);

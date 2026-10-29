@@ -38,7 +38,8 @@
 .nav-mark {
   display: grid;
   place-items: center;
-  width: 48px;
+  /* A pill around the wide ST logo */
+  padding: 0 13px;
   height: 48px;
   flex: none;
 }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useScroll, type Variants } from 'motion/react';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll, type Variants } from 'motion/react';
 import { ease } from '../../lib/motion';
 import { Check, Download, Mail, Plus } from 'lucide-react';
 import { profile } from '../../content';
@@ -67,23 +67,19 @@ export function Nav({ items, chapters }: { items: NavItem[]; chapters: NavItem[]
   const sectionIds = chapters.map((c) => c.id);
   const active = useActiveSection(sectionIds);
   const notice = useNotice();
-  const { scrollYProgress } = useScroll();
+  const { scrollY, scrollYProgress } = useScroll();
   const markRef = useRef<HTMLAnchorElement>(null);
   const endRef = useRef<HTMLDivElement>(null);
   const islandRef = useRef<HTMLButtonElement>(null);
   const glass = [useLiquidGlass(markRef), useLiquidGlass(endRef), useLiquidGlass(islandRef)];
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(() => scrollY.get() > 24);
   const [open, setOpen] = useState(false);
   const menuBtn = useRef<HTMLButtonElement>(null);
   const panel = useRef<HTMLElement>(null);
 
   // Always on screen; once the page scrolls under it, the controls sit on small plates (nav.css).
-  useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 24);
-    on();
-    window.addEventListener('scroll', on, { passive: true });
-    return () => window.removeEventListener('scroll', on);
-  }, []);
+  // Read from motion's scroll value, sampled once a frame: reading scrollY in every scroll event forced a layout each time.
+  useMotionValueEvent(scrollY, 'change', (y) => setScrolled(y > 24));
 
   // While open: focus the first link, keep Tab inside the panel, close on Escape.
   useEffect(() => {
@@ -124,7 +120,7 @@ export function Nav({ items, chapters }: { items: NavItem[]; chapters: NavItem[]
       {glass}
       <div className="nav-bar">
         <a href="#home" ref={markRef} className="nav-mark" aria-label={`${profile.fullName} — back to top`} onClick={close}>
-          <Monogram size={30} />
+          <Monogram size={27} />
         </a>
 
         <motion.button

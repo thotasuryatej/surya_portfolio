@@ -107,9 +107,19 @@ function Pinned({ height, touch }: { height: number; touch: boolean }) {
       const end = el.offsetHeight - innerHeight;
       root.classList.toggle('bc-snapping', top < -2 && -top < end - 2);
     };
-    check();
-    addEventListener('scroll', check, { passive: true });
+    // Measured only while the pin is on screen, so scrolling elsewhere on the page forces no layout here
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) {
+        check();
+        addEventListener('scroll', check, { passive: true });
+      } else {
+        removeEventListener('scroll', check);
+        root.classList.remove('bc-snapping');
+      }
+    });
+    io.observe(el);
     return () => {
+      io.disconnect();
       removeEventListener('scroll', check);
       root.classList.remove('bc-snapping');
     };

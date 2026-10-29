@@ -3,33 +3,23 @@
   overflow: visible;
 }
 
-/* One-time power-up: the package outline draws, the pins appear, the traces route, then the vias land. */
+/* One-time power-up: the letters appear, the traces route out from them, then the pads land. */
 @media (prefers-reduced-motion: no-preference) {
-  .mono-mark--draw .mm-chip,
   .mono-mark--draw .mm-trace {
     stroke-dasharray: 1;
     stroke-dashoffset: 1;
-    animation: mm-draw 0.7s var(--ease-out) forwards;
+    animation: mm-draw 0.7s var(--ease-out) 0.35s forwards;
   }
-  .mono-mark--draw .mm-chip {
-    animation-duration: 0.45s;
-  }
-  .mono-mark--draw .mm-t {
-    animation-delay: 0.35s;
-  }
-  .mono-mark--draw .mm-s {
-    animation-delay: 0.3s;
-    animation-duration: 0.85s;
-  }
-  .mono-mark--draw .mm-pins,
-  .mono-mark--draw .mm-via {
+  .mono-mark--draw .mm-letters,
+  .mono-mark--draw .mm-fold,
+  .mono-mark--draw .mm-pad {
     opacity: 0;
-    animation: mm-in 0.3s var(--ease-out) forwards;
+    animation: mm-in 0.4s var(--ease-out) forwards;
   }
-  .mono-mark--draw .mm-pins {
-    animation-delay: 0.3s;
+  .mono-mark--draw .mm-fold {
+    animation-delay: 0.2s;
   }
-  .mono-mark--draw .mm-via {
+  .mono-mark--draw .mm-pad {
     animation-delay: 1s;
   }
 }

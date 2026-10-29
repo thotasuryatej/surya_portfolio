@@ -6,6 +6,8 @@ import { evidenceColor, evidenceLabel } from '../../lib/status';
 import { useInView } from '../../hooks/useInView';
 import { useLiquidGlass } from '../ui/LiquidGlass';
 import { LiquidButton } from '../ui/LiquidButton';
+import { Markers } from '../brand/Monogram';
+import { ST_FOLD, ST_LETTERS, ST_VIEW } from '../brand/stPaths';
 import './circuit-core.css';
 
 /*
@@ -121,11 +123,6 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
               <stop offset=".6" style={{ stopColor: 'var(--die-2)' }} />
               <stop offset="1" style={{ stopColor: 'var(--die-3)' }} />
             </linearGradient>
-            <linearGradient id={`${uid}-mark`} x1="6" y1="6" x2="42" y2="42" gradientUnits="userSpaceOnUse">
-              <stop offset="0" style={{ stopColor: 'var(--logo-1)' }} />
-              <stop offset=".5" style={{ stopColor: 'var(--cyan)' }} />
-              <stop offset="1" style={{ stopColor: 'var(--violet)' }} />
-            </linearGradient>
             <radialGradient id={`${uid}-heart`}>
               <stop offset="0" style={{ stopColor: 'rgb(var(--reactor-rgb))' }} stopOpacity=".55" />
               <stop offset=".45" style={{ stopColor: 'rgb(var(--reactor-rgb))' }} stopOpacity=".16" />
@@ -182,14 +179,11 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
             <rect x={C - 50} y={C - 50} width="100" height="100" rx="8" fill={`url(#${uid}-die)`} />
             <rect x={C - 50} y={C - 50} width="100" height="100" rx="8" fill={`url(#${uid}-grid)`} style={{ stroke: 'rgb(var(--accent-rgb) / .25)' }} />
             <circle cx={C - 58} cy={C - 58} r="3" style={{ fill: 'rgb(var(--line-rgb) / .4)' }} />
-            {/* The ST mark (same geometry as components/brand/Monogram.tsx) etched on the die */}
-            <g transform={`translate(${C - 38.4} ${C - 38.4}) scale(1.6)`} fill="none" stroke={`url(#${uid}-mark)`} strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" className="chip-mark">
-              <path d="M29 4.5V8M34 4.5V8M39 4.5V8M29 17V19.5M39 17V19.5" />
-              <rect x="24" y="8" width="20" height="9" rx="2" />
-              <path d="M34 17V37.5" />
-              <path d="M24 12.5H12L8 16.5V20L12 24H18L22 28V36L18 40H9.6" />
-              <circle cx="34" cy="40.5" r="2.6" strokeWidth="1.8" />
-              <circle cx="7" cy="40" r="2.6" strokeWidth="1.8" />
+            {/* The ST logo (same geometry as components/brand/Monogram.tsx) etched on the die */}
+            <g transform={`translate(${C - 40} ${C - 28.4}) scale(${80 / ST_VIEW.w})`} className="chip-mark">
+              <Markers size={40} />
+              <path d={ST_FOLD} fill="var(--logo-copper)" />
+              <path d={ST_LETTERS} fill="var(--logo-ink)" />
             </g>
             <text x={C} y={C + 62} className="chip-label" textAnchor="middle">
               ST · CORE

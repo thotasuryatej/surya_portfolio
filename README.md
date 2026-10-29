@@ -74,8 +74,8 @@ public/
   word (`SectionHead` in `Reveal.tsx`), the About portrait "boots up" as it scrolls into view, and
   Journey pins on screens 900 px and wider while the timeline scrolls sideways; narrower screens and
   reduced motion get a vertical list instead. All scroll effects animate `transform`, `opacity` or `clip-path` only.
-- **Brand mark.** `src/components/brand/Monogram.tsx` draws the ST chip (an S and a T routed as PCB traces
-  inside a pinned IC package). Static copies live in `public/brand/`, and `favicon.svg` follows the system theme.
+- **Brand mark.** `src/components/brand/Monogram.tsx` draws the ST logo (angular S and T letterforms with
+  copper circuit traces), traced from my own artwork into `stPaths.ts` and coloured per theme. Static copies live in `public/brand/`, and `favicon.svg` follows the system theme.
 - **Performance.** Sections below the fold use `content-visibility: auto`, so off-screen sections
   aren't laid out or painted until they're near the viewport. `App.tsx` re-aligns in-page jumps once
   scrolling settles, because those sections' heights are estimates until they first render.
