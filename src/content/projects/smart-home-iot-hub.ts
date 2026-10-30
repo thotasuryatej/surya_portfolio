@@ -42,6 +42,5 @@ export default defineProject({
       ],
     },
   ],
-  links: [{ label: 'Hub case study on GitHub', href: 'https://github.com/thotasuryatej/IoT-Matter-Smart-Home-HUB', kind: 'source' }],
   note: 'Product names, internal designs and code belong to PAT IoT Solutions, so this case study describes my role and the engineering at a high level.',
 });

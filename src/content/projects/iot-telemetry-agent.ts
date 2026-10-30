@@ -40,16 +40,9 @@ export default defineProject({
       heading: 'Design choices',
       body: [
         'At-least-once delivery with server-side deduplication was chosen over an exactly-once protocol, which would need a much harder distributed commit for little gain. For a fleet of 100,000 devices, the design document covers a compact binary wire format, stateless deduplication so ingestion scales horizontally, and jitter on retries to avoid synchronised reconnect storms.',
-        'AI assistance (Claude) was used for boilerplate, first drafts of modules written to my design, and documentation; the module split, durability strategy, eviction policy and delivery guarantee were my decisions. The repository includes a full disclosure.',
+        'AI assistance (Claude) was used for boilerplate, first drafts of modules written to my design, and documentation; the module split, durability strategy, eviction policy and delivery guarantee were my decisions.',
       ],
     },
   ],
-  links: [
-    { label: 'Source on GitHub', href: 'https://github.com/thotasuryatej/iot-telemetry-device-agent', kind: 'source' },
-    {
-      label: 'Architecture document',
-      href: 'https://github.com/thotasuryatej/iot-telemetry-device-agent/blob/main/docs/architecture/ARCHITECTURE.md',
-      kind: 'document',
-    },
-  ],
+  note: 'The source and architecture document are kept private. Happy to walk through them on request.',
 });
