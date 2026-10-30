@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 import { site } from './src/content/site';
 import { profile } from './src/content/profile';
 import { education, jobs } from './src/content/experience';
+import { about } from './src/content/about';
 
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
 
@@ -17,6 +18,11 @@ function seoFromContent(): Plugin {
         '@context': 'https://schema.org',
         '@type': 'Person',
         name: profile.name,
+        // The ways people write the name, so a search for any of them finds this page
+        alternateName: [profile.fullName, 'Suryatej', 'Suryatej Thota', 'Thota Suryatej'],
+        description: site.description,
+        ...(profile.portrait ? { image: abs(profile.portrait.src) } : {}),
+        knowsAbout: ['Embedded software', 'Firmware', 'IoT', 'ESP32', 'ESP8266', 'Nuvoton', 'RTOS', 'Matter protocol'],
         jobTitle: current?.role ?? profile.roles[0],
         worksFor: current ? { '@type': 'Organization', name: current.company, url: current.website } : undefined,
         address: { '@type': 'PostalAddress', addressLocality: profile.location },
@@ -24,6 +30,14 @@ function seoFromContent(): Plugin {
         sameAs: profile.socials.map((s) => s.href),
         alumniOf: education.map((e) => ({ '@type': 'CollegeOrUniversity', name: e.institution })),
         ...(site.url ? { url: site.url } : {}),
+      };
+      // The site's own name, which Google shows above the result
+      const website = site.url && {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: profile.fullName,
+        alternateName: ['Surya Tej', 'suryatejpatel.in'],
+        url: `${site.url}/`,
       };
       const tags = [
         `<title>${esc(site.title)}</title>`,
@@ -45,9 +59,22 @@ function seoFromContent(): Plugin {
         ...(site.url
           ? [`<link rel="canonical" href="${site.url}/" />`, `<meta property="og:url" content="${site.url}/" />`]
           : []),
-        `<script type="application/ld+json">${JSON.stringify(person).replace(/</g, '\u003c')}</script>`,
+        // '\u003c' is the six characters \u003c, so a "<" inside the data can't close the script tag early
+        ...[person, website]
+          .filter(Boolean)
+          .map((d) => `<script type="application/ld+json">${JSON.stringify(d).replace(/</g, '\u003c')}</script>`),
       ];
-      return html.replace('<!--seo-->', tags.join('\n    '));
+      // Without JavaScript (some crawlers, link previews) the page still says who this is and what the work is
+      const plain = [
+        `<h1>${esc(profile.fullName)} — ${esc(profile.roles.slice(0, 2).join(' & '))}</h1>`,
+        ...about.intro.map((s) => `<p>${esc(s)}</p>`),
+        '<h2>Experience</h2>',
+        '<ul>',
+        ...jobs.map((j) => `<li>${esc(j.role)}, ${esc(j.company)}</li>`),
+        ...education.map((e) => `<li>${esc(e.degree)}, ${esc(e.institution)}</li>`),
+        '</ul>',
+      ].join('\n        ');
+      return html.replace('<!--seo-->', tags.join('\n    ')).replace('<!--plain-->', plain);
     },
   };
 }

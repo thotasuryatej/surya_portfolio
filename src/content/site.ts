@@ -9,12 +9,19 @@ export const site: SiteConfig = {
   // The site's own domain (no trailing slash).
   // It enables absolute social-preview URLs and the canonical tag.
   url: 'https://suryatejpatel.in',
-  title: 'Surya Tej — Embedded Software Developer & IoT Engineer',
+  // Search engines weigh the title most: the full name, then the work people search for
+  title: 'Surya Tej Thota — Embedded Software & Firmware Developer, IoT Engineer',
   description:
-    'Surya Tej is an embedded software developer in Hyderabad building firmware for IoT and smart-home products — ESP32, ESP8266, Nuvoton, RTOS and Matter — and exploring what to build next.',
+    'Surya Tej Thota (Suryatej) is an embedded software and firmware developer in Hyderabad building firmware for IoT and smart-home products — ESP32, ESP8266, Nuvoton, RTOS and Matter — and exploring what to build next.',
   keywords: [
     'Surya Tej',
+    'Surya Tej Thota',
+    'Suryatej',
+    'Suryatej Thota',
+    'Thota Suryatej',
     'Embedded Software Developer',
+    'Embedded Firmware Developer',
+    'Firmware Engineer',
     'IoT Engineer',
     'Firmware',
     'ESP32',
