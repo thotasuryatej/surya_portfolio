@@ -44,7 +44,7 @@ const NODES: MapNode[] = [
     x: 34,
     y: 89,
     status: 'built',
-    parts: 'ESP32 · ESP8266 · Nuvoton MS51 · Embedded C',
+    parts: 'ESP32 · ESP8266 · Nuvoton · Embedded C',
     detail: 'The products run on three microcontroller families. RTOS-based task management keeps input, load control and communication responsive together.',
   },
   {

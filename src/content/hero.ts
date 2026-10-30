@@ -14,7 +14,7 @@ export const hero: HeroContent = {
       id: 'mcu',
       label: 'Microcontrollers',
       icon: 'Cpu',
-      detail: 'Firmware for ESP32, ESP8266 and Nuvoton MS51 microcontrollers in smart-home products.',
+      detail: 'Firmware for ESP32, ESP8266 and Nuvoton microcontrollers in smart-home products.',
       evidence: 'professional',
     },
     {

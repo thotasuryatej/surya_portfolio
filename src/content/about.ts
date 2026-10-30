@@ -13,7 +13,7 @@ export const about: AboutContent = {
     'The inventors I admire share a few habits: they imagine something that does not exist yet, learn the technology underneath it, prepare for difficult situations, and build their own tools instead of only talking about ideas. That is the kind of engineer I am working to become.',
   ],
   glance: [
-    { icon: 'Microchip', label: 'Microcontrollers', items: ['ESP32', 'ESP8266', 'Nuvoton MS51'] },
+    { icon: 'Microchip', label: 'Microcontrollers', items: ['ESP32', 'ESP8266', 'Nuvoton'] },
     { icon: 'Cable', label: 'Integration', items: ['Firmware debug', 'Circuit debug', 'HW testing'] },
     { icon: 'Network', label: 'Connectivity', items: ['Matter', 'Wi-Fi', 'UART', 'I2C', 'SPI'] },
     { icon: 'Timer', label: 'Real-time', items: ['RTOS tasks', 'Scheduling', 'Device comms'] },

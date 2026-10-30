@@ -11,8 +11,8 @@ export const capabilities: Capability[] = [
     icon: 'Microchip',
     summary: 'The code that runs on the device itself.',
     detail:
-      'Firmware for smart-home products on ESP32, ESP8266 and Nuvoton MS51 — RTOS tasks for sensing, control and communication, debugged on real hardware with the hardware team.',
-    technologies: ['Embedded C', 'C++', 'RTOS', 'ESP32', 'Nuvoton MS51'],
+      'Firmware for smart-home products on ESP32, ESP8266 and Nuvoton — RTOS tasks for sensing, control and communication, debugged on real hardware with the hardware team.',
+    technologies: ['Embedded C', 'C++', 'RTOS', 'ESP32', 'Nuvoton'],
     evidence: ['professional'],
     relatedProjects: ['smart-home-iot-hub'],
   },
