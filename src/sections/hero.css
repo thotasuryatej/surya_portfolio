@@ -5,6 +5,9 @@
   min-height: min(100svh, 980px);
   display: flex;
   align-items: center;
+  /* The spotlight behind the core reaches past the screen edge on two-column tablets; clip, not hidden, so
+     nothing becomes a scroll box and the glass above the hero keeps its backdrop */
+  overflow-x: clip;
 }
 .hero::before {
   /* Vignette: the frame darkens toward its edges so the eye lands on the title and the core */

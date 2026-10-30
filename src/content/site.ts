@@ -23,7 +23,8 @@ export const site: SiteConfig = {
     'Smart home automation',
     'Hyderabad',
   ],
-  ogImage: '/og-image.png',
+  // The ?v= changes whenever the image does, so link previews and browsers fetch it fresh instead of a saved copy
+  ogImage: '/og-image.png?v=st',
   themeColor: '#0b0a09',
   themeColorLight: '#f5f2eb',
 
