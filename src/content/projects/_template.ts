@@ -22,7 +22,7 @@ export default defineProject({
   // featured: false,   // true = big card at the top (only one project should be featured)
   // order: 10,         // lower numbers show first
   // visual: 'blueprint', // illustration on the card: iot-hub | web | queue | vision | microgrid | lidar | blueprint
-  // diagram: 'device-topology', // optional interactive diagram: device-topology | fq-codel | energy-flow | vision-pipeline | site-anatomy | lidar-concept
+  // diagram: 'fq-codel', // optional interactive diagram: fq-codel | energy-flow | vision-pipeline | site-anatomy | lidar-concept | dimming
   overview: [
     'First paragraph: the problem.',
     'Second paragraph: what I built and how.',

@@ -95,7 +95,7 @@ export function Contact() {
                   download={profile.resume.downloadName}
                   icon={<Download size={18} aria-hidden="true" />}
                 >
-                  Download résumé
+                  Download resume
                 </ButtonLink>
                 {profile.socials.map((s) => (
                   <ButtonLink
