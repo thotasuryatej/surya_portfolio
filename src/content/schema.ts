@@ -322,6 +322,8 @@ export interface SiteConfig {
   themeColor: string;
   /** Browser UI colour in the light theme. */
   themeColorLight: string;
+  /** GoatCounter site code (the part before .goatcounter.com). Leave empty for no visitor counting. */
+  goatcounter?: string;
   sections: SectionConfig[];
 }
 

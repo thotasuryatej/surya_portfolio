@@ -34,6 +34,8 @@ export const site: SiteConfig = {
   ogImage: '/og-image.png?v=st',
   themeColor: '#0b0a09',
   themeColorLight: '#f5f2eb',
+  // Visitor counts at https://suryatejpatel.goatcounter.com: no cookies, and visits from localhost aren't counted
+  goatcounter: 'suryatejpatel',
 
   // Order here = order on the page. `nav` controls the navigation bar.
   // To add a new section: create the component, register it in

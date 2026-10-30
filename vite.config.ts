@@ -63,6 +63,9 @@ function seoFromContent(): Plugin {
         ...[person, website]
           .filter(Boolean)
           .map((d) => `<script type="application/ld+json">${JSON.stringify(d).replace(/</g, '\u003c')}</script>`),
+        ...(site.goatcounter
+          ? [`<script data-goatcounter="https://${site.goatcounter}.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>`]
+          : []),
       ];
       // Without JavaScript (some crawlers, link previews) the page still says who this is and what the work is
       const plain = [
