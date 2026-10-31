@@ -1,7 +1,7 @@
 import type { MindsetStep } from './schema';
 
 export const mindsetIntro =
-  'Tony Stark builds the future out of almost nothing — imagine it, learn what it takes, make it work. That is why Iron Man inspires me, and why this core is my own arc reactor. Six habits power it; pick one to see where I have used it.';
+  'Tony Stark builds the future out of almost nothing — imagine it, learn what it takes, make it work. That is why Iron Man inspires me, and why this core is my own arc reactor. AI is my JARVIS: fast with the logic, but knowing what to build, and when, stays with me. Six habits power the core; pick one to see where I have used it.';
 
 export const mindset: MindsetStep[] = [
   {
