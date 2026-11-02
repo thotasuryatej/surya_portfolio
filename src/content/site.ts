@@ -33,7 +33,8 @@ export const site: SiteConfig = {
   // The ?v= changes whenever the image does, so link previews and browsers fetch it fresh instead of a saved copy
   ogImage: '/og-image.png?v=st',
   themeColor: '#0b0a09',
-  themeColorLight: '#f5f2eb',
+  // The light page's top edge renders #e3e4e5 (measured), so the phone status bar blends into it
+  themeColorLight: '#e3e4e5',
   // Visitor counts at https://suryatejpatel.goatcounter.com: no cookies, and visits from localhost aren't counted
   goatcounter: 'suryatejpatel',
 

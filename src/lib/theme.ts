@@ -9,11 +9,18 @@ const KEY = 'theme';
 /** index.html sets data-theme before first paint; read it back so React starts in agreement. */
 const current = (): Theme => (document.documentElement.dataset.theme === 'light' ? 'light' : 'dark');
 
-function apply(theme: Theme) {
-  document.documentElement.dataset.theme = theme;
-  // Once the visitor chooses, the browser UI follows their choice rather than the OS.
+/** The browser UI (phone status bar) follows the visitor's theme rather than the OS. */
+function syncThemeColor(theme: Theme) {
   const color = theme === 'light' ? site.themeColorLight : site.themeColor;
   document.querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]').forEach((m) => (m.content = color));
+}
+
+// index.html picks the saved theme before the theme-color tag exists, so a saved light theme is synced here.
+syncThemeColor(current());
+
+function apply(theme: Theme) {
+  document.documentElement.dataset.theme = theme;
+  syncThemeColor(theme);
 }
 
 /**
