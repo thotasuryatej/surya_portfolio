@@ -134,7 +134,7 @@ button.jr-btn:hover .jr-go {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding-top: var(--nav-h);
+  padding-top: var(--nav-clear);
   overflow: hidden;
 }
 .jr-pin .section-head {

@@ -145,6 +145,8 @@
   --t-slow: 600ms;
 
   --nav-h: 64px;
+  /* Space the floating nav takes from the top, including the notch / status bar (viewport-fit=cover) */
+  --nav-clear: calc(var(--nav-h) + env(safe-area-inset-top, 0px));
 }
 
 /* Light: an editorial publication on warm paper. Ink text, one ink-blue accent for actions and

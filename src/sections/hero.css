@@ -1,6 +1,6 @@
 .hero {
   position: relative;
-  padding-top: calc(var(--nav-h) + min(clamp(1.5rem, 1rem + 3vw, 4rem), 5svh));
+  padding-top: calc(var(--nav-clear) + min(clamp(1.5rem, 1rem + 3vw, 4rem), 5svh));
   padding-bottom: min(clamp(2rem, 1.5rem + 3vw, 4.5rem), 6svh);
   min-height: min(100svh, 980px);
   display: flex;

@@ -416,7 +416,7 @@
 
 /* Pinned: keep the core and the head on one screen */
 .pin-stage .bc-stage {
-  --size: min(100%, 460px, 100svh - var(--nav-h) - 250px);
+  --size: min(100%, 460px, 100svh - var(--nav-clear) - 250px);
 }
 
 /* Dial: where the labels sit below the core, the rotor turns the current habit's segment to the top.

@@ -17,7 +17,7 @@ export const about: AboutContent = {
     { icon: 'Cable', label: 'Integration', items: ['Firmware debug', 'Circuit debug', 'HW testing'] },
     { icon: 'Network', label: 'Connectivity', items: ['Matter', 'Wi-Fi', 'UART', 'I2C', 'SPI'] },
     { icon: 'Timer', label: 'Real-time', items: ['RTOS tasks', 'Scheduling', 'Device comms'] },
-    { icon: 'Code', label: 'Languages', items: ['Embedded C', 'C++17', 'Python'] },
+    { icon: 'Code', label: 'Languages', items: ['Embedded C', 'C++', 'Python'] },
     { icon: 'Trophy', label: 'Recognition', items: ['SIH 2023 finalist', 'Grand Contest 2024'] },
   ],
 };

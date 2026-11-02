@@ -4,7 +4,7 @@
   "description": "Embedded software developer and IoT engineer — projects, journey and resume.",
   "start_url": "/",
   "scope": "/",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "any",
   "background_color": "#0b0a09",
   "theme_color": "#0b0a09",

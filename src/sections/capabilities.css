@@ -111,7 +111,7 @@
 
 .cap-panel-wrap {
   position: sticky;
-  top: calc(var(--nav-h) + 40px);
+  top: calc(var(--nav-clear) + 40px);
 }
 .cap-panel-top {
   display: flex;
@@ -294,7 +294,7 @@
     min-height: 0;
   }
   .cap-panel-wrap {
-    top: calc(var(--nav-h) + 16px);
+    top: calc(var(--nav-clear) + 16px);
   }
   .dim-caption {
     font-size: 0.85rem;
@@ -331,7 +331,7 @@
   border-radius: 16px;
   border: 1px solid var(--line);
   background: rgb(var(--raised-rgb) / 0.35);
-  scroll-margin-top: calc(var(--nav-h) + 24px);
+  scroll-margin-top: calc(var(--nav-clear) + 24px);
 }
 .cap-acc-item[data-open] {
   border-color: rgb(var(--accent-rgb) / 0.35);

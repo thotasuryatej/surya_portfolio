@@ -43,7 +43,7 @@ export const journey: Milestone[] = [
   },
   { phase: 'pat', when: '2025', until: 'Present', title: 'Building a Matter hub', text: 'A smart-home hub on the Matter protocol, in progress.', icon: 'House', kind: 'work', project: 'smart-home-iot-hub' },
   { phase: 'pat', when: 'Apr 2026', title: 'patiot.in, built with Claude AI', text: 'Designed and deployed the company website.', icon: 'Globe', kind: 'build', project: 'pat-iot-website' },
-  { phase: 'pat', when: 'Jul 2026', title: 'IoT Telemetry Device Agent', text: 'A take-home assignment in C++17.', icon: 'Server', kind: 'build', project: 'iot-telemetry-agent' },
+  { phase: 'pat', when: 'Jul 2026', title: 'IoT Telemetry Device Agent', text: 'A take-home assignment in C++.', icon: 'Server', kind: 'build', project: 'iot-telemetry-agent' },
 ];
 
 /** The date label for a stop: "Sep 2025", or "Sep 2025 – Present" when it has an end. */

@@ -255,7 +255,7 @@
 /* Short windows: the panel's links tighten so the contact block still fits */
 @media (max-height: 700px) {
   .nav-panel {
-    padding-top: calc(var(--nav-h) + 28px);
+    padding-top: calc(var(--nav-clear) + 28px);
   }
   .nav-panel-link {
     font-size: 1.6rem;

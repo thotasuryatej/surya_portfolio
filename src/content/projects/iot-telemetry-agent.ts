@@ -10,8 +10,8 @@ export default defineProject({
   status: 'Completed',
   period: { start: '2026-07', end: '2026-07' },
   updated: '2026-10',
-  role: 'Sole author — architecture, C++17 implementation, simulator and documentation',
-  technologies: ['C++17', 'CMake', 'Embedded systems', 'Flash storage', 'IoT telemetry'],
+  role: 'Sole author — architecture, C++ implementation, simulator and documentation',
+  technologies: ['C++', 'CMake', 'Embedded systems', 'Flash storage', 'IoT telemetry'],
   order: 5,
   visual: 'telemetry',
   overview: [
