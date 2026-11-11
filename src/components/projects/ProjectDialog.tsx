@@ -183,7 +183,18 @@ export function ProjectDialog() {
                           {m.type === 'video' ? (
                             <video src={asset(m.src)} poster={asset(m.poster)} controls preload="none" aria-label={m.alt} />
                           ) : (
-                            <img src={asset(m.src)} alt={m.alt} loading="lazy" decoding="async" />
+                            <a href={asset(m.src)} target="_blank" rel="noopener" title="Open full size">
+                              <img
+                                src={asset(m.src)}
+                                alt={m.alt}
+                                loading="lazy"
+                                decoding="async"
+                                onLoad={(e) => {
+                                  const i = e.currentTarget;
+                                  if (i.naturalWidth > i.naturalHeight) i.dataset.wide = '';
+                                }}
+                              />
+                            </a>
                           )}
                           {m.caption && <figcaption>{m.caption}</figcaption>}
                         </figure>
@@ -237,6 +248,26 @@ export function ProjectDialog() {
                       </li>
                     ))}
                   </ul>
+                )}
+                {!!project.related?.length && (
+                  <div className="dlg-related">
+                    <h3 className="dlg-h">Related project</h3>
+                    <ul role="list" className="dlg-links">
+                      {project.related.map((s) => {
+                        const r = projectBySlug(s);
+                        return (
+                          r && (
+                            <li key={s}>
+                              <button type="button" className="dlg-page dlg-rel" onClick={() => open(s)}>
+                                <span>{r.title}</span>
+                                <ArrowRight size={16} aria-hidden="true" />
+                              </button>
+                            </li>
+                          )
+                        );
+                      })}
+                    </ul>
+                  </div>
                 )}
                 {project.note && (
                   <p className="dlg-note">

@@ -35,7 +35,7 @@ export const capabilities: Capability[] = [
     detail: 'Dimming controllers built at PAT IoT Solutions: Phase-Cut, PWM, DALI and analog. Try the explainer.',
     technologies: ['Phase-Cut', 'PWM', 'DALI', 'Analog dimming'],
     evidence: ['professional'],
-    relatedProjects: ['smart-home-iot-hub'],
+    relatedProjects: ['lighting-control', 'smart-home-iot-hub'],
     demo: 'dimming',
   },
   {

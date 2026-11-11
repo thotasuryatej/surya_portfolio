@@ -17,10 +17,9 @@ export const journeyPhases: JourneyPhase[] = [
 export const journey: Milestone[] = [
   { phase: 'btech', when: 'Nov 2021', until: '2025', title: 'B.Tech, CSE (IoT)', text: 'Kakatiya Institute of Technology and Science, Warangal.', icon: 'GraduationCap', kind: 'study' },
   { phase: 'btech', when: 'Dec 2023', title: 'Smart India Hackathon finalist', text: 'Team leader for Smart Microgrid as a Service.', icon: 'Trophy', kind: 'award', project: 'smart-microgrid' },
-  { phase: 'btech', when: 'Mar 2024', title: 'Smart surveillance', text: 'Real-time detection with OpenCV and YOLO.', icon: 'ScanEye', kind: 'build', project: 'smart-surveillance' },
   { phase: 'btech', when: '2024', title: 'Grand Contest 2024 — selected', text: 'LiDAR-enabled smartwatch for visually impaired users.', icon: 'Award', kind: 'award', project: 'lidar-smartwatch' },
-  { phase: 'btech', when: '2024', title: 'IDE Bootcamp · Sumshodhini’24', text: 'Bootcamp at NIT Goa; organised a technical event at KITS.', icon: 'Rocket', kind: 'study' },
-  { phase: 'btech', when: 'Apr 2025', title: 'FQ-CoDel for IoT Wi-Fi', text: 'Fair-queuing congestion control, simulated in NS-3.', icon: 'Network', kind: 'build', project: 'fq-codel-iot-wifi' },
+  { phase: 'btech', when: '2024', title: 'IDE Bootcamp 2024', text: 'Participant in the bootcamp at NIT Goa.', icon: 'Rocket', kind: 'study' },
+  { phase: 'btech', when: '2024', title: 'Sumshodhini’24', text: 'Organised a technical event at KITS Warangal.', icon: 'Users', kind: 'award' },
   {
     phase: 'intern',
     when: 'May 2025',
@@ -42,8 +41,7 @@ export const journey: Milestone[] = [
     logo: { src: '/images/companies/pat-iot-solutions.webp', alt: 'PAT IoT Solutions logo' },
   },
   { phase: 'pat', when: '2025', until: 'Present', title: 'Building a Matter hub', text: 'A smart-home hub on the Matter protocol, in progress.', icon: 'House', kind: 'work', project: 'smart-home-iot-hub' },
-  { phase: 'pat', when: 'Apr 2026', title: 'patiot.in, built with Claude AI', text: 'Designed and deployed the company website.', icon: 'Globe', kind: 'build', project: 'pat-iot-website' },
-  { phase: 'pat', when: 'Jul 2026', title: 'IoT Telemetry Device Agent', text: 'A take-home assignment in C++.', icon: 'Server', kind: 'build', project: 'iot-telemetry-agent' },
+  { phase: 'pat', when: 'Sep 2026', until: 'Nov 2026', title: 'PAT IoT app, next version', text: 'Redesigned the company’s smart-home app with Claude AI; launched on Android and iOS.', icon: 'MonitorSmartphone', kind: 'work', project: 'pat-iot-app' },
 ];
 
 /** The date label for a stop: "Sep 2025", or "Sep 2025 – Present" when it has an end. */

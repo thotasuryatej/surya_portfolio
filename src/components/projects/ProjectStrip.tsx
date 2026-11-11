@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState, type MouseEvent } from 'react';
 import { animate, useReducedMotion } from 'motion/react';
 import { ArrowLeft, ArrowRight, ArrowUpRight, Award } from 'lucide-react';
 import type { Project } from '../../content/schema';
@@ -8,6 +8,7 @@ import { projectStatusColor } from '../../lib/status';
 import { useProjectRoute } from '../../hooks/useProjectRoute';
 import { ProjectMedia } from './ProjectCard';
 import { Step } from './ProjectGallery';
+import { TOUR_PROJECT } from '../../lib/tour';
 
 const nn = (n: number) => String(n).padStart(2, '0');
 
@@ -68,6 +69,18 @@ export function ProjectStrip({ projects, from = 0 }: { projects: Project[]; from
       },
     });
   };
+
+  // The site tour turns to the project it is talking about
+  const goRef = useRef(go);
+  goRef.current = go;
+  useEffect(() => {
+    const onTour = (e: Event) => {
+      const i = projects.findIndex((p) => p.slug === (e as CustomEvent<string>).detail);
+      if (i >= 0) goRef.current(i);
+    };
+    window.addEventListener(TOUR_PROJECT, onTour);
+    return () => window.removeEventListener(TOUR_PROJECT, onTour);
+  }, [projects]);
 
   return (
     <div className="pst">

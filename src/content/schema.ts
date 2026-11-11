@@ -212,6 +212,8 @@ export interface Project {
   sections?: CaseStudySection[];
   media?: Media[];
   links?: Link[];
+  /** Slugs of other projects to link to from the case study (e.g. a project this one is part of). */
+  related?: string[];
   /** A short, honest note shown in the case study (e.g. about missing details). */
   note?: string;
 }

@@ -60,6 +60,10 @@ export function validateContent(fileExists: (publicPath: string) => boolean): Is
     checkDate(where, 'period.end', p.period.end, true);
     checkDate(where, 'updated', p.updated);
     if (p.visual && !(visualKeys as readonly string[]).includes(p.visual)) err(where, `unknown visual "${p.visual}". Options: ${visualKeys.join(', ')}`);
+    for (const s of p.related ?? []) {
+      if (!projectSlugs.has(s)) err(where, `related project "${s}" does not exist`);
+      if (s === p.slug) err(where, 'a project cannot be related to itself');
+    }
     for (const d of [p.diagram ?? []].flat())
       if (!(diagramKeys as readonly string[]).includes(d)) err(where, `unknown diagram "${d}". Options: ${diagramKeys.join(', ')}`);
     if (p.featured) featured++;

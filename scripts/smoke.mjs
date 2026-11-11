@@ -61,6 +61,29 @@ const errors = [];
     await page.waitForFunction((t) => (document.documentElement.dataset.theme ?? 'dark') === t, t0, { timeout: 3000 });
   });
 
+  await check('tour: starts from the hero, steps to a project, turns the gallery, Escape closes', async () => {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.locator('.hero-tour').click();
+    await page.locator('.tour').waitFor({ timeout: 3000 });
+    const next = page.locator('.tour [aria-label="Next stop"]');
+    await next.click();
+    await next.click();
+    await page.locator('.tour-kicker', { hasText: 'Project 1' }).waitFor({ timeout: 3000 });
+    await next.click();
+    const title = await page.locator('.tour-title').textContent();
+    // The gallery turns to the project the tour is on (phones swipe a strip instead, with no detail panel)
+    await page.waitForFunction(
+      (t) => {
+        const detail = document.querySelector('#projects .pg-detail');
+        return !detail || !!(t && detail.textContent?.includes(t));
+      },
+      title,
+      { timeout: 3000 },
+    );
+    await page.keyboard.press('Escape');
+    await page.locator('.tour').waitFor({ state: 'detached', timeout: 3000 });
+  });
+
   await check('journey: a linked stop opens its case study', async () => {
     await page.locator('#journey').scrollIntoViewIfNeeded();
     const stop = page.locator('#journey button.jr-btn').first();
@@ -82,8 +105,8 @@ const errors = [];
     await page.waitForFunction(() => /Improve/.test(document.querySelector('.bc-body > :last-child .bc-title')?.textContent ?? ''), null, { timeout: 2000 });
   });
 
-  await check('dimming demo (IoT hub case study): slider and modes update the readout', async () => {
-    await page.evaluate(() => (location.hash = '#project/smart-home-iot-hub'));
+  await check('dimming demo (Lighting Control case study): slider and modes update the readout', async () => {
+    await page.evaluate(() => (location.hash = '#project/lighting-control'));
     const demo = page.locator('dialog[open] .dim');
     await demo.waitFor();
     const scope = demo.locator('svg[role="img"]');

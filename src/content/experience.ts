@@ -17,10 +17,11 @@ export const jobs: Job[] = [
       'Building an IoT hub using the Matter protocol to connect home-automation devices with Alexa, Siri and Google Assistant (in progress).',
       'RTOS-based embedded architectures, communication protocols and device integration workflows.',
       'Firmware debugging, hardware–software integration and real-time device communication.',
+      'Redesigned and launched the company’s Flutter smart-home app on Google Play and the App Store, using Claude AI to build a secure, updated UI with home-screen widgets in Kotlin and Swift, encrypted login storage and automated test builds.',
       'Designed and deployed the PAT IoT Solutions website using Claude AI for UI development, deployment and workflow integration.',
       'Collaborating with hardware, firmware and product teams on connected automation products.',
     ],
-    technologies: ['ESP32', 'ESP8266', 'Nuvoton', 'RTOS', 'Matter', 'Embedded C', 'HTML/CSS'],
+    technologies: ['ESP32', 'ESP8266', 'Nuvoton', 'RTOS', 'Matter', 'Embedded C', 'Flutter', 'HTML/CSS'],
   },
   {
     company: 'CSR Electronologies',

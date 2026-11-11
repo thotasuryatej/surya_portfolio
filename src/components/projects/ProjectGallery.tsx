@@ -8,6 +8,7 @@ import { projectStatusColor } from '../../lib/status';
 import { useProjectRoute } from '../../hooks/useProjectRoute';
 import { useLiquidGlass } from '../ui/LiquidGlass';
 import { ProjectMedia, useCursorLabel } from './ProjectCard';
+import { TOUR_PROJECT } from '../../lib/tour';
 
 /*
  * The fan: the centre card full size, its neighbours tipped out behind it, and past the second step a card
@@ -154,6 +155,17 @@ export function ProjectGallery({ projects, steer, from = 0 }: { projects: Projec
     if (target === steer.step) turn(target, velocity);
     else steer.goTo(target);
   };
+  // The site tour turns to the project it is talking about
+  const goRef = useRef(go);
+  goRef.current = go;
+  useEffect(() => {
+    const onTour = (e: Event) => {
+      const i = projects.findIndex((p) => p.slug === (e as CustomEvent<string>).detail);
+      if (i >= 0) goRef.current(i);
+    };
+    window.addEventListener(TOUR_PROJECT, onTour);
+    return () => window.removeEventListener(TOUR_PROJECT, onTour);
+  }, [projects]);
   const step = steer?.step;
   useEffect(() => {
     if (step !== undefined) turn(step);

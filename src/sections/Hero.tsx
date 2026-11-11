@@ -1,11 +1,12 @@
 import { useEffect, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { ease } from '../lib/motion';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Play } from 'lucide-react';
 import { hero, profile } from '../content';
 import { ButtonLink } from '../components/ui/Button';
 import { CircuitCore } from '../components/hero/CircuitCore';
 import { introDelay } from '../components/layout/Intro';
+import { startTour } from '../lib/tour';
 import './hero.css';
 
 function Title() {
@@ -139,6 +140,10 @@ export function Hero() {
             <ButtonLink variant="glass" href={hero.secondaryAction.href}>
               {hero.secondaryAction.label}
             </ButtonLink>
+            <button type="button" className="btn btn--ghost hero-tour" onClick={startTour}>
+              <Play size={15} aria-hidden="true" />
+              <span>1-minute tour</span>
+            </button>
           </motion.div>
 
           {hero.now && (

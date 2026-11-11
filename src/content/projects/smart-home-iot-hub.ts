@@ -15,7 +15,6 @@ export default defineProject({
   featured: true,
   order: 1,
   visual: 'iot-hub',
-  diagram: 'dimming',
   overview: [
     'This is my main area of professional work: firmware for smart-home automation products, including Wi-Fi smart switches and lighting dimmers, built on ESP32, ESP8266 and Nuvoton microcontrollers.',
     'The current focus is a hub based on the Matter protocol, the smart-home standard designed so devices can work across ecosystems such as Alexa, Siri and Google Assistant.',
@@ -40,5 +39,6 @@ export default defineProject({
       ],
     },
   ],
+  related: ['lighting-control'],
   note: 'Product names, internal designs and code belong to PAT IoT Solutions, so this case study describes my role and the engineering at a high level.',
 });

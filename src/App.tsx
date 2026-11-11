@@ -9,21 +9,13 @@ import { SignalTrace } from './components/visuals/SignalTrace';
 import { ProjectRouteProvider } from './hooks/useProjectRoute';
 import { sectionComponents, visibleSections } from './sections/registry';
 import { ChapterContext } from './lib/chapter';
+import { crossesPin } from './lib/scroll';
+import { Tour } from './components/tour/Tour';
 
 const navItems = visibleSections.filter((s) => s.nav).map(({ id, label }) => ({ id, label }));
 const chapters = visibleSections.map(({ id, label }) => ({ id, label }));
 const sectionIds = chapters.map((s) => s.id);
 const TOUCH = '(max-width: 900px) and (pointer: coarse)';
-
-/** Whether a pinned section lies between the current scroll position and `el`. */
-const crossesPin = (el: Element) => {
-  const to = el.getBoundingClientRect().top;
-  const [lo, hi] = to < 0 ? [to, 0] : [0, to];
-  return [...document.querySelectorAll('.section--pinned')].some((pin) => {
-    const r = pin.getBoundingClientRect();
-    return pin !== el && r.top < hi && r.bottom > lo;
-  });
-};
 
 export default function App() {
   // Sections below the fold use content-visibility:auto (base.css), so their heights are estimates until
@@ -121,6 +113,7 @@ export default function App() {
         </main>
         <Footer items={navItems} />
         <ProjectDialog />
+        <Tour />
       </ProjectRouteProvider>
     </MotionConfig>
   );

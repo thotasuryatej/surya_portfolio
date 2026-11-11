@@ -240,6 +240,35 @@ function Telemetry() {
   );
 }
 
+/** A lamp beside four small traces, one for each dimming technique the Lighting Control project explains. */
+function Lighting() {
+  const rows = [
+    { y: 56, label: 'PHASE', d: 'M0 0C6 0 10 -16 16 -16S26 0 32 0H40C46 0 50 16 56 16S66 0 72 0H80C86 0 90 -16 96 -16S106 0 112 0' },
+    { y: 102, label: 'PWM', d: 'M0 12V-12H18V12H28V-12H46V12H56V-12H74V12H84V-12H102V12H112' },
+    { y: 148, label: 'DALI', d: 'M0 12V-12H14V12H28V-12H42V-12H56V12H70V12H84V-12H98V12H112' },
+    { y: 194, label: '0–10V', d: 'M0 12C30 12 40 -8 64 -8H112' },
+  ];
+  return (
+    <Frame label="Lighting control">
+      <circle cx="96" cy="118" r="96" fill="url(#pv-glow)" />
+      <path className="pv-node" d="M96 62a40 40 0 0 0-24 72c6 5 8 10 8 16v8h32v-8c0-6 2-11 8-16a40 40 0 0 0-24-72z" />
+      <path className="pv-trace" d="M84 140l6-28 6 14 6-14 6 28" />
+      <rect className="pv-chip" x="82" y="166" width="28" height="18" rx="5" />
+      <circle className="pv-led" cx="96" cy="100" r="5" />
+      {rows.map((r, i) => (
+        <g key={r.label}>
+          <text className="pv-label pv-label--sm" x="196" y={r.y + 4} textAnchor="end">
+            {r.label}
+          </text>
+          <path className="pv-trace" d={`M146 ${r.y}H196`} opacity="0.5" />
+          <path className="pv-trace pv-flow" d={r.d} transform={`translate(214 ${r.y})`} style={{ animationDelay: `${i * -0.4}s` }} />
+          <path className="pv-trace" d={r.d} transform={`translate(214 ${r.y})`} opacity="0.6" />
+        </g>
+      ))}
+    </Frame>
+  );
+}
+
 /** Generic fallback, varied by a seed so cards without a dedicated visual still differ. */
 function Blueprint({ seed = 'x' }: { seed?: string }) {
   let h = 0;
@@ -267,6 +296,7 @@ const VISUALS: Record<VisualKey, (p: { seed?: string }) => ReactNode> = {
   microgrid: Microgrid,
   lidar: Lidar,
   telemetry: Telemetry,
+  lighting: Lighting,
   blueprint: Blueprint,
 };
 

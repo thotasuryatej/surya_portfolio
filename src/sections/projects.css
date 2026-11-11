@@ -637,20 +637,57 @@ html.vt-project-swap::view-transition-group(pj-title) {
 .dlg-checks .wip {
   color: var(--cyan);
 }
+/* Thumbnails side by side at one height, so tall phone screens and wide TV screens both stay small.
+   Each opens full size in a new tab. */
 .dlg-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
-  gap: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.dlg-gallery figure {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+.dlg-gallery a {
+  display: block;
+  border-radius: var(--r-md);
 }
 .dlg-gallery img,
 .dlg-gallery video {
-  width: 100%;
+  display: block;
+  height: 170px;
+  width: auto;
+  max-width: 300px;
+  object-fit: contain;
   border-radius: var(--r-md);
   border: 1px solid var(--line);
+  transition: border-color 0.2s;
+}
+/* Wide screenshots (TV, desktop) get a shorter row so they stay about as small as the phone ones. */
+.dlg-gallery img[data-wide] {
+  height: 108px;
+}
+@media (max-width: 560px) {
+  .dlg-gallery {
+    gap: 10px;
+  }
+  .dlg-gallery img[data-wide] {
+    height: 84px;
+  }
+}
+.dlg-gallery a:hover img,
+.dlg-gallery a:focus-visible img {
+  border-color: rgb(var(--accent-rgb) / 0.7);
 }
 .dlg-gallery figcaption {
+  /* The caption wraps to the picture's width instead of widening it. */
+  width: 0;
+  min-width: 100%;
   margin-top: 6px;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
   color: var(--text-3);
 }
 
@@ -738,6 +775,19 @@ html.vt-project-swap::view-transition-group(pj-title) {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--text-3);
+}
+/* "Related project" button in the case-study sidebar: the pager style, full width, arrow at the end. */
+.dlg-related {
+  display: grid;
+  gap: 10px;
+}
+.dlg-rel {
+  width: 100%;
+  justify-content: space-between;
+}
+.dlg-rel:hover svg,
+.dlg-rel:focus-visible svg {
+  color: rgb(var(--accent-rgb));
 }
 .dlg-page--next {
   justify-content: flex-end;

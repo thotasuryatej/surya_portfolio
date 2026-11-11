@@ -15,10 +15,11 @@ export default defineProject({
   order: 3,
   visual: 'web',
   diagram: 'site-anatomy',
-  // A real screenshot of the live home page, captured 2026-10-28 (1440 × 810)
+  // A real screenshot of the live home page, captured 2026-10-28 (home.webp, 1440 × 810),
+  // shown unchanged inside a plain browser frame at 16:10 so it fits the cards without cropping
   cover: {
     type: 'image',
-    src: '/media/projects/pat-iot-website/home.webp',
+    src: '/media/projects/pat-iot-website/cover.webp',
     alt: 'The patiot.in home page: "Transform Your Living" over a living room with PAT IoT smart switches on the wall',
   },
   overview: [
