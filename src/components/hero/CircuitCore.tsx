@@ -6,8 +6,8 @@ import { evidenceColor, evidenceLabel } from '../../lib/status';
 import { useInView } from '../../hooks/useInView';
 import { useLiquidGlass } from '../ui/LiquidGlass';
 import { LiquidButton } from '../ui/LiquidButton';
-import { Markers } from '../brand/Monogram';
-import { ST_FOLD, ST_LETTERS, ST_VIEW } from '../brand/stPaths';
+import { StArt } from '../brand/Monogram';
+import { ST_VIEW } from '../brand/stPaths';
 import './circuit-core.css';
 
 /*
@@ -63,6 +63,9 @@ function stubs(): { d: string; via: Pt }[] {
   }
   return out;
 }
+
+/** The ST logo spans 70 of the 100-wide die, centred on it. */
+const MARK_SCALE = 70 / ST_VIEW.w;
 
 export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
   const uid = useId().replace(/:/g, '');
@@ -179,11 +182,12 @@ export function CircuitCore({ nodes }: { nodes: HeroNode[] }) {
             <rect x={C - 50} y={C - 50} width="100" height="100" rx="8" fill={`url(#${uid}-die)`} />
             <rect x={C - 50} y={C - 50} width="100" height="100" rx="8" fill={`url(#${uid}-grid)`} style={{ stroke: 'rgb(var(--accent-rgb) / .25)' }} />
             <circle cx={C - 58} cy={C - 58} r="3" style={{ fill: 'rgb(var(--line-rgb) / .4)' }} />
-            {/* The ST logo (same geometry as components/brand/Monogram.tsx) etched on the die */}
-            <g transform={`translate(${C - 40} ${C - 28.4}) scale(${80 / ST_VIEW.w})`} className="chip-mark">
-              <Markers size={40} />
-              <path d={ST_FOLD} fill="var(--logo-copper)" />
-              <path d={ST_LETTERS} fill="var(--logo-ink)" />
+            {/* The ST logo (components/brand/Monogram.tsx) on the die */}
+            <g
+              transform={`translate(${C - (ST_VIEW.x + ST_VIEW.w / 2) * MARK_SCALE} ${C - (ST_VIEW.y + ST_VIEW.h / 2) * MARK_SCALE}) scale(${MARK_SCALE})`}
+              className="chip-mark"
+            >
+              <StArt steps={8} />
             </g>
             <text x={C} y={C + 62} className="chip-label" textAnchor="middle">
               ST · CORE

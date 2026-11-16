@@ -31,7 +31,7 @@ export const site: SiteConfig = {
     'Hyderabad',
   ],
   // The ?v= changes whenever the image does, so link previews and browsers fetch it fresh instead of a saved copy
-  ogImage: '/og-image.png?v=st',
+  ogImage: '/og-image.png?v=glass',
   themeColor: '#0b0a09',
   // The light page's top edge renders #e3e4e5 (measured), so the phone status bar blends into it
   themeColorLight: '#e3e4e5',

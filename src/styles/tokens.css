@@ -100,8 +100,14 @@
   --logo-1: #fbe9c6;
   --logo-2: #e8b058;
   --logo-3: #de6e58;
-  --logo-ink: #efe7df;
-  --logo-copper: #e2894e;
+  /* Polished copper face of the ST, highlight to shadow */
+  --logo-band-0: #fff4e8;
+  --logo-band-1: #f7b886;
+  --logo-band-2: #b45a28;
+  --logo-band-3: #f0a46c;
+  --logo-band-4: #ffe6cc;
+  --logo-band-5: #c86e38;
+  --logo-band-6: #7e3412;
 
   /* Glow strength: glows are light sources in the dark and soft shadows in the light */
   --glow: 1;
@@ -219,8 +225,14 @@
   --logo-1: #16181c;
   --logo-2: #1e4e9c;
   --logo-3: #b04a30;
-  --logo-ink: #1b1a19;
-  --logo-copper: #b4582a;
+  /* Deeper copper so the bands hold their shape on a pale page */
+  --logo-band-0: #f0b98c;
+  --logo-band-1: #d98a52;
+  --logo-band-2: #933f14;
+  --logo-band-3: #c9733a;
+  --logo-band-4: #e8a877;
+  --logo-band-5: #a3501e;
+  --logo-band-6: #64270b;
 
   --glow: 0.4;
   --ev-exploring: var(--amber);
