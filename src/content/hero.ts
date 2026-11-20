@@ -1,7 +1,7 @@
 import type { HeroContent } from './schema';
 
 export const hero: HeroContent = {
-  eyebrow: ['Embedded Software Developer', 'IoT Engineer'],
+  eyebrow: ['Embedded Software Engineer', 'IoT Product Engineer'],
   title: 'I love turning ideas into things that work.',
   accent: 'things that work.',
   primaryAction: { label: 'Explore my builds', href: '#projects' },

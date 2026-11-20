@@ -10,15 +10,17 @@ export const site: SiteConfig = {
   // It enables absolute social-preview URLs and the canonical tag.
   url: 'https://suryatejpatel.in',
   // Search engines weigh the title most: the full name, then the work people search for
-  title: 'Surya Tej Thota — Embedded Software & Firmware Developer, IoT Engineer',
+  title: 'Surya Tej Thota — Embedded Software Engineer & IoT Product Engineer',
   description:
-    'Surya Tej Thota (Suryatej) is an embedded software and firmware developer in Hyderabad building firmware for IoT and smart-home products — ESP32, ESP8266, Nuvoton, RTOS and Matter — and exploring what to build next.',
+    'Surya Tej Thota (Suryatej) is an embedded software engineer and IoT product engineer in Hyderabad building smart-home products end to end — device firmware (ESP32, ESP8266, Nuvoton, RTOS, Matter), the mobile app and the web — and exploring what to build next.',
   keywords: [
     'Surya Tej',
     'Surya Tej Thota',
     'Suryatej',
     'Suryatej Thota',
     'Thota Suryatej',
+    'Embedded Software Engineer',
+    'IoT Product Engineer',
     'Embedded Software Developer',
     'Embedded Firmware Developer',
     'Firmware Engineer',
@@ -31,7 +33,7 @@ export const site: SiteConfig = {
     'Hyderabad',
   ],
   // The ?v= changes whenever the image does, so link previews and browsers fetch it fresh instead of a saved copy
-  ogImage: '/og-image.png?v=glass',
+  ogImage: '/og-image.png?v=role',
   themeColor: '#0b0a09',
   // The light page's top edge renders #e3e4e5 (measured), so the phone status bar blends into it
   themeColorLight: '#e3e4e5',

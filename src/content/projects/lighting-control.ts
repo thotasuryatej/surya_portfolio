@@ -12,7 +12,7 @@ export default defineProject({
   status: 'Completed',
   period: { start: '2025' },
   updated: '2026-11',
-  role: 'Embedded software developer — dimming firmware for the smart-home products',
+  role: 'Embedded software engineer — dimming firmware for the smart-home products',
   technologies: ['Embedded C', 'Phase-Cut', 'PWM', 'DALI', 'Analog 0–10 V'],
   order: 1.2,
   visual: 'lighting',

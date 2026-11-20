@@ -7,7 +7,7 @@ export const profile: Profile = {
   shortName: 'Surya',
   initials: 'ST',
   headline: 'An engineer who turns ideas into things that work.',
-  roles: ['Embedded Software Developer', 'IoT Engineer', 'Inventor', 'Lifelong Learner'],
+  roles: ['Embedded Software Engineer', 'IoT Product Engineer', 'Inventor', 'Lifelong Learner'],
   location: 'Hyderabad, India',
   email: 'thotasuryatej@gmail.com',
   // No phone number here: anything in this file ships in the public JavaScript bundle.
@@ -37,6 +37,6 @@ export const profile: Profile = {
     // To update: edit resume-source/resume.html, run `npm run resume`, then change `updated`.
     file: '/resume/Surya-Tej-Resume.pdf',
     downloadName: 'Surya-Tej-Resume.pdf',
-    updated: '2026-10',
+    updated: '2026-11',
   },
 };

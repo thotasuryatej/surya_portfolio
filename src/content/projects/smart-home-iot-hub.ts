@@ -10,7 +10,7 @@ export default defineProject({
   status: 'In progress',
   period: { start: '2025', end: 'present' },
   updated: '2026-10',
-  role: 'Embedded software developer — firmware, RTOS architecture, device integration',
+  role: 'Embedded software engineer — firmware, RTOS architecture, device integration',
   technologies: ['ESP32', 'ESP8266', 'Nuvoton', 'RTOS', 'Matter', 'Embedded C', 'Wi-Fi', 'PWM', 'DALI'],
   featured: true,
   order: 1,

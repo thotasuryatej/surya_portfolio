@@ -3,7 +3,7 @@ import type { AboutContent } from './schema';
 export const about: AboutContent = {
   title: 'Built on curiosity',
   intro: [
-    "I'm an embedded developer, and I love building products. Right now I write firmware for smart-home devices at PAT IoT Solutions in Hyderabad, and I'm always up for building something new.",
+    "I'm an embedded software engineer and IoT product engineer, and I love building products. Right now I write firmware for smart-home devices at PAT IoT Solutions in Hyderabad, and I'm always up for building something new.",
     'I like the point where hardware and software meet: getting a microcontroller, a radio, a power stage and a few thousand lines of C to behave as one reliable product. Getting there means reading datasheets, debugging, and learning whatever the problem needs.',
   ],
   // Taken from the second intro paragraph, so the long version still reads in full
